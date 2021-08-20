@@ -3,17 +3,19 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { systemConfig } from './configs/system';
 import { databaseConfig } from './configs/databases';
 import { clusterConfig } from './configs/cluster';
+import { getEnvFileName } from '../helpers/utils/check-env-file';
 
-// @todo check file exists and if not fall back
-const overrideEnv = !!process.env.OVERRIDE_ENV
+const envSuffix = !!process.env.OVERRIDE_ENV
   ? `.${process.env.OVERRIDE_ENV}`
   : '';
+
+const envFileName = getEnvFileName(envSuffix);
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       load: [systemConfig, databaseConfig, clusterConfig],
-      envFilePath: `.env${overrideEnv}`,
+      envFilePath: envFileName,
     }),
   ],
   providers: [ConfigService],
