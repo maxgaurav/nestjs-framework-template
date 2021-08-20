@@ -17,9 +17,11 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ErrorValidationFormatFilter } from './helpers/filters/error-validation-format/error-validation-format.filter';
 import { LoggingService } from './services/logging/logging.service';
 import * as helmet from 'helmet';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { join } from 'path';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.useLogger(app.get<LoggingService>(LoggingService));
 
   const config = app.get(ConfigService);
@@ -47,6 +49,10 @@ async function bootstrap() {
 
   app.useGlobalFilters(new ErrorValidationFormatFilter());
   setupApiDocumentation(app);
+
+  app.useStaticAssets(join(process.cwd(), 'public'));
+  app.setBaseViewsDir(join(process.cwd(), 'views'));
+  app.setViewEngine('hbs');
 
   await app.listen(config.get<SystemConfig>('system').port);
 }
