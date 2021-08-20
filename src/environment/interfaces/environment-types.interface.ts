@@ -3,8 +3,10 @@ import { ConnectionNames } from '../../databases/connection-names';
 
 export interface SystemConfig {
   port: number;
-  maxMemory: number;
+  maxHeapMemory: number;
+  maxRssMemory: number;
   debug: boolean;
+  checkMemory: boolean;
 }
 
 export interface ClusterConfig {

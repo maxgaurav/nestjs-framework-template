@@ -14,6 +14,8 @@ import { OnEvent } from '@nestjs/event-emitter';
 import { SystemEvents } from '../../../system-events/system-events';
 import { ProcessMessagingService } from '../../../common/services/process-messaging/process-messaging.service';
 import { CommunicationCommands } from '../../../cluster/communication-commands';
+import { SystemConfig } from '../../../environment/interfaces/environment-types.interface';
+import { HealthIndicatorFunction } from '@nestjs/terminus/dist/health-indicator';
 
 @Controller('health')
 export class HealthController {
@@ -27,18 +29,42 @@ export class HealthController {
     private processMessaging: ProcessMessagingService,
   ) {}
 
+  /**
+   * Main health check action
+   */
   @Get()
   @HealthCheck()
   public check() {
-    return this.health.check([
+    const systemConfig = this.configService.get<SystemConfig>('system');
+    const checks: HealthIndicatorFunction[] = [
       () =>
         this.sequelizeHealthCheck.pingCheck(
           `database-${ConnectionNames.DefaultConnection}`,
           { connection: this.defaultConnection },
         ),
-    ]);
+    ];
+
+    if (!!systemConfig.checkMemory) {
+      checks.push(
+        () =>
+          this.memoryHealth.checkRSS(
+            'process-rss-memory',
+            systemConfig.maxRssMemory,
+          ),
+        () =>
+          this.memoryHealth.checkHeap(
+            'process-heap-memory',
+            systemConfig.maxHeapMemory,
+          ),
+      );
+    }
+
+    return this.health.check(checks);
   }
 
+  /**
+   * Triggers health check and sends information to master process
+   */
   @OnEvent(SystemEvents.SelfHealthStatus)
   public async checkOnCommand() {
     let result: HealthCheckResult;

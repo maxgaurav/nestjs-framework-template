@@ -16,6 +16,7 @@ import { NotFoundConverterInterceptor } from './helpers/interceptors/not-found-c
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ErrorValidationFormatFilter } from './helpers/filters/error-validation-format/error-validation-format.filter';
 import { LoggingService } from './services/logging/logging.service';
+import * as helmet from 'helmet';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -23,6 +24,7 @@ async function bootstrap() {
 
   const config = app.get(ConfigService);
   app.enableCors();
+  app.use(helmet());
 
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
