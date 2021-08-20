@@ -3,7 +3,6 @@ import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { SystemConfig } from './environment/interfaces/environment-types.interface';
 import {
-  ClassSerializerInterceptor,
   INestApplication,
   UnprocessableEntityException,
   ValidationError,
@@ -16,9 +15,12 @@ import { ContextInterceptor } from './helpers/interceptors/context/context.inter
 import { NotFoundConverterInterceptor } from './helpers/interceptors/not-found-converter/not-found-converter.interceptor';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ErrorValidationFormatFilter } from './helpers/filters/error-validation-format/error-validation-format.filter';
+import { LoggingService } from './services/logging/logging.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.useLogger(app.get<LoggingService>(LoggingService));
+
   const config = app.get(ConfigService);
   app.enableCors();
 
@@ -38,7 +40,6 @@ async function bootstrap() {
   );
   app.useGlobalInterceptors(
     app.get(NotFoundConverterInterceptor),
-    app.get(ClassSerializerInterceptor),
     new ContextInterceptor(),
   );
 
@@ -64,7 +65,7 @@ async function clusterStart() {
  */
 function setupApiDocumentation(app: INestApplication) {
   const options = new DocumentBuilder()
-    .setTitle('Api for {CHANGE TEMPLATE NAME} Services')
+    .setTitle('Api for {CHANGE TEMPLATE NAME}')
     .setVersion('1.0')
     .build();
 

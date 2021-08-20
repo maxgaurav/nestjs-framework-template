@@ -1,6 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
 import {
   HealthCheck,
+  HealthCheckResult,
   HealthCheckService,
   MemoryHealthIndicator,
   SequelizeHealthIndicator,
@@ -9,6 +10,10 @@ import { ConfigService } from '@nestjs/config';
 import { ConnectionNames } from '../../../databases/connection-names';
 import { InjectConnection } from '@nestjs/sequelize';
 import { Sequelize } from 'sequelize-typescript';
+import { OnEvent } from '@nestjs/event-emitter';
+import { SystemEvents } from '../../../system-events/system-events';
+import { ProcessMessagingService } from '../../../common/services/process-messaging/process-messaging.service';
+import { CommunicationCommands } from '../../../cluster/communication-commands';
 
 @Controller('health')
 export class HealthController {
@@ -19,6 +24,7 @@ export class HealthController {
     private sequelizeHealthCheck: SequelizeHealthIndicator,
     @InjectConnection(ConnectionNames.DefaultConnection)
     private defaultConnection: Sequelize,
+    private processMessaging: ProcessMessagingService,
   ) {}
 
   @Get()
@@ -31,5 +37,24 @@ export class HealthController {
           { connection: this.defaultConnection },
         ),
     ]);
+  }
+
+  @OnEvent(SystemEvents.SelfHealthStatus)
+  public async checkOnCommand() {
+    let result: HealthCheckResult;
+
+    this.check()
+      .then((status) => {
+        result = status;
+      })
+      .catch((err) => {
+        result = err;
+      })
+      .finally(() =>
+        this.processMessaging.sendCommand<HealthCheckResult>(
+          CommunicationCommands.HealthCheckStatus,
+          result,
+        ),
+      );
   }
 }

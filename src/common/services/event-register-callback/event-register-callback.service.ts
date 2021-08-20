@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Transaction } from 'sequelize';
-import { CallbackExecutioner } from '../../interfaces/transaction-callback.interface';
+import { CallbackExecutioner } from '../../../interfaces/transaction-callback.interface';
 
 @Injectable()
 export class EventRegisterCallbackService {

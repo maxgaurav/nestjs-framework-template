@@ -10,9 +10,10 @@ import { ConfigService } from '@nestjs/config';
 import { DatabaseHelperService } from './services/database-helper/database-helper.service';
 import { DropDatabaseService } from './commands/drop-database/drop-database.service';
 import { CreateDatabaseService } from './commands/create-database/create-database.service';
+import { CommonModule } from '../common/common.module';
 
 @Module({
-  imports: [CommandModule, EnvironmentModule],
+  imports: [CommandModule, EnvironmentModule, CommonModule.register()],
   providers: [
     RouteListService,
     Logger,

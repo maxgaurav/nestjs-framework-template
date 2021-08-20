@@ -4,6 +4,7 @@ import { systemConfig } from './configs/system';
 import { databaseConfig } from './configs/databases';
 import { clusterConfig } from './configs/cluster';
 
+// @todo check file exists and if not fall back
 const overrideEnv = !!process.env.OVERRIDE_ENV
   ? `.${process.env.OVERRIDE_ENV}`
   : '';

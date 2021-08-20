@@ -9,6 +9,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { ConnectionNames } from '../../../databases/connection-names';
 import { getConnectionToken } from '@nestjs/sequelize';
+import { ProcessMessagingService } from '../../../common/services/process-messaging/process-messaging.service';
 
 describe('HealthController', () => {
   let controller: HealthController;
@@ -35,6 +36,10 @@ describe('HealthController', () => {
           provide: getConnectionToken(ConnectionNames.DefaultConnection),
           useValue: {},
         },
+        {
+          provide: ProcessMessagingService,
+          useValue: {}
+        }
       ],
     }).compile();
 
