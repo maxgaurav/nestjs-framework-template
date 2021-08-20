@@ -9,6 +9,7 @@ import { DocumentationHelperModule } from './documentation-helper/documentation-
 import { CommonModule } from './common/common.module';
 import { LoggingService } from './services/logging/logging.service';
 import { TransactionManagerModule } from './transaction-manager/transaction-manager.module';
+import { CliCommandsModule } from './cli-commands/cli-commands.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { TransactionManagerModule } from './transaction-manager/transaction-mana
     DocumentationHelperModule,
     CommonModule.register(),
     TransactionManagerModule.register(),
+    CliCommandsModule,
   ],
   controllers: [AppController],
   providers: [
