@@ -8,6 +8,7 @@ import { NotFoundConverterInterceptor } from './helpers/interceptors/not-found-c
 import { DocumentationHelperModule } from './documentation-helper/documentation-helper.module';
 import { CommonModule } from './common/common.module';
 import { LoggingService } from './services/logging/logging.service';
+import { TransactionManagerModule } from './transaction-manager/transaction-manager.module';
 
 @Module({
   imports: [
@@ -16,13 +17,14 @@ import { LoggingService } from './services/logging/logging.service';
     HealthModule,
     DocumentationHelperModule,
     CommonModule.register(),
+    TransactionManagerModule.register(),
   ],
   controllers: [AppController],
   providers: [
     AppService,
     NotFoundConverterInterceptor,
     ClassSerializerInterceptor,
-    LoggingService
+    LoggingService,
   ],
 })
 export class AppModule {}
