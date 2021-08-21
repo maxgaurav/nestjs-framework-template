@@ -18,6 +18,7 @@ import { TransactionProviderService } from '../src/common/services/transaction-p
 import { LoggingService } from '../src/services/logging/logging.service';
 import { join } from 'path';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { SessionConfigService } from '../src/session-manager/services/session-config/session-config.service';
 
 /**
  * Sets basic e2e testing module of app
@@ -50,7 +51,11 @@ export async function basicE2eSetup(): Promise<
     app.get(NotFoundConverterInterceptor),
     new ContextInterceptor(),
   );
+
   app.useLogger(app.get<LoggingService>(LoggingService));
+
+  app.use(await app.get<SessionConfigService>(SessionConfigService).session());
+
   app.useStaticAssets(join(process.cwd(), 'public'));
   app.setBaseViewsDir(join(process.cwd(), 'views'));
   app.setViewEngine('hbs');

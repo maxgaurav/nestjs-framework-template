@@ -14,6 +14,7 @@ import { MailModule } from './mail/mail.module';
 import { ViewEngineModule } from './view-engine/view-engine.module';
 import { UrlGeneratorModule } from 'nestjs-url-generator';
 import { UrlConfigServiceService } from './services/url-config-service/url-config-service.service';
+import { SessionManagerModule } from './session-manager/session-manager.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { UrlConfigServiceService } from './services/url-config-service/url-confi
     UrlGeneratorModule.forRootAsync({
       useClass: UrlConfigServiceService,
     }),
+    SessionManagerModule,
   ],
   controllers: [AppController],
   providers: [

@@ -19,6 +19,7 @@ import { LoggingService } from './services/logging/logging.service';
 import * as helmet from 'helmet';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
+import { SessionConfigService } from './session-manager/services/session-config/session-config.service';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -49,6 +50,8 @@ async function bootstrap() {
 
   app.useGlobalFilters(new ErrorValidationFormatFilter());
   setupApiDocumentation(app);
+
+  app.use(await app.get<SessionConfigService>(SessionConfigService).session());
 
   app.useStaticAssets(join(process.cwd(), 'public'));
   app.setBaseViewsDir(join(process.cwd(), 'views'));

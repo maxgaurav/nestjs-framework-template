@@ -1,6 +1,7 @@
 import { SequelizeModuleOptions } from '@nestjs/sequelize';
 import { ConnectionNames } from '../../databases/connection-names';
 import { MailerOptions } from '@nestjs-modules/mailer';
+import { SessionOptions } from 'express-session';
 
 export interface SystemConfig {
   port: number;
@@ -35,4 +36,8 @@ export interface DatabaseConfig {
 
 export interface MailConfig extends MailerOptions {
   driver: 'log' | 'smtp';
+}
+
+export interface SessionConfig extends Partial<SessionOptions> {
+  driver: 'memory' | 'file';
 }

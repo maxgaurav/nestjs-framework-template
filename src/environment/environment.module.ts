@@ -5,6 +5,7 @@ import { databaseConfig } from './configs/databases';
 import { clusterConfig } from './configs/cluster';
 import { getEnvFileName } from '../helpers/utils/check-env-file';
 import { mailConfig } from './configs/mail';
+import { sessionConfig } from './configs/session';
 
 const envSuffix = !!process.env.OVERRIDE_ENV
   ? `.${process.env.OVERRIDE_ENV}`
@@ -15,7 +16,13 @@ const envFileName = getEnvFileName(envSuffix);
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [systemConfig, databaseConfig, clusterConfig, mailConfig],
+      load: [
+        systemConfig,
+        databaseConfig,
+        clusterConfig,
+        mailConfig,
+        sessionConfig,
+      ],
       envFilePath: envFileName,
       isGlobal: true,
     }),
