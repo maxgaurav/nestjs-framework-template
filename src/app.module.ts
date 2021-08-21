@@ -12,7 +12,6 @@ import { TransactionManagerModule } from './transaction-manager/transaction-mana
 import { CliCommandsModule } from './cli-commands/cli-commands.module';
 import { MailModule } from './mail/mail.module';
 import { ViewEngineModule } from './view-engine/view-engine.module';
-import { ViewEngineConfigService } from './view-envinte/services/view-engine-config/view-engine-config.service';
 
 @Module({
   imports: [
@@ -32,7 +31,6 @@ import { ViewEngineConfigService } from './view-envinte/services/view-engine-con
     NotFoundConverterInterceptor,
     ClassSerializerInterceptor,
     LoggingService,
-    ViewEngineConfigService,
   ],
 })
 export class AppModule {}
