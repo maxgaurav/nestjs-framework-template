@@ -17,6 +17,7 @@ const envFileName = getEnvFileName(envSuffix);
     ConfigModule.forRoot({
       load: [systemConfig, databaseConfig, clusterConfig, mailConfig],
       envFilePath: envFileName,
+      isGlobal: true,
     }),
   ],
   providers: [ConfigService],

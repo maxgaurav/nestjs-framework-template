@@ -4,6 +4,8 @@ import { MailerOptions } from '@nestjs-modules/mailer';
 
 export interface SystemConfig {
   port: number;
+  url: string;
+  secret: string;
   maxHeapMemory: number;
   maxRssMemory: number;
   debug: boolean;

@@ -12,6 +12,8 @@ import { TransactionManagerModule } from './transaction-manager/transaction-mana
 import { CliCommandsModule } from './cli-commands/cli-commands.module';
 import { MailModule } from './mail/mail.module';
 import { ViewEngineModule } from './view-engine/view-engine.module';
+import { UrlGeneratorModule } from 'nestjs-url-generator';
+import { UrlConfigServiceService } from './services/url-config-service/url-config-service.service';
 
 @Module({
   imports: [
@@ -24,6 +26,9 @@ import { ViewEngineModule } from './view-engine/view-engine.module';
     CliCommandsModule,
     MailModule,
     ViewEngineModule,
+    UrlGeneratorModule.forRootAsync({
+      useClass: UrlConfigServiceService,
+    }),
   ],
   controllers: [AppController],
   providers: [
@@ -31,6 +36,7 @@ import { ViewEngineModule } from './view-engine/view-engine.module';
     NotFoundConverterInterceptor,
     ClassSerializerInterceptor,
     LoggingService,
+    UrlConfigServiceService,
   ],
 })
 export class AppModule {}

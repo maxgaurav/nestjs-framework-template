@@ -1019,7 +1019,7 @@
   resolved "https://registry.yarnpkg.com/@types/pug/-/pug-2.0.4.tgz#8772fcd0418e3cd2cc171555d73007415051f4b2"
   integrity sha1-h3L80EGOPNLMFxVV1zAHQVBR9LI=
 
-"@types/qs@*":
+"@types/qs@*", "@types/qs@^6.9.5":
   version "6.9.7"
   resolved "https://registry.yarnpkg.com/@types/qs/-/qs-6.9.7.tgz#63bb7d067db107cc1e457c303bc25d511febf6cb"
   integrity sha512-FGa1F62FT09qcrueBA6qYTrJPVDzah9a+493+o2PCXsesWHIn27G98TsSMs3WPNbZIEj4+VJf6saSFpvD+3Zsw==
@@ -4815,6 +4815,14 @@ nestjs-sequelize-paginate@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/nestjs-sequelize-paginate/-/nestjs-sequelize-paginate-1.0.0.tgz#8d31068a02d306baf447cb14bb292e3ee2efd67a"
   integrity sha512-EjBiHOugg9CGSDozqfFkD8kLT40KArLvqd6KimquODr3pURWceTvRrdKhmkTBhwCOm5irpf/RvG9NIO9LEhh3Q==
+
+nestjs-url-generator@^0.0.9:
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/nestjs-url-generator/-/nestjs-url-generator-0.0.9.tgz#e0caf1c7d6b6b05d02b74bed3db51985c563d624"
+  integrity sha512-BVckWWQuz8N8hK3xk+2YWUkYHq4hrk7U9gT4PCpHB5m5ynp+TgtCKZz3dosfixoT1dAtjBpLgnt2ySDV9cfzow==
+  dependencies:
+    "@types/qs" "^6.9.5"
+    qs "^6.9.4"
 
 netmask@^2.0.1:
   version "2.0.2"
