@@ -7,6 +7,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "prebuild": "rimraf dist",
+    "postinstall": "package-scripts/post-install.js",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
@@ -43,6 +44,7 @@
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
     "sequelize": "^6.6.5",
+    "sequelize-cli": "^6.2.0",
     "sequelize-typescript": "^2.1.0",
     "swagger-ui-express": "^4.1.6",
     "ts-enum-util": "^4.0.2",
