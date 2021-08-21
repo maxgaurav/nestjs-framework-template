@@ -7,7 +7,7 @@ export class AppController {
 
   @Get()
   @Render('welcome')
-  getHello(): { message: string } {
+  async getHello(): Promise<{ message: string }> {
     return { message: this.appService.getHello() };
   }
 }

@@ -10,6 +10,7 @@ import { CommonModule } from './common/common.module';
 import { LoggingService } from './services/logging/logging.service';
 import { TransactionManagerModule } from './transaction-manager/transaction-manager.module';
 import { CliCommandsModule } from './cli-commands/cli-commands.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { CliCommandsModule } from './cli-commands/cli-commands.module';
     CommonModule.register(),
     TransactionManagerModule.register(),
     CliCommandsModule,
+    MailModule,
   ],
   controllers: [AppController],
   providers: [
