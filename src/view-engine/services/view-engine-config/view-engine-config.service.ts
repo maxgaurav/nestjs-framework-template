@@ -7,6 +7,7 @@ import * as layouts from 'handlebars-layout';
 export class ViewEngineConfigService implements OnApplicationBootstrap {
   onApplicationBootstrap(): any {
     hbs.registerPartials(join(process.cwd(), 'views', 'partials'));
-    layouts.register(hbs);
+    hbs.registerPartials(join(process.cwd(), 'views', 'layouts'));
+    layouts.register(hbs.handlebars);
   }
 }
