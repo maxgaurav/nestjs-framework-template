@@ -4,8 +4,10 @@ import {
   ExceptionFilter,
   UnprocessableEntityException,
 } from '@nestjs/common';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { ValidationError } from 'class-validator';
+import { SESSION_VALIDATION_ERROR_KEY } from '../../../session-manager/constants';
+import { ValidationErrorsFormat } from '../../../interfaces/validation-errors-format';
 
 interface DefaultValidationError {
   statusCode: number;
@@ -17,11 +19,25 @@ interface DefaultValidationError {
 export class ErrorValidationFormatFilter implements ExceptionFilter {
   catch(exception: UnprocessableEntityException, host: ArgumentsHost) {
     const response = host.switchToHttp().getResponse<Response>();
+    const request = host.switchToHttp().getRequest<Request>();
     const errorResponse: DefaultValidationError =
       exception.getResponse() as any;
-    response.status(exception.getStatus()).json({
-      errors: this.formattedErrors(errorResponse.message),
-      message: errorResponse.error,
+
+    const errors = this.formattedErrors(errorResponse.message);
+
+    if (request.accepts(['html', 'text', 'json']) === 'json') {
+      response.status(exception.getStatus()).json({
+        errors,
+        message: errorResponse.error,
+      });
+      return;
+    }
+
+    request.flash(SESSION_VALIDATION_ERROR_KEY, JSON.stringify(errors));
+    const sessionPreviousUrl = (request.session as any)._previous?.url || '/';
+    const previousUrl = request.header('referrer') || sessionPreviousUrl;
+    request.session.save(() => {
+      response.redirect(previousUrl);
     });
   }
 
@@ -33,8 +49,8 @@ export class ErrorValidationFormatFilter implements ExceptionFilter {
   public formattedErrors(
     errors: ValidationError[],
     propertyPrefix = '',
-  ): { [key: string]: string[] } {
-    let formattedErrors: { [key: string]: string[] } = {};
+  ): ValidationErrorsFormat {
+    let formattedErrors: ValidationErrorsFormat = {};
 
     for (const error of errors) {
       formattedErrors[`${propertyPrefix}${error.property}`] = [];

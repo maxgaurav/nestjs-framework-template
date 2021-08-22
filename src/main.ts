@@ -20,6 +20,10 @@ import * as helmet from 'helmet';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 import { SessionConfigService } from './session-manager/services/session-config/session-config.service';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import * as flash from 'connect-flash';
+import { SessionMapPreviousUrlInterceptor } from './session-manager/interceptors/session-map-previous-url/session-map-previous-url-interceptor.service';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -45,6 +49,7 @@ async function bootstrap() {
   );
   app.useGlobalInterceptors(
     app.get(NotFoundConverterInterceptor),
+    app.get(SessionMapPreviousUrlInterceptor),
     new ContextInterceptor(),
   );
 
@@ -52,6 +57,7 @@ async function bootstrap() {
   setupApiDocumentation(app);
 
   app.use(await app.get<SessionConfigService>(SessionConfigService).session());
+  app.use(flash());
 
   app.useStaticAssets(join(process.cwd(), 'public'));
   app.setBaseViewsDir(join(process.cwd(), 'views'));
