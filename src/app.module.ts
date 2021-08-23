@@ -15,9 +15,15 @@ import { ViewEngineModule } from './view-engine/view-engine.module';
 import { UrlGeneratorModule } from 'nestjs-url-generator';
 import { UrlConfigServiceService } from './services/url-config-service/url-config-service.service';
 import { SessionManagerModule } from './session-manager/session-manager.module';
+import { AuthModule } from './auth/auth.module';
+import { UserModule } from './user/user.module';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
   imports: [
+    PassportModule.register({
+      session: true,
+    }),
     EnvironmentModule,
     DatabasesModule,
     HealthModule,
@@ -31,6 +37,8 @@ import { SessionManagerModule } from './session-manager/session-manager.module';
       useClass: UrlConfigServiceService,
     }),
     SessionManagerModule,
+    AuthModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [

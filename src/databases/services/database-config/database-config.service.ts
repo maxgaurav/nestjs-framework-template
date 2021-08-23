@@ -5,6 +5,7 @@ import {
   SequelizeOptionsFactory,
 } from '@nestjs/sequelize';
 import { ConnectionNames } from '../../connection-names';
+import { UserModel } from '../../models/user.model';
 
 @Injectable()
 export class DatabaseConfigService implements SequelizeOptionsFactory {
@@ -20,7 +21,7 @@ export class DatabaseConfigService implements SequelizeOptionsFactory {
 
     // @todo find way to auto detect models
     // add all the model classes here
-    config.models = [];
+    config.models = [UserModel];
 
     return config;
   }

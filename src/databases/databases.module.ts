@@ -3,6 +3,7 @@ import { DatabaseConfigService } from './services/database-config/database-confi
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ConnectionNames } from './connection-names';
 import { SequelizeModule } from '@nestjs/sequelize';
+import { ModelBootstrapModule } from './model-bootstrap/model-bootstrap.module';
 
 @Module({
   imports: [
