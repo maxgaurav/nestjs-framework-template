@@ -12,7 +12,8 @@ import { Session } from 'express-session';
 export class SessionMapPreviousUrlInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const request = context.switchToHttp().getRequest<Request>();
-    const session: Session & { [key: string]: any } = request.session;
+    const session: Session & { [key: string]: any } =
+      request.session || ({} as any);
     session._previous = session._previous || { url: null };
     if (
       request.method.toUpperCase() === 'GET' &&

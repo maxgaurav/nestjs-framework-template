@@ -1,5 +1,6 @@
 import {
   Injectable,
+  UnauthorizedException,
   UnprocessableEntityException,
   ValidationError,
 } from '@nestjs/common';
@@ -17,14 +18,14 @@ export class LoginWebGuard extends AuthGuard('local') {
     if (err || !user) {
       const errors: ValidationError[] = [
         {
-          property: 'email',
+          property: 'credentials',
           constraints: {
             credentials: 'Credentials are invalid',
           },
           children: [],
         },
       ];
-      if (err instanceof UnprocessableEntityException || !user) {
+      if (err instanceof UnauthorizedException || !user) {
         throw new UnprocessableEntityException(errors);
       }
     }

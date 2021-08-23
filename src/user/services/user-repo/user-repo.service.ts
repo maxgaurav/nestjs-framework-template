@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { UserModel } from '../../../databases/models/user.model';
-import { Transaction } from 'sequelize';
+import { EmptyResultError, Transaction } from 'sequelize';
 import { InjectModel } from '@nestjs/sequelize';
 
 @Injectable()
 export class UserRepoService {
   constructor(@InjectModel(UserModel) public userModel: typeof UserModel) {}
+
   /**
    * Find by email or returns null when not not found
    * @param email
@@ -29,7 +30,12 @@ export class UserRepoService {
     email: string,
     transaction?: Transaction,
   ): Promise<UserModel> {
-    return Promise.resolve({} as any);
+    return this.findByEmail(email, transaction).then((result) => {
+      if (!result) {
+        throw new EmptyResultError();
+      }
+      return result;
+    });
   }
 
   /**
@@ -37,10 +43,7 @@ export class UserRepoService {
    * @param id
    * @param transaction
    */
-  public findByIdOrFail(
-    id: number,
-    transaction?: Transaction,
-  ): Promise<UserModel> {
+  public findOrFail(id: number, transaction?: Transaction): Promise<UserModel> {
     return this.userModel.findByPk(id, { transaction });
   }
 }

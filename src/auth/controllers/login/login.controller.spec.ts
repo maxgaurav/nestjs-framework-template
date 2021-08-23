@@ -15,4 +15,19 @@ describe('LoginController', () => {
   it('should be defined', () => {
     expect(controller).toBeDefined();
   });
+
+  it('should set the session property with auth information', () => {
+    const request: any = { session: {}, user: { id: 1 } };
+    controller.login(request);
+    expect(request).toEqual(
+      expect.objectContaining({
+        session: expect.objectContaining({
+          auth: expect.objectContaining({
+            isAuth: true,
+            userId: request.user.id,
+          }),
+        }),
+      }),
+    );
+  });
 });

@@ -8,7 +8,7 @@ export const notFoundPipe = <T>() => {
     source.pipe(
       catchError((err) => {
         if (err instanceof EmptyResultError) {
-          return throwError(new NotFoundException('Record not found'));
+          return throwError(() => new NotFoundException('Record not found'));
         }
         return throwError(err);
       }),

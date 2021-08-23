@@ -43,8 +43,8 @@ export class SessionErrorValidationInterceptor implements NestInterceptor {
     }
     return next.handle().pipe(
       map((templateContext: { [key: string]: any } | undefined | null) => {
-        if (!templateContext) {
-          templateContext = {};
+        if (typeof templateContext !== 'object') {
+          return templateContext;
         }
 
         templateContext._errorBag = errorBag;

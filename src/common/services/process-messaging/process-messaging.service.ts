@@ -52,6 +52,13 @@ export class ProcessMessagingService implements OnApplicationBootstrap {
   }
 
   /**
+   * Subscribe to unprocessed message content for process
+   */
+  public subscribeToMessages<T = any>(): Observable<T> {
+    return this.generalMessageEmitter.asObservable();
+  }
+
+  /**
    * Sends command from process to owner of process
    * @param command
    * @param message
@@ -111,9 +118,11 @@ export class ProcessMessagingService implements OnApplicationBootstrap {
     };
     worker.addListener('message', handler);
 
-    return emitter
-      .asObservable()
-      .pipe(finalize(() => worker.removeListener('message', handler)));
+    return emitter.asObservable().pipe(
+      finalize(() => {
+        worker.removeListener('message', handler);
+      }),
+    );
   }
 
   /**
@@ -121,7 +130,7 @@ export class ProcessMessagingService implements OnApplicationBootstrap {
    * @param commandReceived
    * @protected
    */
-  protected convertCommandsToSystemEvents(
+  public convertCommandsToSystemEvents(
     commandReceived: InterProcessCommunication,
   ): void {
     switch (commandReceived.command) {

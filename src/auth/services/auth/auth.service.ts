@@ -24,14 +24,18 @@ export class AuthService {
       return null;
     }
 
-    if (!this.hashEncryptService.checkHash(password, user.password)) {
+    if (!(await this.hashEncryptService.checkHash(password, user.password))) {
       return null;
     }
 
     return user;
   }
 
+  /**
+   * Returns current logged in user detail by user id
+   * @param userId
+   */
   public getLoggedInUser(userId: number): Promise<UserModel> {
-    return this.userRepo.findByIdOrFail(userId);
+    return this.userRepo.findOrFail(userId);
   }
 }

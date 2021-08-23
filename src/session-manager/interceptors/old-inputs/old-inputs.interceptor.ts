@@ -26,6 +26,10 @@ export class OldInputsInterceptor implements NestInterceptor {
 
     return next.handle().pipe(
       map((templateContext: { [key: string]: any } | undefined | null) => {
+        if (typeof templateContext !== 'object') {
+          return templateContext;
+        }
+
         if (!templateContext) {
           templateContext = {};
         }
