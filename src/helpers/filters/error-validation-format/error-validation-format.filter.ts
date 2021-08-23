@@ -6,7 +6,10 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { ValidationError } from 'class-validator';
-import { SESSION_VALIDATION_ERROR_KEY } from '../../../session-manager/constants';
+import {
+  SESSION_VALIDATION_ERROR_KEY,
+  SESSION_VALIDATION_INPUTS,
+} from '../../../session-manager/constants';
 import { ValidationErrorsFormat } from '../../../interfaces/validation-errors-format';
 
 interface DefaultValidationError {
@@ -34,6 +37,7 @@ export class ErrorValidationFormatFilter implements ExceptionFilter {
     }
 
     request.flash(SESSION_VALIDATION_ERROR_KEY, JSON.stringify(errors));
+    request.flash(SESSION_VALIDATION_INPUTS, JSON.stringify(request.body));
     const sessionPreviousUrl = (request.session as any)._previous?.url || '/';
     const previousUrl = request.header('referrer') || sessionPreviousUrl;
     request.session.save(() => {

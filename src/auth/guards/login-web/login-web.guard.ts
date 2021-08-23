@@ -14,7 +14,6 @@ export class LoginWebGuard extends AuthGuard('local') {
     context: any,
     status?: any,
   ) {
-    console.log('handle');
     if (err || !user) {
       const errors: ValidationError[] = [
         {

@@ -16,7 +16,6 @@ export class SessionStrategyService extends PassportStrategy(Strategy) {
    * @param password
    */
   public async validate(email: string, password: string): Promise<UserModel> {
-    console.log('validating through strategy');
     const user = await this.authService.validateForPassword(email, password);
     if (!user) {
       throw new UnauthorizedException();

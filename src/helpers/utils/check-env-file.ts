@@ -1,7 +1,6 @@
 import { existsSync } from 'fs';
 
 export const getEnvFileName = (envSuffix: string): string => {
-  console.log(process.cwd());
   const isOverridden = envSuffix !== '';
 
   const defaultFile = `${process.cwd()}/.env`;

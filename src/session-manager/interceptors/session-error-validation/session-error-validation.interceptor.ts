@@ -40,7 +40,6 @@ export class SessionErrorValidationInterceptor implements NestInterceptor {
       );
 
       errorBag = { all: allErrors, errors: validationErrors };
-      console.log(errorBag);
     }
     return next.handle().pipe(
       map((templateContext: { [key: string]: any } | undefined | null) => {
