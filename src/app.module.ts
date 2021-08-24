@@ -39,6 +39,10 @@ import { PassportModule } from '@nestjs/passport';
     SessionManagerModule,
     AuthModule,
     UserModule,
+    EventEmitterModule.forRoot({
+      wildcard: true,
+      delimiter: '.',
+    }),
   ],
   controllers: [AppController],
   providers: [
