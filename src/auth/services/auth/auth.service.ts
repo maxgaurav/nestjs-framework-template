@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { UserRepoService } from '../../../user/services/user-repo/user-repo.service';
 import { UserModel } from '../../../databases/models/user.model';
 import { HashEncryptService } from '../hash-encrypt/hash-encrypt.service';
+import { Session } from 'express-session';
 
 @Injectable()
 export class AuthService {
@@ -37,5 +38,22 @@ export class AuthService {
    */
   public getLoggedInUser(userId: number): Promise<UserModel> {
     return this.userRepo.findOrFail(userId);
+  }
+
+  /**
+   * Map user to session to setup authenticated state
+   * @param session
+   * @param user
+   */
+  public mapSessionWithUser(
+    session: Session & {
+      auth?: { isAuth: boolean; userId: number | null };
+    },
+    user: UserModel,
+  ): void {
+    session.auth = {
+      isAuth: true,
+      userId: user.id,
+    };
   }
 }

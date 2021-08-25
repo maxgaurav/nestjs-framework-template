@@ -7,7 +7,7 @@ import {
 import { from, Observable, throwError } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { Transaction } from 'sequelize';
-import { TransactionProviderService } from '../../../common/services/transaction-provider/transaction-provider.service';
+import { TransactionProviderService } from '../../services/transaction-provider/transaction-provider.service';
 
 @Injectable()
 export class TransactionInterceptor implements NestInterceptor {

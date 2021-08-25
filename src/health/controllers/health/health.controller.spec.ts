@@ -38,8 +38,8 @@ describe('HealthController', () => {
         },
         {
           provide: ProcessMessagingService,
-          useValue: {}
-        }
+          useValue: {},
+        },
       ],
     }).compile();
 

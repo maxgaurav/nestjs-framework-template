@@ -1,19 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { EventRegisterCallbackService } from './event-register-callback.service';
-import { TransactionProviderService } from '../transaction-provider/transaction-provider.service';
 
 describe('EventRegisterCallbackService', () => {
   let service: EventRegisterCallbackService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        EventRegisterCallbackService,
-        {
-          provide: TransactionProviderService,
-          useValue: {},
-        },
-      ],
+      providers: [EventRegisterCallbackService],
     }).compile();
 
     service = module.get<EventRegisterCallbackService>(

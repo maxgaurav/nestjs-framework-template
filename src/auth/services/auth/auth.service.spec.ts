@@ -3,10 +3,13 @@ import { AuthService } from './auth.service';
 import { UserRepoService } from '../../../user/services/user-repo/user-repo.service';
 import { HashEncryptService } from '../hash-encrypt/hash-encrypt.service';
 import { UserModel } from '../../../databases/models/user.model';
+import { ConfigService } from '@nestjs/config';
 
 describe('AuthService', () => {
   let service: AuthService;
   let hashService: HashEncryptService;
+
+  const configService: ConfigService = {} as any;
 
   const userRepo: UserRepoService = {
     findByEmail: (value) => value,
@@ -20,6 +23,10 @@ describe('AuthService', () => {
         {
           provide: UserRepoService,
           useValue: userRepo,
+        },
+        {
+          provide: ConfigService,
+          useValue: configService,
         },
         HashEncryptService,
       ],
@@ -96,5 +103,16 @@ describe('AuthService', () => {
 
     expect(await service.getLoggedInUser(user.id)).toEqual(user);
     expect(findByIdOrFailSpy).toHaveBeenCalledWith(user.id);
+  });
+
+  it('should map user to session', () => {
+    const session = {} as any;
+    const user: UserModel = { id: 1 } as any;
+    service.mapSessionWithUser(session, user);
+    expect(session).toEqual(
+      expect.objectContaining({
+        auth: { isAuth: true, userId: user.id },
+      }),
+    );
   });
 });
