@@ -35,7 +35,8 @@ export class ErrorValidationFormatFilter implements ExceptionFilter {
       });
       return;
     }
-
+    request.flash(SESSION_VALIDATION_ERROR_KEY);
+    request.flash(SESSION_VALIDATION_INPUTS);
     request.flash(SESSION_VALIDATION_ERROR_KEY, JSON.stringify(errors));
     request.flash(SESSION_VALIDATION_INPUTS, JSON.stringify(request.body));
     const sessionPreviousUrl = (request.session as any)._previous?.url || '/';

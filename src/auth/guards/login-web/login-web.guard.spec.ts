@@ -51,6 +51,30 @@ describe('LoginWebGuard', () => {
     expect(errorThrown).toEqual(true);
   });
 
+  it('should throw unprocessable error user is not received', async () => {
+    let errorThrown = false;
+
+    try {
+      service.handleRequest(undefined, false, false, false, false);
+    } catch (err) {
+      if (err instanceof UnprocessableEntityException) {
+        errorThrown = true;
+        expect((err.getResponse() as any).message).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              property: 'credentials',
+              constraints: expect.objectContaining({
+                credentials: 'Credentials are invalid',
+              }),
+            }),
+          ]),
+        );
+      }
+    }
+
+    expect(errorThrown).toEqual(true);
+  });
+
   it('should pass when there is no error and user is injected', async () => {
     const superActionSpy = jest
       .spyOn(AuthGuard('local').prototype, 'handleRequest')
@@ -61,5 +85,18 @@ describe('LoginWebGuard', () => {
     );
 
     expect(superActionSpy).toHaveBeenCalledWith(false, {}, false, false, false);
+  });
+
+  it('should pass when error is not unauthorized type and user is injected', async () => {
+    const superActionSpy = jest
+      .spyOn(AuthGuard('local').prototype, 'handleRequest')
+      .mockReturnValueOnce(true);
+
+    const error = new Error();
+    expect(await service.handleRequest(error, {}, false, false, false)).toEqual(
+      true,
+    );
+
+    expect(superActionSpy).toHaveBeenCalledWith(error, {}, false, false, false);
   });
 });

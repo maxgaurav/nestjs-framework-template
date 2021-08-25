@@ -7,6 +7,7 @@ import { UserRepoService } from '../user/services/user-repo/user-repo.service';
 import { ModelBootstrapModule } from '../databases/model-bootstrap/model-bootstrap.module';
 import { WebGuard } from './guards/web/web.guard';
 import { LoginWebGuard } from './guards/login-web/login-web.guard';
+import { IntendManagerService } from '../session-manager/services/intend-manager/intend-manager.service';
 
 @Global()
 @Module({
@@ -18,6 +19,7 @@ import { LoginWebGuard } from './guards/login-web/login-web.guard';
     UserRepoService,
     WebGuard,
     LoginWebGuard,
+    IntendManagerService,
   ],
   controllers: [LoginController],
   exports: [AuthService, HashEncryptService],

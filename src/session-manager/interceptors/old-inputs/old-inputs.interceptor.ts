@@ -25,18 +25,20 @@ export class OldInputsInterceptor implements NestInterceptor {
     }
 
     return next.handle().pipe(
-      map((templateContext: { [key: string]: any } | undefined | null) => {
-        if (typeof templateContext !== 'object') {
+      map(
+        (templateContext: { [key: string]: any } | undefined | null | any) => {
+          if (typeof templateContext !== 'object') {
+            return templateContext;
+          }
+
+          if (templateContext === undefined || templateContext === null) {
+            return templateContext;
+          }
+
+          templateContext._oldInputs = oldInputs;
           return templateContext;
-        }
-
-        if (!templateContext) {
-          templateContext = {};
-        }
-
-        templateContext._oldInputs = oldInputs;
-        return templateContext;
-      }),
+        },
+      ),
     );
   }
 }

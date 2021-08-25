@@ -6,9 +6,12 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
+import { IntendManagerService } from '../../services/intend-manager/intend-manager.service';
 
 @Catch(UnauthorizedException)
-export class RedirectToLoginFilter implements ExceptionFilter {
+export class RedirectFromLoginFilter implements ExceptionFilter {
+  constructor(private intendManager: IntendManagerService) {}
+
   protected loginRoute = '/';
 
   catch(exception: UnauthorizedException, host: ArgumentsHost) {
@@ -23,6 +26,14 @@ export class RedirectToLoginFilter implements ExceptionFilter {
       return;
     }
 
-    response.redirect(this.loginRoute);
+    const intendUrl =
+      request.method.toUpperCase() === 'GET'
+        ? request.url
+        : this.intendManager.getUrl(request);
+    this.intendManager.setUrl(request, intendUrl);
+
+    request.session.save(() => {
+      response.redirect(this.loginRoute);
+    });
   }
 }

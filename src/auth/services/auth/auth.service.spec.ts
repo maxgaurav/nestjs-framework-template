@@ -105,14 +105,44 @@ describe('AuthService', () => {
     expect(findByIdOrFailSpy).toHaveBeenCalledWith(user.id);
   });
 
-  it('should map user to session', () => {
-    const session = {} as any;
+  it('should map user to session', async () => {
+    const session = { save: (value) => value } as any;
+
+    const saveSpy = jest
+      .spyOn(session, 'save')
+      .mockImplementation((callback: () => void) => {
+        callback();
+      });
+
     const user: UserModel = { id: 1 } as any;
-    service.mapSessionWithUser(session, user);
+    await service.mapSessionWithUser(session, user);
     expect(session).toEqual(
       expect.objectContaining({
         auth: { isAuth: true, userId: user.id },
       }),
     );
+    expect(saveSpy).toHaveBeenCalled();
+  });
+
+  it('should throw error when mapping of user to session fails to be saved', async () => {
+    const session = { save: (value) => value } as any;
+
+    const saveSpy = jest
+      .spyOn(session, 'save')
+      .mockImplementation((callback: (err: string) => void) => {
+        callback('errorPassed');
+      });
+
+    const user: UserModel = { id: 1 } as any;
+    let errorThrown = false;
+    try {
+      await service.mapSessionWithUser(session, user);
+    } catch (err) {
+      if (err === 'errorPassed') {
+        errorThrown = true;
+      }
+    }
+    expect(saveSpy).toHaveBeenCalled();
+    expect(errorThrown).toEqual(true);
   });
 });

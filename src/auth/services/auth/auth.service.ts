@@ -50,10 +50,19 @@ export class AuthService {
       auth?: { isAuth: boolean; userId: number | null };
     },
     user: UserModel,
-  ): void {
+  ): Promise<boolean> {
     session.auth = {
       isAuth: true,
       userId: user.id,
     };
+    return new Promise((res, rej) => {
+      session.save((err) => {
+        if (!!err) {
+          rej(err);
+          return;
+        }
+        res(true);
+      });
+    });
   }
 }

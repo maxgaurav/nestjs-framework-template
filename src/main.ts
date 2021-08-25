@@ -24,6 +24,8 @@ import { SessionConfigService } from './session-manager/services/session-config/
 // @ts-ignore
 import * as flash from 'connect-flash';
 import { SessionMapPreviousUrlInterceptor } from './session-manager/interceptors/session-map-previous-url/session-map-previous-url-interceptor.service';
+import { RedirectFromLoginFilter } from './session-manager/filters/redirect-to-login/redirect-to-login.filter';
+import { SetupIntendInterceptor } from './session-manager/interceptors/setup-intend/setup-intend.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -47,17 +49,19 @@ async function bootstrap() {
       },
     }),
   );
-  app.useGlobalInterceptors(
-    app.get(NotFoundConverterInterceptor),
-    app.get(SessionMapPreviousUrlInterceptor),
-    new ContextInterceptor(),
-  );
 
   app.useGlobalFilters(new ErrorValidationFormatFilter());
+  app.useGlobalFilters(app.get(RedirectFromLoginFilter));
   setupApiDocumentation(app);
 
   app.use(await app.get<SessionConfigService>(SessionConfigService).session());
   app.use(flash());
+  app.useGlobalInterceptors(
+    app.get(NotFoundConverterInterceptor),
+    app.get(SessionMapPreviousUrlInterceptor),
+    app.get(SetupIntendInterceptor),
+    new ContextInterceptor(),
+  );
 
   app.useStaticAssets(join(process.cwd(), 'public'));
   app.setBaseViewsDir(join(process.cwd(), 'views'));

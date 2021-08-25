@@ -81,4 +81,60 @@ describe('OldInputsInterceptor', () => {
 
     expect(flashSpy).toHaveBeenCalled();
   });
+
+  it('should map correct old inputs to template when found but with incorrect', async () => {
+    const request: any = {
+      flash: (value) => value,
+    };
+
+    const oldInput = 'sample';
+
+    const context = {
+      switchToHttp: () => ({ getRequest: () => request }),
+    };
+
+    const next = { handle: () => of({}) };
+
+    const flashSpy = jest
+      .spyOn(request, 'flash')
+      .mockReturnValueOnce([JSON.stringify(oldInput)]);
+
+    expect(
+      await firstValueFrom(interceptor.intercept(context as any, next)),
+    ).toEqual(
+      expect.objectContaining({
+        _oldInputs: {},
+      }),
+    );
+
+    expect(flashSpy).toHaveBeenCalled();
+  });
+
+  it('should return template context without mapping old input when template context is not object', async () => {
+    const request: any = {
+      flash: (value) => value,
+    };
+
+    const oldInput = 'sample';
+
+    const context = {
+      switchToHttp: () => ({ getRequest: () => request }),
+    };
+
+    const next = { handle: () => of(null) };
+
+    const flashSpy = jest
+      .spyOn(request, 'flash')
+      .mockReturnValueOnce([JSON.stringify(oldInput)]);
+
+    expect(
+      await firstValueFrom(interceptor.intercept(context as any, next)),
+    ).toEqual(
+      expect.not.objectContaining({
+        _oldInputs: {},
+      }),
+    );
+
+    expect(flashSpy).toHaveBeenCalled();
+  });
 });
