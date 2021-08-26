@@ -1,4 +1,9 @@
-import { ClassSerializerInterceptor, Module } from '@nestjs/common';
+import {
+  ClassSerializerInterceptor,
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+} from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { EnvironmentModule } from './environment/environment.module';
@@ -19,6 +24,7 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { PassportModule } from '@nestjs/passport';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { MethodChangeMiddleware } from './helpers/middlewares/method-change/method-change.middleware';
 
 @Module({
   imports: [
@@ -54,4 +60,8 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     UrlConfigServiceService,
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): any {
+    consumer.apply(MethodChangeMiddleware).forRoutes('*');
+  }
+}

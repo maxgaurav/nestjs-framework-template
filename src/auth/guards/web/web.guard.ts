@@ -30,7 +30,12 @@ export class WebGuard extends AuthGuard('local') {
       auth?: { isAuth: boolean; userId: number | null };
     } = request.session || ({} as any);
 
-    const userId = this.getUserFromSession(session);
+    let userId: number | null | boolean;
+    try {
+      userId = this.getUserFromSession(session);
+    } catch (err) {
+      return throwError(err);
+    }
 
     return this.getUser(request, userId).pipe(
       map((user) => this.mapUserToRequest(request, user)),
