@@ -116,16 +116,16 @@
       "!helpers/filters/error-validation-format/**/*.(t|j)s",
       "!helpers/utils/check-env-file.(t|j)s",
       "!helpers/interceptors/context/**/*.(t|j)s",
-      "!helpers/decorators/transaction/**/*.(t|j)s",
       "!health/controllers/health/**/*.(t|j)s",
       "!common/services/transaction-provider/**/*.(t|j)s",
       "!services/logging/**/*.(t|j)s",
       "!services/url-config-service/**/*.(t|j)s",
       "!mail/services/mail-config/**/*.(t|j)s",
-      "!transaction-manager/decorators/transaction/**/*.(t|j)s",
+      "!mail/services/mail-config/**/*.(t|j)s",
       "!transaction-manager/services/transaction-provider/**/*.(t|j)s",
       "!view-engine/services/view-engine-config/**/*.(t|j)s",
-      "!session-manager/services/session-config/**/*.(t|j)s"
+      "!session-manager/services/session-config/**/*.(t|j)s",
+      "!**/decorators/**/*.(t|j)s"
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"

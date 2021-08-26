@@ -68,7 +68,7 @@ describe('WebGuard', () => {
   });
 
   it('should return unauthorized when auth is set to false', async () => {
-    const request = { session: { auth: { isAuth: false, userId: null } } };
+    const request = { session: { auth: { isAuth: false, userId: 12 } } };
     const context = {
       switchToHttp: () => ({
         getRequest: () => request,
@@ -88,7 +88,7 @@ describe('WebGuard', () => {
   });
 
   it('should return unauthorized when auth is set but user is forced set to null', async () => {
-    const request = { session: { auth: { isAuth: false, userId: null } } };
+    const request = { session: { auth: { isAuth: true, userId: null } } };
     const context = {
       switchToHttp: () => ({
         getRequest: () => request,
@@ -129,7 +129,7 @@ describe('WebGuard', () => {
     expect(request).toEqual(expect.objectContaining({ user }));
   });
 
-  it('should return true when user is found and request being mapped to user', async () => {
+  it('should return false when user is not found', async () => {
     const request = {
       session: { auth: { isAuth: true, userId: 1 } },
       user: undefined,
@@ -148,7 +148,7 @@ describe('WebGuard', () => {
       false,
     );
 
-    expect(findUserSpy).toHaveBeenCalledWith(request.session.auth.userId);
+    expect(findUserSpy).toHaveBeenCalledWith(1);
     expect(request.user).toEqual(undefined);
   });
 

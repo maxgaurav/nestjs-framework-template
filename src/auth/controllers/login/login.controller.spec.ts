@@ -174,12 +174,6 @@ describe('LoginController', () => {
         callback('shouldFail');
       });
 
-    // const failSpy = jest
-    //   .spyOn(request.session, 'save')
-    //   .mockReturnValue((callback: (err: string) => void) => {
-    //     callback('err');
-    //   });
-
     const redirectSpy = jest.spyOn(response, 'redirect');
     jest.spyOn(intendManager, 'getUrl').mockReturnValueOnce('/intendUrl');
 
