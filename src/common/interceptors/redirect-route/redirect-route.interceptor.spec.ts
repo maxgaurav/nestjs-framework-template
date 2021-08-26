@@ -6,7 +6,7 @@ describe('RedirectRouteInterceptor', () => {
   let interceptor: RedirectRouteInterceptor;
 
   beforeEach(() => {
-    interceptor = new RedirectRouteInterceptor<string, string>(
+    interceptor = new RedirectRouteInterceptor<string>(
       (data, content) => `${data}-${content}`,
     );
   });
@@ -31,6 +31,9 @@ describe('RedirectRouteInterceptor', () => {
     };
 
     const redirectSpy = jest.spyOn(response, 'redirect').mockImplementation();
+    const saveSessionSpy = jest
+      .spyOn(interceptor, 'saveSession')
+      .mockReturnValue(Promise.resolve(true));
 
     expect(
       await firstValueFrom(
@@ -42,5 +45,40 @@ describe('RedirectRouteInterceptor', () => {
     ).toEqual(true);
 
     expect(redirectSpy).toHaveBeenCalledWith('value-concat');
+    expect(saveSessionSpy).toHaveBeenCalledWith('concat');
+  });
+
+  it('should resolve promise when session is saved', async () => {
+    const request = { session: { save: (value) => value } };
+
+    const saveSpy = jest
+      .spyOn(request.session, 'save')
+      .mockImplementation((callback: () => void) => {
+        callback();
+      });
+
+    expect(await interceptor.saveSession(request as any)).toEqual(true);
+    expect(saveSpy).toHaveBeenCalled();
+  });
+
+  it('should reject promise with session save error', async () => {
+    const request = { session: { save: (value) => value } };
+
+    const saveSpy = jest
+      .spyOn(request.session, 'save')
+      .mockImplementation((callback: (err: string) => void) => {
+        callback('error');
+      });
+
+    let errorThrown = false;
+    try {
+      await interceptor.saveSession(request as any);
+    } catch (err) {
+      if (err === 'error') {
+        errorThrown = true;
+      }
+    }
+    expect(errorThrown).toEqual(true);
+    expect(saveSpy).toHaveBeenCalled();
   });
 });
