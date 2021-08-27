@@ -5,7 +5,7 @@ import {
   ValidationError,
   ValidationPipe,
 } from '@nestjs/common';
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test, TestingModule, TestingModuleBuilder } from '@nestjs/testing';
 import { AppModule } from '../src/app.module';
 import { Sequelize, Transaction } from 'sequelize';
 import { getConnectionToken } from '@nestjs/sequelize';
@@ -14,24 +14,55 @@ import { NotFoundConverterInterceptor } from '../src/helpers/interceptors/not-fo
 import { ContextInterceptor } from '../src/helpers/interceptors/context/context.interceptor';
 import { ErrorValidationFormatFilter } from '../src/helpers/filters/error-validation-format/error-validation-format.filter';
 import * as request from 'supertest';
-import { TransactionProviderService } from '../src/common/services/transaction-provider/transaction-provider.service';
 import { LoggingService } from '../src/services/logging/logging.service';
 import { join } from 'path';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { SessionConfigService } from '../src/session-manager/services/session-config/session-config.service';
+import { TransactionProviderService } from '../src/transaction-manager/services/transaction-provider/transaction-provider.service';
+import { RedirectFromLoginFilter } from '../src/session-manager/filters/redirect-to-login/redirect-to-login.filter';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import * as flash from 'connect-flash';
+import { SessionMapPreviousUrlInterceptor } from '../src/session-manager/interceptors/session-map-previous-url/session-map-previous-url-interceptor.service';
+import { SetupIntendInterceptor } from '../src/session-manager/interceptors/setup-intend/setup-intend.interceptor';
+import * as helmet from 'helmet';
+
+/**
+ * Hook for overriding the testing module
+ */
+export type TestingModuleCreatePreHook = (
+  moduleBuilder: TestingModuleBuilder,
+) => TestingModuleBuilder;
+
+/**
+ * Hook for adding items to nest application
+ */
+export type TestingAppCreatePreHook = (
+  app: NestExpressApplication,
+) => Promise<void>;
 
 /**
  * Sets basic e2e testing module of app
  */
-export async function basicE2eSetup(): Promise<
-  [NestExpressApplication, TestingModule]
-> {
-  const moduleFixture: TestingModule = await Test.createTestingModule({
+export async function basicE2eSetup(
+  config: {
+    moduleBuilderHook?: TestingModuleCreatePreHook;
+    appInitHook?: TestingAppCreatePreHook;
+  } = {},
+): Promise<[NestExpressApplication, TestingModule]> {
+  let moduleBuilder: TestingModuleBuilder = Test.createTestingModule({
     imports: [AppModule],
-  }).compile();
+  });
+
+  if (!!config.moduleBuilderHook) {
+    moduleBuilder = config.moduleBuilderHook(moduleBuilder);
+  }
+
+  const moduleFixture: TestingModule = await moduleBuilder.compile();
 
   const app = moduleFixture.createNestApplication<NestExpressApplication>();
   app.enableCors();
+  app.use(helmet());
 
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
@@ -47,8 +78,15 @@ export async function basicE2eSetup(): Promise<
       },
     }),
   );
+  app.useGlobalFilters(new ErrorValidationFormatFilter());
+  app.useGlobalFilters(app.get(RedirectFromLoginFilter));
+
+  app.use(await app.get<SessionConfigService>(SessionConfigService).session());
+  app.use(flash());
   app.useGlobalInterceptors(
     app.get(NotFoundConverterInterceptor),
+    app.get(SessionMapPreviousUrlInterceptor),
+    app.get(SetupIntendInterceptor),
     new ContextInterceptor(),
   );
 
@@ -61,6 +99,11 @@ export async function basicE2eSetup(): Promise<
   app.setViewEngine('hbs');
 
   app.useGlobalFilters(new ErrorValidationFormatFilter());
+
+  if (config.appInitHook) {
+    await config.appInitHook(app);
+  }
+
   return [await app.init(), moduleFixture];
 }
 
