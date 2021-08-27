@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { DatabaseHelperService } from '../../services/database-helper/database-helper.service';
-import { Command, Option, Positional } from 'nestjs-command';
+import { Command, Option } from 'nestjs-command';
 import { ConnectionNames } from '../../../databases/connection-names';
 import { join } from 'path';
 import { exec } from 'child_process';

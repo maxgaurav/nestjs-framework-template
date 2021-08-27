@@ -2,7 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { HashEncryptService } from './hash-encrypt.service';
 import { compare } from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
-import { createDecipheriv } from 'crypto';
 
 describe('HashEncryptService', () => {
   let service: HashEncryptService;

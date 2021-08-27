@@ -31,6 +31,9 @@ export class SessionConfigService {
       secret: sessionConfig.secret,
       name: sessionConfig.name,
       resave: sessionConfig.resave,
+      cookie: {
+        maxAge: Date.now() + 2 * 60 * 60 * 1000,
+      },
       saveUninitialized: sessionConfig.saveUninitialized,
     });
   }
