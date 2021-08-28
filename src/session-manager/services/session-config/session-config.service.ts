@@ -6,6 +6,7 @@ import { SessionConfig } from '../../../environment/interfaces/environment-types
 import { MemoryStore, Store } from 'express-session';
 import { FileStore } from '../../session-stores/file-store/file-store';
 import { join } from 'path';
+import { LoggingService } from '../../../services/logging/logging.service';
 
 @Injectable()
 export class SessionConfigService {
@@ -17,8 +18,11 @@ export class SessionConfigService {
 
     switch (sessionConfig.driver) {
       case 'file':
+        const logger = new LoggingService(this.configService);
         sessionStore = await new FileStore(session, {
           path: join(process.cwd(), 'storage', 'session'),
+          logFn: (...args) =>
+            args.forEach((arg) => logger.debug(arg, 'session-file-store')),
         }).store();
         break;
       case 'memory':

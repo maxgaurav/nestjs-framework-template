@@ -117,4 +117,27 @@ describe('IntendManagerService', () => {
     expect(service.getUrl(request)).toEqual(null);
     expect(getIntendSpy).toHaveBeenCalledWith(request);
   });
+
+  it('should call setup intend if get action fails for some reason', () => {
+    let isFailCalled = false;
+    const request = { flash: (value) => value };
+    const flashSpy = jest.spyOn(request, 'flash').mockImplementation(() => {
+      if (!isFailCalled) {
+        isFailCalled = true;
+        return ['should fail'];
+      }
+
+      return [JSON.stringify(service.getDefaultValue())];
+    });
+
+    const updateSpy = jest.spyOn(service, 'updateContent').mockImplementation();
+    const setupIntend = jest.spyOn(service, 'setupIntend').mockImplementation();
+
+    expect(service.getIntend(request as any)).toEqual(
+      service.getDefaultValue(),
+    );
+    expect(flashSpy).toHaveBeenCalledTimes(2);
+    expect(setupIntend).toHaveBeenCalled();
+    expect(updateSpy).toHaveBeenCalled();
+  });
 });

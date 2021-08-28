@@ -16,8 +16,6 @@ export class SetupIntendInterceptor implements NestInterceptor {
     return of(true)
       .pipe(
         map(() => {
-          console.log('starting intend setup');
-
           this.intendManager.setupIntend(
             context.switchToHttp().getRequest<Request>(),
           );

@@ -2,9 +2,14 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { DatabaseConfigService } from './database-config.service';
 import { ConfigService } from '@nestjs/config';
 import { ConnectionNames } from '../../connection-names';
+import { SequelizeModuleOptions } from '@nestjs/sequelize';
 
 describe('DatabaseConfigService', () => {
   let service: DatabaseConfigService;
+
+  const configService = {
+    get: (value: any) => ({ passes: value, debug: true }),
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -12,9 +17,7 @@ describe('DatabaseConfigService', () => {
         DatabaseConfigService,
         {
           provide: ConfigService,
-          useValue: {
-            get: (value: any) => ({ passes: value }),
-          },
+          useValue: configService,
         },
       ],
     }).compile();
@@ -40,5 +43,21 @@ describe('DatabaseConfigService', () => {
     );
 
     done();
+  });
+
+  it('should return correct config value and setup logger', (done) => {
+    const getSpy = jest
+      .spyOn(configService, 'get')
+      .mockReturnValue({ logging: true } as any);
+    const result = service.createSequelizeOptions() as SequelizeModuleOptions;
+    expect(typeof result.logging).toEqual('function');
+
+    expect(getSpy).toHaveBeenCalled();
+    done();
+  });
+
+  it('should trigger log action', () => {
+    const loggerFun = service.logger();
+    loggerFun('sql', 100);
   });
 });
