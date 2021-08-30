@@ -14,6 +14,8 @@ import { ConfigModule } from '@nestjs/config';
 import { AccessTokenService } from './strategies/access-token/access-token.service';
 import { RefreshTokenService } from './strategies/refresh-token/refresh-token/refresh-token.service';
 import { OauthController } from './controllers/oauth/oauth.controller';
+import { ClientRepoService } from './services/oauth/client-repo/client-repo.service';
+import { AccessTokenRepoService } from './services/oauth/access-token-repo/access-token-repo.service';
 
 @Global()
 @Module({
@@ -35,6 +37,8 @@ import { OauthController } from './controllers/oauth/oauth.controller';
     JwtTokenManagerService,
     AccessTokenService,
     RefreshTokenService,
+    ClientRepoService,
+    AccessTokenRepoService,
   ],
   controllers: [LoginController, OauthController],
   exports: [AuthService, HashEncryptService],
