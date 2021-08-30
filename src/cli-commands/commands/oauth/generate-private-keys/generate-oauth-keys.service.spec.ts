@@ -1,15 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { GenerateJwtKeysService } from './generate-jwt-keys.service';
+import { GenerateOauthKeysService } from './generate-oauth-keys.service';
 
 describe('GenerateJwtKeysService', () => {
-  let service: GenerateJwtKeysService;
+  let service: GenerateOauthKeysService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [GenerateJwtKeysService],
+      providers: [GenerateOauthKeysService],
     }).compile();
 
-    service = module.get<GenerateJwtKeysService>(GenerateJwtKeysService);
+    service = module.get<GenerateOauthKeysService>(GenerateOauthKeysService);
   });
 
   it('should be defined', () => {

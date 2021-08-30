@@ -10,10 +10,13 @@ import { ConfigService } from '@nestjs/config';
 import { DatabaseHelperService } from './services/database-helper/database-helper.service';
 import { DropDatabaseService } from './commands/drop-database/drop-database.service';
 import { CreateDatabaseService } from './commands/create-database/create-database.service';
-import { GenerateJwtKeysService } from './commands/generate-jwt-keys/generate-jwt-keys.service';
+import { GenerateOauthKeysService } from './commands/oauth/generate-private-keys/generate-oauth-keys.service';
+import { GenerateClientService } from './commands/oauth/generate-client/generate-client.service';
+import { ClientRepoService } from '../auth/services/oauth/client-repo/client-repo.service';
+import { ModelBootstrapModule } from '../databases/model-bootstrap/model-bootstrap.module';
 
 @Module({
-  imports: [CommandModule, EnvironmentModule],
+  imports: [CommandModule, EnvironmentModule, ModelBootstrapModule.register()],
   providers: [
     RouteListService,
     Logger,
@@ -25,7 +28,9 @@ import { GenerateJwtKeysService } from './commands/generate-jwt-keys/generate-jw
     DatabaseHelperService,
     DropDatabaseService,
     CreateDatabaseService,
-    GenerateJwtKeysService,
+    GenerateOauthKeysService,
+    GenerateClientService,
+    ClientRepoService,
   ],
 })
 export class CliCommandsModule {}

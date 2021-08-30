@@ -1,16 +1,15 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Command } from 'nestjs-command';
 import { generateKeyPair } from 'crypto';
-import { promises as fsPormises } from 'fs';
+import { promises as fsPromises } from 'fs';
 import { join } from 'path';
-import { promisify } from 'util';
 
 @Injectable()
-export class GenerateJwtKeysService {
+export class GenerateOauthKeysService {
   constructor(private log: Logger) {}
 
   @Command({
-    command: 'jwt:generate-keys',
+    command: 'oauth:generate-keys',
     describe: 'Generates private and public keys for jwt',
     autoExit: true,
   })
@@ -59,7 +58,7 @@ export class GenerateJwtKeysService {
     this.log.debug(privateKey, 'CliCommandModule');
     this.log.debug('Starting to write private key in file', 'CliCommandModule');
     const filePath = this.filePath('private-key.pem');
-    await fsPormises.writeFile(filePath, Buffer.from(privateKey));
+    await fsPromises.writeFile(filePath, Buffer.from(privateKey));
     this.log.debug(`Private key saved to file ${filePath}`, 'CliCommandModule');
     return true;
   }
@@ -73,7 +72,7 @@ export class GenerateJwtKeysService {
     this.log.debug(publicKey, 'CliCommandModule');
     this.log.debug('Starting to write public key in file', 'CliCommandModule');
     const filePath = this.filePath('public-key.pem');
-    await fsPormises.writeFile(filePath, Buffer.from(publicKey));
+    await fsPromises.writeFile(filePath, Buffer.from(publicKey));
     this.log.debug(`Public key saved to file ${filePath}`, 'CliCommandModule');
     return true;
   }
