@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { RandomByteGeneratorService } from './random-byte-generator.service';
+import * as crypto from 'crypto';
 
 describe('RandomByteGeneratorService', () => {
   let service: RandomByteGeneratorService;
@@ -9,10 +10,23 @@ describe('RandomByteGeneratorService', () => {
       providers: [RandomByteGeneratorService],
     }).compile();
 
-    service = module.get<RandomByteGeneratorService>(RandomByteGeneratorService);
+    service = module.get<RandomByteGeneratorService>(
+      RandomByteGeneratorService,
+    );
   });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
+  });
+
+  it('should generate random byte', () => {
+    const stringContent = 'sample';
+
+    const randomSpy = jest
+      .spyOn(crypto, 'randomBytes')
+      .mockReturnValue(Buffer.from(stringContent) as any);
+    const result = service.generateRandomByte(50);
+    expect(result.toString()).toEqual(stringContent);
+    expect(randomSpy).toHaveBeenCalledWith(50);
   });
 });
