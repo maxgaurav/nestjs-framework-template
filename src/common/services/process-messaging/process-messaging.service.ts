@@ -31,6 +31,7 @@ export class ProcessMessagingService implements OnApplicationBootstrap {
   public async onApplicationBootstrap(): Promise<void> {
     this.logger.log(
       `Starting to listen process messages for process with pid ${process.pid}`,
+      'CommonModule',
     );
     process.on('message', (event: any | InterProcessCommunication) => {
       this.logger.debug(event, 'Message received on process');

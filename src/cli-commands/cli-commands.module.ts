@@ -10,6 +10,7 @@ import { ConfigService } from '@nestjs/config';
 import { DatabaseHelperService } from './services/database-helper/database-helper.service';
 import { DropDatabaseService } from './commands/drop-database/drop-database.service';
 import { CreateDatabaseService } from './commands/create-database/create-database.service';
+import { GenerateJwtKeysService } from './commands/generate-jwt-keys/generate-jwt-keys.service';
 
 @Module({
   imports: [CommandModule, EnvironmentModule],
@@ -24,6 +25,7 @@ import { CreateDatabaseService } from './commands/create-database/create-databas
     DatabaseHelperService,
     DropDatabaseService,
     CreateDatabaseService,
+    GenerateJwtKeysService,
   ],
 })
 export class CliCommandsModule {}

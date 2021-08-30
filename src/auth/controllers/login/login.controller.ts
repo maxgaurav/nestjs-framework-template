@@ -4,8 +4,9 @@ import { UserModel } from '../../../databases/models/user.model';
 import { LoginWebGuard } from '../../guards/login-web/login-web.guard';
 import { AuthService } from '../../services/auth/auth.service';
 import { IntendManagerService } from '../../../session-manager/services/intend-manager/intend-manager.service';
+import { LoginAccessTokenGuard } from '../../guards/login-access-token/login-access-token.guard';
 
-@Controller('auth/login')
+@Controller('auth')
 export class LoginController {
   /**
    * Default redirect url
@@ -19,7 +20,7 @@ export class LoginController {
   ) {}
 
   @UseGuards(LoginWebGuard)
-  @Post()
+  @Post('login')
   public async login(@Req() request: Request, @Res() response: Response) {
     await this.authService.mapSessionWithUser(
       request.session as any,
@@ -53,4 +54,8 @@ export class LoginController {
 
     return this.defaultRedirectUrl;
   }
+
+  @UseGuards(LoginAccessTokenGuard)
+  @Post('test')
+  public async loginToken(): Promise<any> {}
 }

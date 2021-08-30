@@ -3,12 +3,14 @@ import { UserRepoService } from '../../../user/services/user-repo/user-repo.serv
 import { UserModel } from '../../../databases/models/user.model';
 import { HashEncryptService } from '../hash-encrypt/hash-encrypt.service';
 import { Session } from 'express-session';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
   constructor(
     private userRepo: UserRepoService,
     private hashEncryptService: HashEncryptService,
+    private jwtService: JwtService, // @todo needs to be encapsulated
   ) {}
 
   /**
@@ -20,16 +22,17 @@ export class AuthService {
     email: string,
     password: string,
   ): Promise<UserModel | null> {
-    const user = await this.userRepo.findByEmail(email);
-    if (!user) {
-      return null;
-    }
-
-    if (!(await this.hashEncryptService.checkHash(password, user.password))) {
-      return null;
-    }
-
-    return user;
+    return { id: 1 } as any;
+    // const user = await this.userRepo.findByEmail(email);
+    // if (!user) {
+    //   return null;
+    // }
+    //
+    // if (!(await this.hashEncryptService.checkHash(password, user.password))) {
+    //   return null;
+    // }
+    //
+    // return user;
   }
 
   /**
@@ -64,5 +67,18 @@ export class AuthService {
         res(true);
       });
     });
+  }
+
+  public async findUserByToken(token: any): Promise<UserModel | null> {
+    return null;
+  }
+
+  /**
+   * Return's access token
+   * @param user
+   */
+  public async getAccessToken(user: UserModel): Promise<any> {
+    console.log(user);
+    return this.jwtService.signAsync('', {});
   }
 }
