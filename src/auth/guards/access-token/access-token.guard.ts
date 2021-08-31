@@ -8,23 +8,17 @@ import {
 import { from, Observable } from 'rxjs';
 import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
-import { JwtService } from '@nestjs/jwt';
 import { map } from 'rxjs/operators';
 import { AuthService } from '../../services/auth/auth.service';
 import { IncomingHttpHeaders } from 'http2';
 
 @Injectable()
 export class AccessTokenGuard extends AuthGuard() implements CanActivate {
-  constructor(
-    private readonly jwtService: JwtService,
-    private authService: AuthService,
-  ) {
+  constructor(private readonly authService: AuthService) {
     super();
   }
 
-  canActivate(
-    context: ExecutionContext,
-  ): boolean | Promise<boolean> | Observable<boolean> {
+  canActivate(context: ExecutionContext): Observable<boolean> {
     const request = context.switchToHttp().getRequest<Request>();
 
     return from(

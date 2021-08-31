@@ -4,12 +4,21 @@ import { UserRepoService } from '../../../user/services/user-repo/user-repo.serv
 import { HashEncryptService } from '../hash-encrypt/hash-encrypt.service';
 import { UserModel } from '../../../databases/models/user.model';
 import { ConfigService } from '@nestjs/config';
+import { AccessTokenRepoService } from '../oauth/access-token-repo/access-token-repo.service';
+import { JwtService } from '@nestjs/jwt';
+import { AccessTokenModel } from '../../../databases/models/oauth/access-token.model';
 
 describe('AuthService', () => {
   let service: AuthService;
   let hashService: HashEncryptService;
 
   const configService: ConfigService = {} as any;
+  const accessTokenRepo: AccessTokenRepoService = {
+    findForActiveState: (value) => value,
+  } as any;
+  const jwtService: JwtService = {
+    decode: (value) => value,
+  } as any;
 
   const userRepo: UserRepoService = {
     findByEmail: (value) => value,
@@ -27,6 +36,14 @@ describe('AuthService', () => {
         {
           provide: ConfigService,
           useValue: configService,
+        },
+        {
+          provide: AccessTokenRepoService,
+          useValue: accessTokenRepo,
+        },
+        {
+          provide: JwtService,
+          useValue: jwtService,
         },
         HashEncryptService,
       ],
@@ -144,5 +161,71 @@ describe('AuthService', () => {
     }
     expect(saveSpy).toHaveBeenCalled();
     expect(errorThrown).toEqual(true);
+  });
+
+  it('should return user when searching for user by token', async () => {
+    const decodeSpy = jest
+      .spyOn(jwtService, 'decode')
+      .mockReturnValue('decoded');
+    const token: AccessTokenModel = { id: 'id', user_id: 1 } as any;
+    const user: UserModel = { id: 1 } as any;
+    const findActiveToken = jest
+      .spyOn(accessTokenRepo, 'findForActiveState')
+      .mockReturnValue(Promise.resolve(token));
+
+    const loggedInUserSpy = jest
+      .spyOn(service, 'getLoggedInUser')
+      .mockReturnValue(Promise.resolve(user));
+
+    expect(await service.findUserByToken('token')).toEqual(user);
+    expect(decodeSpy).toHaveBeenCalledWith('token');
+    expect(findActiveToken).toHaveBeenCalledWith('decoded');
+    expect(loggedInUserSpy).toHaveBeenCalledWith(token.user_id);
+  });
+
+  it('should return null when access token is not found when searching for user by token', async () => {
+    const decodeSpy = jest
+      .spyOn(jwtService, 'decode')
+      .mockReturnValue('decoded');
+    const findActiveToken = jest
+      .spyOn(accessTokenRepo, 'findForActiveState')
+      .mockReturnValue(Promise.resolve(null));
+
+    expect(await service.findUserByToken('token')).toEqual(null);
+    expect(decodeSpy).toHaveBeenCalledWith('token');
+    expect(findActiveToken).toHaveBeenCalledWith('decoded');
+  });
+
+  it('should return null when searching for user by token returns no result for user', async () => {
+    const decodeSpy = jest
+      .spyOn(jwtService, 'decode')
+      .mockReturnValue('decoded');
+    const token: AccessTokenModel = { id: 'id', user_id: 1 } as any;
+    const findActiveToken = jest
+      .spyOn(accessTokenRepo, 'findForActiveState')
+      .mockReturnValue(Promise.resolve(token));
+
+    const loggedInUserSpy = jest
+      .spyOn(service, 'getLoggedInUser')
+      .mockReturnValue(Promise.resolve(null));
+
+    expect(await service.findUserByToken('token')).toEqual(null);
+    expect(decodeSpy).toHaveBeenCalledWith('token');
+    expect(findActiveToken).toHaveBeenCalledWith('decoded');
+    expect(loggedInUserSpy).toHaveBeenCalledWith(token.user_id);
+  });
+
+  it('should return null when access token is not mapped to user', async () => {
+    const decodeSpy = jest
+      .spyOn(jwtService, 'decode')
+      .mockReturnValue('decoded');
+    const token: AccessTokenModel = { id: 'id', user_id: null } as any;
+    const findActiveToken = jest
+      .spyOn(accessTokenRepo, 'findForActiveState')
+      .mockReturnValue(Promise.resolve(token));
+
+    expect(await service.findUserByToken('token')).toEqual(null);
+    expect(decodeSpy).toHaveBeenCalledWith('token');
+    expect(findActiveToken).toHaveBeenCalledWith('decoded');
   });
 });

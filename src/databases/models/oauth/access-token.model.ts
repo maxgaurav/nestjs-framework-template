@@ -1,8 +1,6 @@
 import {
   BelongsTo,
   Column,
-  DataType,
-  Default,
   ForeignKey,
   PrimaryKey,
   Table,
@@ -30,4 +28,7 @@ export class AccessTokenModel extends DatesMapping<AccessTokenModel> {
 
   @BelongsTo(() => ClientModel)
   public client: ClientModel | null;
+
+  @BelongsTo(() => UserModel)
+  public user: UserModel | null;
 }

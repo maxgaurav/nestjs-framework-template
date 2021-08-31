@@ -24,7 +24,7 @@ export class GenerateClientService {
   ) {
     this.logger.debug('Generating client', 'CliCommandModule');
     this.logger.debug(`Name provided: ${name}, 'CliCommandModule`);
-    const client = await this.clientRepo.generateClient(name);
+    const client = await this.clientRepo.create(name);
     this.logger.log(
       { clientId: client.id, clientSecret: client.secret },
       'Client',

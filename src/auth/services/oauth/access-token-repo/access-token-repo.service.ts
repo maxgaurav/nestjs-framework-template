@@ -6,7 +6,6 @@ import { ClientModel } from '../../../../databases/models/oauth/client.model';
 import { Op, Transaction } from 'sequelize';
 import { UserModel } from '../../../../databases/models/user.model';
 import { JwtService } from '@nestjs/jwt';
-import { JwtTokenManagerService } from '../../jwt-token-manager/jwt-token-manager.service';
 
 @Injectable()
 export class AccessTokenRepoService {
@@ -14,7 +13,6 @@ export class AccessTokenRepoService {
     @InjectModel(AccessTokenModel) public accessToken: typeof AccessTokenModel,
     private randomByteGenerate: RandomByteGeneratorService,
     private jwtService: JwtService,
-    private jwtTokenManager: JwtTokenManagerService,
   ) {}
 
   /**
@@ -77,13 +75,13 @@ export class AccessTokenRepoService {
    * Generates new access token record
    * @param client
    * @param user
-   * @param expiresIn
+   * @param expiresAt
    * @param transaction
    */
   public create(
     client: ClientModel,
     user: UserModel | null,
-    expiresIn: Date | null = null,
+    expiresAt: Date | null = null,
     transaction?: Transaction,
   ): Promise<AccessTokenModel> {
     return this.accessToken
@@ -91,7 +89,7 @@ export class AccessTokenRepoService {
       .setAttributes({
         client_id: client.id,
         user_id: !!user ? user.id : null,
-        expires_at: expiresIn,
+        expires_at: expiresAt,
         id: this.randomByteGenerate.generateRandomByte(40).toString('hex'),
       })
       .save({ transaction });
@@ -104,9 +102,8 @@ export class AccessTokenRepoService {
   public async createBearerToken(
     accessToken: AccessTokenModel,
   ): Promise<string> {
-    return this.jwtService.sign(accessToken.id, {
+    return this.jwtService.signAsync(accessToken.id, {
       algorithm: 'HS256',
-      privateKey: await this.jwtTokenManager.privateKey(),
     });
   }
 }

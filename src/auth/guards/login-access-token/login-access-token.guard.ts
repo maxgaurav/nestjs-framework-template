@@ -7,19 +7,20 @@ import {
   ValidationError,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { Observable } from 'rxjs';
 
 @Injectable()
 export class LoginAccessTokenGuard
   extends AuthGuard('accessToken')
   implements CanActivate
 {
-  public canActivate(
-    context: ExecutionContext,
-  ): boolean | Promise<boolean> | Observable<boolean> {
-    return super.canActivate(context);
-  }
-
+  /**
+   * Handle main request
+   * @param err
+   * @param user
+   * @param info
+   * @param context
+   * @param status
+   */
   public handleRequest(
     err: any,
     user: any,
