@@ -5,10 +5,7 @@ import {
   PrimaryKey,
   Table,
   Default,
-  CreatedAt,
-  UpdatedAt,
 } from 'sequelize-typescript';
-import { ApiModelProperty } from '@nestjs/swagger/dist/decorators/api-model-property.decorator';
 import { DatesMapping } from '../dates-mapping';
 
 @Table({ tableName: 'oauth_clients' })

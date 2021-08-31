@@ -12,6 +12,18 @@ export class ClientRepoService {
   ) {}
 
   /**
+   * Finds client by id or fails
+   * @param id
+   * @param transaction
+   */
+  public findOrFail(
+    id: string,
+    transaction?: Transaction,
+  ): Promise<ClientModel> {
+    return this.clientModel.findByPk(id, { transaction, rejectOnEmpty: true });
+  }
+
+  /**
    * Generates new oauth client
    * @param name
    * @param transaction

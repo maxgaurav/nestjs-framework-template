@@ -9,4 +9,10 @@ export class UserModel extends BaseModel<UserModel> {
 
   @Column
   public password: string | null;
+
+  public toJSON(): any {
+    const content = super.toJSON() as Record<keyof UserModel, any>;
+    delete content.password;
+    return content;
+  }
 }

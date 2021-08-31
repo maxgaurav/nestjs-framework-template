@@ -10,11 +10,8 @@ export class JwtTokenManagerService implements JwtOptionsFactory {
 
   async createJwtOptions(): Promise<JwtModuleOptions> {
     return {
-      publicKey: await fsPromises.readFile(this.keyPath('public-key.pem')),
-      privateKey: await fsPromises.readFile(this.keyPath('private-key.pem')),
-      signOptions: {
-        expiresIn: '30 days',
-      },
+      publicKey: await this.publicKey(),
+      privateKey: await this.privateKey(),
     };
   }
 
@@ -22,7 +19,15 @@ export class JwtTokenManagerService implements JwtOptionsFactory {
    * Returns key path for the file
    * @param fileName
    */
-  public keyPath(fileName: string): string {
+  protected keyPath(fileName: string): string {
     return join(process.cwd(), 'storage', fileName);
+  }
+
+  public async publicKey(): Promise<Buffer> {
+    return fsPromises.readFile(this.keyPath('public-key.pem'));
+  }
+
+  public async privateKey(): Promise<Buffer> {
+    return fsPromises.readFile(this.keyPath('private-key.pem'));
   }
 }

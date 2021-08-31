@@ -19,7 +19,7 @@ export class GenerateOauthKeysService {
       generateKeyPair(
         'rsa',
         {
-          modulusLength: 4096,
+          modulusLength: 2048,
           publicKeyEncoding: {
             type: 'spki',
             format: 'pem',
