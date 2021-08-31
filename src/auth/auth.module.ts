@@ -10,7 +10,6 @@ import { LoginWebGuard } from './guards/login-web/login-web.guard';
 import { IntendManagerService } from '../session-manager/services/intend-manager/intend-manager.service';
 import { JwtTokenManagerService } from './services/jwt-token-manager/jwt-token-manager.service';
 import { JwtModule } from '@nestjs/jwt';
-import { ConfigModule } from '@nestjs/config';
 import { AccessTokenService } from './strategies/access-token/access-token.service';
 import { RefreshTokenService } from './strategies/refresh-token/refresh-token/refresh-token.service';
 import { OauthController } from './controllers/oauth/oauth.controller';

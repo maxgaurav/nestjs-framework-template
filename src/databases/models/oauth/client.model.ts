@@ -1,7 +1,6 @@
 import {
   Column,
   DataType,
-  Model,
   PrimaryKey,
   Table,
   Default,
