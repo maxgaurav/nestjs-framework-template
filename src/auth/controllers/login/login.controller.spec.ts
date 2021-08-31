@@ -4,6 +4,8 @@ import { AuthService } from '../../services/auth/auth.service';
 import { HashEncryptService } from '../../services/hash-encrypt/hash-encrypt.service';
 import { UserRepoService } from '../../../user/services/user-repo/user-repo.service';
 import { IntendManagerService } from '../../../session-manager/services/intend-manager/intend-manager.service';
+import { AccessTokenRepoService } from '../../services/oauth/access-token-repo/access-token-repo.service';
+import { JwtService } from '@nestjs/jwt';
 
 describe('LoginController', () => {
   let controller: LoginController;
@@ -27,6 +29,14 @@ describe('LoginController', () => {
         {
           provide: IntendManagerService,
           useValue: intendManager,
+        },
+        {
+          provide: AccessTokenRepoService,
+          useValue: {},
+        },
+        {
+          provide: JwtService,
+          useValue: {},
         },
       ],
     }).compile();

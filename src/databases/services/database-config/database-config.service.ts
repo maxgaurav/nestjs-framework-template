@@ -9,6 +9,7 @@ import { UserModel } from '../../models/user.model';
 import { LoggingService } from '../../../services/logging/logging.service';
 import { ClientModel } from '../../models/oauth/client.model';
 import { AccessTokenModel } from '../../models/oauth/access-token.model';
+import { RefreshTokenModel } from '../../models/oauth/refresh-token.model';
 
 @Injectable()
 export class DatabaseConfigService implements SequelizeOptionsFactory {
@@ -28,7 +29,12 @@ export class DatabaseConfigService implements SequelizeOptionsFactory {
 
     // @todo find way to auto detect models
     // add all the model classes here
-    config.models = [UserModel, ClientModel, AccessTokenModel];
+    config.models = [
+      UserModel,
+      ClientModel,
+      AccessTokenModel,
+      RefreshTokenModel,
+    ];
 
     return config;
   }

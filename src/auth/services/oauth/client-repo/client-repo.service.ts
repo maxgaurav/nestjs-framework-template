@@ -28,7 +28,7 @@ export class ClientRepoService {
    * @param name
    * @param transaction
    */
-  public async generateClient(
+  public async create(
     name: string,
     transaction?: Transaction,
   ): Promise<ClientModel> {
@@ -36,7 +36,7 @@ export class ClientRepoService {
       .build()
       .setAttributes({
         name,
-        secret: this.randomByeGenerator.generateRandomByte().toString('hex'),
+        secret: this.randomByeGenerator.generateRandomByte(40).toString('hex'),
       })
       .save({ transaction });
   }

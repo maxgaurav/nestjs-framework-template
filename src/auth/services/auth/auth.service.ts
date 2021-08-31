@@ -70,9 +70,20 @@ export class AuthService {
     });
   }
 
+  /**
+   * Finds user by token
+   * @param bearerToken
+   */
   public async findUserByToken(bearerToken: string): Promise<UserModel | null> {
+    let decodedId;
+    try {
+      decodedId = this.jwtService.decode(bearerToken) as string;
+    } catch (err) {
+      // @Todo
+    }
+
     const accessToken = await this.accessTokenRepo.findForActiveState(
-      this.jwtService.decode(bearerToken) as string,
+      decodedId,
     );
     if (accessToken === null) {
       return null;

@@ -8,6 +8,6 @@ export const ReqTransaction = createParamDecorator(
       return req.scopeTransaction;
     }
 
-    throw new Error('Transaction not mapped through interceptor');
+    return null;
   },
 );

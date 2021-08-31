@@ -16,6 +16,7 @@ import { RefreshTokenService } from './strategies/refresh-token/refresh-token/re
 import { OauthController } from './controllers/oauth/oauth.controller';
 import { ClientRepoService } from './services/oauth/client-repo/client-repo.service';
 import { AccessTokenRepoService } from './services/oauth/access-token-repo/access-token-repo.service';
+import { RefreshTokenRepoService } from './services/oauth/refresh-token-repo/refresh-token-repo.service';
 
 @Global()
 @Module({
@@ -23,7 +24,6 @@ import { AccessTokenRepoService } from './services/oauth/access-token-repo/acces
     ModelBootstrapModule.register(),
     JwtModule.registerAsync({
       useClass: JwtTokenManagerService,
-      inject: [ConfigModule],
     }),
   ],
   providers: [
@@ -39,6 +39,7 @@ import { AccessTokenRepoService } from './services/oauth/access-token-repo/acces
     RefreshTokenService,
     ClientRepoService,
     AccessTokenRepoService,
+    RefreshTokenRepoService,
   ],
   controllers: [LoginController, OauthController],
   exports: [AuthService, HashEncryptService],

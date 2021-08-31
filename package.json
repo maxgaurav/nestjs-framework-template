@@ -110,6 +110,7 @@
       "**/*.(t|j)s",
       "!**/*.module.(t|j)s",
       "!databases/migrations/*.(t|j)s",
+      "!databases/models/**/*.(t|j)s",
       "!databases/config.(t|j)s",
       "!documentation-helper/**/*.(t|j)s",
       "!environment/configs/*.(t|j)s",

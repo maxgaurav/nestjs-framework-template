@@ -4,7 +4,6 @@ import { UserModel } from '../../../databases/models/user.model';
 import { LoginWebGuard } from '../../guards/login-web/login-web.guard';
 import { AuthService } from '../../services/auth/auth.service';
 import { IntendManagerService } from '../../../session-manager/services/intend-manager/intend-manager.service';
-import { LoginAccessTokenGuard } from '../../guards/login-access-token/login-access-token.guard';
 
 @Controller('auth')
 export class LoginController {
@@ -54,8 +53,4 @@ export class LoginController {
 
     return this.defaultRedirectUrl;
   }
-
-  @UseGuards(LoginAccessTokenGuard)
-  @Post('test')
-  public async loginToken(): Promise<any> {}
 }

@@ -11,6 +11,8 @@ import { Request } from 'express';
 import { AccessTokenDto } from '../../dtos/access-token/access-token.dto';
 import { validateOrReject } from 'class-validator';
 import { ClientRepoService } from '../../services/oauth/client-repo/client-repo.service';
+import { UserModel } from '../../../databases/models/user.model';
+import { ClientModel } from '../../../databases/models/oauth/client.model';
 
 @Injectable()
 export class AccessTokenService extends PassportStrategy(
@@ -19,24 +21,24 @@ export class AccessTokenService extends PassportStrategy(
 ) {
   constructor(
     private readonly authService: AuthService,
-    private clientRepo: ClientRepoService,
+    private readonly clientRepo: ClientRepoService,
   ) {
     super();
   }
 
-  public async validate(content: Request): Promise<any> {
+  /**
+   * Main validation action
+   * @param request
+   */
+  public async validate(
+    request: Request,
+  ): Promise<{ user: UserModel; client: ClientModel }> {
     // aborting with 404 as accept content is not correct
-    if (content.headers.accept !== 'application/json') {
+    if (request.headers.accept.toLowerCase() !== 'application/json') {
       throw new NotFoundException();
     }
 
-    const payload = new AccessTokenDto(content.body);
-    try {
-      await validateOrReject(payload);
-    } catch (err) {
-      throw new UnprocessableEntityException(err);
-    }
-
+    const payload = await this.validateContent(request.body, AccessTokenDto);
     const user = await this.authService.validateForPassword(
       payload.email,
       payload.password,
@@ -50,5 +52,26 @@ export class AccessTokenService extends PassportStrategy(
       user,
       client: await this.clientRepo.findOrFail(payload.client_id),
     };
+  }
+
+  /**
+   * Validate content of body and return dto object
+   * @param body
+   * @param dtoInstance
+   */
+  public async validateContent(
+    body: {
+      [key: string]: any;
+    },
+    dtoInstance: { new (content: any): AccessTokenDto },
+  ): Promise<AccessTokenDto> {
+    const payload = new dtoInstance(body);
+    try {
+      await validateOrReject(payload);
+    } catch (err) {
+      throw new UnprocessableEntityException(err);
+    }
+
+    return payload;
   }
 }
