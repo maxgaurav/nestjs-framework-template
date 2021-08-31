@@ -38,9 +38,12 @@ export class LoginAccessTokenGuard
         },
       ];
 
-      // @todo handle invalid client error
       if (err instanceof UnauthorizedException) {
         throw new UnprocessableEntityException(errors);
+      }
+
+      if (err instanceof UnprocessableEntityException) {
+        throw err;
       }
     }
     return super.handleRequest(err, user, info, context, status);

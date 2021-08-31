@@ -2,18 +2,25 @@ import {
   Injectable,
   NotFoundException,
   UnauthorizedException,
+  UnprocessableEntityException,
 } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { AuthService } from '../../services/auth/auth.service';
 import { Strategy } from 'passport-custom';
 import { Request } from 'express';
+import { AccessTokenDto } from '../../dtos/access-token/access-token.dto';
+import { validateOrReject } from 'class-validator';
+import { ClientRepoService } from '../../services/oauth/client-repo/client-repo.service';
 
 @Injectable()
 export class AccessTokenService extends PassportStrategy(
   Strategy,
   'accessToken',
 ) {
-  constructor(private readonly authService: AuthService) {
+  constructor(
+    private readonly authService: AuthService,
+    private clientRepo: ClientRepoService,
+  ) {
     super();
   }
 
@@ -23,21 +30,25 @@ export class AccessTokenService extends PassportStrategy(
       throw new NotFoundException();
     }
 
-    // @Todo add dto for basic requirement
-    const payload = content.body;
+    const payload = new AccessTokenDto(content.body);
+    try {
+      await validateOrReject(payload);
+    } catch (err) {
+      throw new UnprocessableEntityException(err);
+    }
 
-    // @todo add check for client ids
-
-    const user = this.authService.validateForPassword(
-      'payload.email',
-      'payload.password',
+    const user = await this.authService.validateForPassword(
+      payload.email,
+      payload.password,
     );
 
     if (!user) {
       throw new UnauthorizedException();
     }
 
-    // @Todo attach client
-    return { user, client: 'any' };
+    return {
+      user,
+      client: await this.clientRepo.findOrFail(payload.client_id),
+    };
   }
 }

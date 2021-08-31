@@ -4,13 +4,15 @@ import { UserModel } from '../../../databases/models/user.model';
 import { HashEncryptService } from '../hash-encrypt/hash-encrypt.service';
 import { Session } from 'express-session';
 import { JwtService } from '@nestjs/jwt';
+import { AccessTokenRepoService } from '../oauth/access-token-repo/access-token-repo.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private userRepo: UserRepoService,
     private hashEncryptService: HashEncryptService,
-    private jwtService: JwtService, // @todo needs to be encapsulated
+    private accessTokenRepo: AccessTokenRepoService,
+    private jwtService: JwtService,
   ) {}
 
   /**
@@ -22,17 +24,16 @@ export class AuthService {
     email: string,
     password: string,
   ): Promise<UserModel | null> {
-    return { id: 1 } as any;
-    // const user = await this.userRepo.findByEmail(email);
-    // if (!user) {
-    //   return null;
-    // }
-    //
-    // if (!(await this.hashEncryptService.checkHash(password, user.password))) {
-    //   return null;
-    // }
-    //
-    // return user;
+    const user = await this.userRepo.findByEmail(email);
+    if (!user) {
+      return null;
+    }
+
+    if (!(await this.hashEncryptService.checkHash(password, user.password))) {
+      return null;
+    }
+
+    return user;
   }
 
   /**
@@ -69,16 +70,18 @@ export class AuthService {
     });
   }
 
-  public async findUserByToken(token: any): Promise<UserModel | null> {
-    return null;
-  }
+  public async findUserByToken(bearerToken: string): Promise<UserModel | null> {
+    const accessToken = await this.accessTokenRepo.findForActiveState(
+      this.jwtService.decode(bearerToken) as string,
+    );
+    if (accessToken === null) {
+      return null;
+    }
 
-  /**
-   * Return's access token
-   * @param user
-   */
-  public async getAccessToken(user: UserModel): Promise<any> {
-    console.log(user);
-    return this.jwtService.signAsync('', {});
+    if (accessToken.user_id === null) {
+      return null;
+    }
+
+    return this.getLoggedInUser(accessToken.user_id);
   }
 }
