@@ -5,8 +5,9 @@ import { join } from 'path';
 
 @Injectable()
 export class JwtTokenManagerService implements JwtOptionsFactory {
-  constructor() {}
-
+  /**
+   * Create jwt root sync settings for JwtModule
+   */
   async createJwtOptions(): Promise<JwtModuleOptions> {
     return {
       publicKey: await this.publicKey(),

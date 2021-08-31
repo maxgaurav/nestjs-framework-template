@@ -2,7 +2,7 @@ import { AccessTokenGuard } from './access-token.guard';
 import { AuthService } from '../../services/auth/auth.service';
 import { NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { UserModel } from '../../../databases/models/user.model';
-import { firstValueFrom, Observable } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 
 describe('AccessTokenGuard', () => {
   let guard: AccessTokenGuard;
