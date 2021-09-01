@@ -25,8 +25,13 @@ export class LoginWebGuard extends AuthGuard('local') {
           children: [],
         },
       ];
-      if (err instanceof UnauthorizedException || !user) {
+      if (err instanceof UnauthorizedException) {
         throw new UnprocessableEntityException(errors);
+      }
+
+      /* istanbul ignore else */
+      if (err instanceof UnprocessableEntityException) {
+        throw err;
       }
     }
     return super.handleRequest(err, user, info, context, status);

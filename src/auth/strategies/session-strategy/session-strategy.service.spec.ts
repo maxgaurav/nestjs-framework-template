@@ -2,7 +2,11 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { SessionStrategyService } from './session-strategy.service';
 import { AuthService } from '../../services/auth/auth.service';
 import { UserModel } from '../../../databases/models/user.model';
-import { UnauthorizedException } from '@nestjs/common';
+import {
+  UnauthorizedException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
+import { LoginPasswordDto } from '../../dtos/login-password/login-password.dto';
 
 describe('LocalStrategyService', () => {
   let service: SessionStrategyService;
@@ -36,21 +40,39 @@ describe('LocalStrategyService', () => {
       password: 'password',
     } as any;
 
+    const dto = new LoginPasswordDto({
+      email: user.email,
+      password: user.password,
+    });
+
+    const validateContentSpy = jest
+      .spyOn(service, 'validateContent')
+      .mockReturnValue(Promise.resolve(dto));
+
     const validateSpy = jest
       .spyOn(authService, 'validateForPassword')
       .mockReturnValueOnce(Promise.resolve(user));
 
     expect(await service.validate(user.email, user.password)).toEqual(user);
-    expect(validateSpy).toHaveBeenCalledWith(user.email, user.password);
+    expect(validateSpy).toHaveBeenCalledWith(dto.email, dto.password);
+    expect(validateContentSpy).toHaveBeenCalledWith(dto.email, dto.password);
   });
 
   it('should throw unauthorized exception when user is not found', async () => {
+    const dto = new LoginPasswordDto({
+      email: 'email@email.com',
+      password: 'password',
+    });
+    const validateContentSpy = jest
+      .spyOn(service, 'validateContent')
+      .mockReturnValue(Promise.resolve(dto));
+
     let errorThrown = false;
     const validateSpy = jest
       .spyOn(authService, 'validateForPassword')
       .mockReturnValueOnce(Promise.resolve(null));
     try {
-      await service.validate('email@email.com', 'password');
+      await service.validate(dto.email, dto.password);
     } catch (err) {
       if (err instanceof UnauthorizedException) {
         errorThrown = true;
@@ -59,5 +81,25 @@ describe('LocalStrategyService', () => {
 
     expect(errorThrown).toEqual(true);
     expect(validateSpy).toHaveBeenCalledWith('email@email.com', 'password');
+    expect(validateContentSpy).toHaveBeenCalled();
+  });
+
+  it('should return dto when validation passes', async () => {
+    const result = await service.validateContent('test@test.com', 'password');
+    expect(result instanceof LoginPasswordDto).toEqual(true);
+  });
+
+  it('should throw error when validation fails', async () => {
+    let errorThrown = false;
+
+    try {
+      await service.validateContent('', '');
+    } catch (err) {
+      if (err instanceof UnprocessableEntityException) {
+        errorThrown = true;
+      }
+    }
+
+    expect(errorThrown).toEqual(true);
   });
 });
