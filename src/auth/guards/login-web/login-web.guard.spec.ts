@@ -51,28 +51,22 @@ describe('LoginWebGuard', () => {
     expect(errorThrown).toEqual(true);
   });
 
-  it('should throw unprocessable error user is not received', async () => {
+  it('should throw unprocessable when received with same exception', async () => {
     let errorThrown = false;
+    const originalError = new UnprocessableEntityException();
+    let errorMapped;
 
     try {
-      service.handleRequest(undefined, false, false, false, false);
+      service.handleRequest(originalError, false, false, false, false);
     } catch (err) {
       if (err instanceof UnprocessableEntityException) {
         errorThrown = true;
-        expect((err.getResponse() as any).message).toEqual(
-          expect.arrayContaining([
-            expect.objectContaining({
-              property: 'credentials',
-              constraints: expect.objectContaining({
-                credentials: 'Credentials are invalid',
-              }),
-            }),
-          ]),
-        );
+        errorMapped = err;
       }
     }
 
     expect(errorThrown).toEqual(true);
+    expect(errorMapped === originalError).toEqual(true);
   });
 
   it('should pass when there is no error and user is injected', async () => {

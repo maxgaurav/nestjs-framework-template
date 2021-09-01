@@ -1,8 +1,14 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  UnauthorizedException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-local';
 import { AuthService } from '../../services/auth/auth.service';
 import { UserModel } from '../../../databases/models/user.model';
+import { LoginPasswordDto } from '../../dtos/login-password/login-password.dto';
+import { validateOrReject } from 'class-validator';
 
 @Injectable()
 export class SessionStrategyService extends PassportStrategy(Strategy) {
@@ -16,12 +22,30 @@ export class SessionStrategyService extends PassportStrategy(Strategy) {
    * @param password
    */
   public async validate(email: string, password: string): Promise<UserModel> {
-    // @todo add dto for required content;
-    const user = await this.authService.validateForPassword(email, password);
+    const dto = await this.validateContent(email, password);
+    const user = await this.authService.validateForPassword(
+      dto.email,
+      dto.password,
+    );
     if (!user) {
       throw new UnauthorizedException();
     }
 
     return user;
+  }
+
+  public async validateContent(
+    email: string,
+    password: string,
+  ): Promise<LoginPasswordDto> {
+    const dto = new LoginPasswordDto({ email, password });
+
+    try {
+      await validateOrReject(dto);
+    } catch (err) {
+      throw new UnprocessableEntityException(err);
+    }
+
+    return dto;
   }
 }
