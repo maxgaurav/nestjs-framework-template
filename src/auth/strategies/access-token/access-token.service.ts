@@ -3,6 +3,7 @@ import {
   NotFoundException,
   UnauthorizedException,
   UnprocessableEntityException,
+  ValidationError,
 } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { AuthService } from '../../services/auth/auth.service';
@@ -39,6 +40,25 @@ export class AccessTokenService extends PassportStrategy(
     }
 
     const payload = await this.validateContent(request.body, AccessTokenDto);
+
+    const client = await this.clientRepo.findForIdAndSecret(
+      payload.client_id,
+      payload.client_secret,
+    );
+
+    if (!client) {
+      const errors: ValidationError[] = [
+        {
+          property: 'credentials',
+          constraints: {
+            credentials: 'Client credentials are invalid',
+          },
+          children: [],
+        },
+      ];
+      throw new UnprocessableEntityException(errors);
+    }
+
     const user = await this.authService.validateForPassword(
       payload.email,
       payload.password,
@@ -50,7 +70,7 @@ export class AccessTokenService extends PassportStrategy(
 
     return {
       user,
-      client: await this.clientRepo.findOrFail(payload.client_id),
+      client,
     };
   }
 

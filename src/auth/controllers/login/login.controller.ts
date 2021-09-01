@@ -4,7 +4,9 @@ import { UserModel } from '../../../databases/models/user.model';
 import { LoginWebGuard } from '../../guards/login-web/login-web.guard';
 import { AuthService } from '../../services/auth/auth.service';
 import { IntendManagerService } from '../../../session-manager/services/intend-manager/intend-manager.service';
+import { ApiExcludeController } from '@nestjs/swagger';
 
+@ApiExcludeController()
 @Controller('auth')
 export class LoginController {
   /**

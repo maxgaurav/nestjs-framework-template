@@ -1,13 +1,19 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { RefreshTokenService } from './refresh-token.service';
 import { AuthService } from '../../../services/auth/auth.service';
-import { NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {
+  NotFoundException,
+  UnauthorizedException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { Request } from 'express';
 import { RefreshTokenDto } from '../../../dtos/refresh-token/refresh-token.dto';
 import { RefreshTokenModel } from '../../../../databases/models/oauth/refresh-token.model';
 import { IsNotEmpty } from 'class-validator';
 import * as mockdate from 'mockdate';
 import * as moment from 'moment';
+import { ClientRepoService } from '../../../services/oauth/client-repo/client-repo.service';
+import { ClientModel } from '../../../../databases/models/oauth/client.model';
 
 class PassValidation {
   constructor(public content: any) {}
@@ -27,6 +33,10 @@ describe('RefreshTokenService', () => {
     findRefreshToken: (value) => value,
   } as any;
 
+  const clientRepo: ClientRepoService = {
+    findForIdAndSecret: (value) => value,
+  } as any;
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -34,6 +44,10 @@ describe('RefreshTokenService', () => {
         {
           provide: AuthService,
           useValue: authService,
+        },
+        {
+          provide: ClientRepoService,
+          useValue: clientRepo,
         },
       ],
     }).compile();
@@ -69,10 +83,21 @@ describe('RefreshTokenService', () => {
       body: { test: 'test' },
     } as any;
 
-    const dto = new RefreshTokenDto({ refresh_token: 'token' });
+    const client: ClientModel = { id: 'client', secret: 'secret' } as any;
+
+    const dto = new RefreshTokenDto({
+      refresh_token: 'token',
+      client_id: client.id,
+      client_secret: client.secret,
+    });
+
     const validateContentSpy = jest
       .spyOn(service, 'validateContent')
       .mockReturnValue(Promise.resolve(dto));
+
+    const findClientSpy = jest
+      .spyOn(clientRepo, 'findForIdAndSecret')
+      .mockReturnValue(Promise.resolve(client));
 
     const token: RefreshTokenModel = { id: 1 } as any;
 
@@ -87,6 +112,10 @@ describe('RefreshTokenService', () => {
     );
 
     expect(findTokenSpy).toHaveBeenCalledWith(dto.refresh_token);
+    expect(findClientSpy).toHaveBeenCalledWith(
+      dto.client_id,
+      dto.client_secret,
+    );
   });
 
   it('should throw unauthorized exception when refresh token not found', async () => {
@@ -177,5 +206,48 @@ describe('RefreshTokenService', () => {
     );
 
     expect(findTokenSpy).toHaveBeenCalledWith(dto.refresh_token);
+  });
+
+  it('should throw unprocessable error when client is not found', async () => {
+    const request: Request = {
+      headers: { accept: 'application/json' },
+      body: { test: 'test' },
+    } as any;
+
+    const client: ClientModel = { id: 'client', secret: 'secret' } as any;
+
+    const dto = new RefreshTokenDto({
+      refresh_token: 'token',
+      client_id: client.id,
+      client_secret: client.secret,
+    });
+
+    const validateContentSpy = jest
+      .spyOn(service, 'validateContent')
+      .mockReturnValue(Promise.resolve(dto));
+
+    const findClientSpy = jest
+      .spyOn(clientRepo, 'findForIdAndSecret')
+      .mockReturnValue(Promise.resolve(null));
+
+    let errorThrown = false;
+
+    try {
+      await service.validate(request);
+    } catch (err) {
+      if (err instanceof UnprocessableEntityException) {
+        errorThrown = true;
+      }
+    }
+
+    expect(errorThrown).toEqual(true);
+    expect(validateContentSpy).toHaveBeenCalledWith(
+      request.body,
+      expect.anything(),
+    );
+    expect(findClientSpy).toHaveBeenCalledWith(
+      dto.client_id,
+      dto.client_secret,
+    );
   });
 });

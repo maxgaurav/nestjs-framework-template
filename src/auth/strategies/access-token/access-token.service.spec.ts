@@ -6,7 +6,11 @@ import { AccessTokenDto } from '../../dtos/access-token/access-token.dto';
 import { UserModel } from '../../../databases/models/user.model';
 import { ClientModel } from '../../../databases/models/oauth/client.model';
 import { Request } from 'express';
-import { NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {
+  NotFoundException,
+  UnauthorizedException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { IsNotEmpty } from 'class-validator';
 
 class FailureClass {
@@ -22,7 +26,9 @@ describe('AccessTokenService', () => {
   const authService: AuthService = {
     validateForPassword: (value) => value,
   } as any;
-  const clientRepo: ClientRepoService = { findOrFail: (value) => value } as any;
+  const clientRepo: ClientRepoService = {
+    findForIdAndSecret: (value) => value,
+  } as any;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -51,6 +57,7 @@ describe('AccessTokenService', () => {
       email: 'test@test.com',
       password: 'password',
       client_id: 'clientId',
+      client_secret: 'secret',
     });
 
     const validateContentSpy = jest
@@ -65,7 +72,7 @@ describe('AccessTokenService', () => {
       .mockReturnValue(Promise.resolve(user));
 
     const findSpy = jest
-      .spyOn(clientRepo, 'findOrFail')
+      .spyOn(clientRepo, 'findForIdAndSecret')
       .mockReturnValue(Promise.resolve(client));
 
     const request: Request = {
@@ -79,7 +86,7 @@ describe('AccessTokenService', () => {
       AccessTokenDto,
     );
     expect(validatePasswordSpy).toHaveBeenCalledWith(dto.email, dto.password);
-    expect(findSpy).toHaveBeenCalledWith(dto.client_id);
+    expect(findSpy).toHaveBeenCalledWith(dto.client_id, dto.client_secret);
   });
 
   it('should throw not found exception when accept header is incorrect', async () => {
@@ -157,5 +164,43 @@ describe('AccessTokenService', () => {
     }
 
     expect(errorThrown).toEqual(true);
+  });
+
+  it('should throw unprocessable error when client is not found', async () => {
+    const dto = new AccessTokenDto({
+      email: 'test@test.com',
+      password: 'password',
+      client_id: 'clientId',
+      client_secret: 'secret',
+    });
+
+    const validateContentSpy = jest
+      .spyOn(service, 'validateContent')
+      .mockReturnValue(Promise.resolve(dto));
+
+    const findSpy = jest
+      .spyOn(clientRepo, 'findForIdAndSecret')
+      .mockReturnValue(Promise.resolve(null));
+
+    const request: Request = {
+      headers: { accept: 'application/json' },
+      body: { test: 'test' },
+    } as any;
+
+    let errorThrown = false;
+
+    try {
+      await service.validate(request);
+    } catch (err) {
+      if (err instanceof UnprocessableEntityException) {
+        errorThrown = true;
+      }
+    }
+    expect(errorThrown).toEqual(true);
+    expect(validateContentSpy).toHaveBeenCalledWith(
+      request.body,
+      AccessTokenDto,
+    );
+    expect(findSpy).toHaveBeenCalledWith(dto.client_id, dto.client_secret);
   });
 });

@@ -12,6 +12,7 @@ describe('ClientRepoService', () => {
   } as any;
   const model: typeof ClientModel = {
     findByPk: (value) => value,
+    findOne: (value) => value,
     build: (value) => value,
   } as any;
 
@@ -99,5 +100,39 @@ describe('ClientRepoService', () => {
     expect(await service.revoke(client, transaction)).toEqual(client);
     expect(setAttributeSpy).toHaveBeenCalledWith({ is_revoked: false });
     expect(saveSpy).toHaveBeenCalledWith({ transaction });
+  });
+
+  it('should return client when searching with both client and secret and found', async () => {
+    const client: ClientModel = { id: 'client', secret: 'secret' } as any;
+    const findSpy = jest
+      .spyOn(model, 'findOne')
+      .mockReturnValue(Promise.resolve(client));
+    const transaction = null;
+
+    expect(
+      await service.findForIdAndSecret(client.id, client.secret, transaction),
+    ).toEqual(client);
+
+    expect(findSpy).toHaveBeenCalledWith({
+      where: { id: client.id, secret: client.secret },
+      transaction,
+    });
+  });
+
+  it('should return null when client is not found for id and secret', async () => {
+    const client: ClientModel = { id: 'client', secret: 'secret' } as any;
+    const findSpy = jest
+      .spyOn(model, 'findOne')
+      .mockReturnValue(Promise.resolve(undefined));
+    const transaction = null;
+
+    expect(
+      await service.findForIdAndSecret(client.id, client.secret, transaction),
+    ).toEqual(null);
+
+    expect(findSpy).toHaveBeenCalledWith({
+      where: { id: client.id, secret: client.secret },
+      transaction,
+    });
   });
 });
