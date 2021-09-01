@@ -7,6 +7,9 @@ import { UserModel } from '../../../databases/models/user.model';
 import { ClientModel } from '../../../databases/models/oauth/client.model';
 import { AccessTokenModel } from '../../../databases/models/oauth/access-token.model';
 import { RefreshTokenModel } from '../../../databases/models/oauth/refresh-token.model';
+import { ConfigService } from '@nestjs/config';
+import * as mockdate from 'mockdate';
+import * as moment from 'moment';
 
 describe('OauthController', () => {
   let controller: OauthController;
@@ -19,6 +22,10 @@ describe('OauthController', () => {
     create: (value) => value,
     createBearerToken: (value) => value,
     consumeToken: (value) => value,
+  } as any;
+
+  const configService: ConfigService = {
+    get: (value) => value,
   } as any;
 
   beforeEach(async () => {
@@ -36,6 +43,10 @@ describe('OauthController', () => {
         {
           provide: AccessTokenRepoService,
           useValue: accessTokenRepo,
+        },
+        {
+          provide: ConfigService,
+          useValue: configService,
         },
       ],
     }).compile();
@@ -72,9 +83,16 @@ describe('OauthController', () => {
       .spyOn(refreshTokenRepo, 'createBearerToken')
       .mockReturnValue(Promise.resolve('refreshBearer'));
 
+    const getAccessDateSpy = jest
+      .spyOn(controller, 'accessTokenExpiration')
+      .mockReturnValue(null);
+    const getRefreshDateSpy = jest
+      .spyOn(controller, 'refreshTokenExpiration')
+      .mockReturnValue(null);
+
     expect(await controller.login(authContent, transaction)).toEqual({
       type: 'Bearer',
-      expires_in: null,
+      expires_at: null,
       access_token: 'accessBearer',
       refresh_token: 'refreshBearer',
     });
@@ -92,12 +110,21 @@ describe('OauthController', () => {
     );
     expect(createAccessTokenBearerSpy).toHaveBeenCalledWith(accessToken);
     expect(createRefreshTokenBearerSpy).toHaveBeenCalledWith(refreshToken);
+    expect(getAccessDateSpy).toHaveBeenCalled();
+    expect(getRefreshDateSpy).toHaveBeenCalled();
   });
 
   it('should generate new tokens on refresh', async () => {
     const currentRefreshToken: RefreshTokenModel = { id: 'current' } as any;
     const refreshToken: RefreshTokenModel = { id: 'new' } as any;
     const accessToken: AccessTokenModel = { id: 'new' } as any;
+
+    const getAccessDateSpy = jest
+      .spyOn(controller, 'accessTokenExpiration')
+      .mockReturnValue(null);
+    const getRefreshDateSpy = jest
+      .spyOn(controller, 'refreshTokenExpiration')
+      .mockReturnValue(null);
 
     const createAccessTokenBearerSpy = jest
       .spyOn(accessTokenRepo, 'createBearerToken')
@@ -117,16 +144,64 @@ describe('OauthController', () => {
       await controller.refreshAccessToken(currentRefreshToken, transaction),
     ).toEqual({
       type: 'Bearer',
-      expires_in: null,
+      expires_at: null,
       access_token: 'accessBearer',
       refresh_token: 'refreshBearer',
     });
 
     expect(consumerRefreshTokenSpy).toHaveBeenCalledWith(
       currentRefreshToken,
+      null,
+      null,
       transaction,
     );
     expect(createAccessTokenBearerSpy).toHaveBeenCalledWith(accessToken);
     expect(createRefreshTokenBearerSpy).toHaveBeenCalledWith(refreshToken);
+    expect(getAccessDateSpy).toHaveBeenCalled();
+    expect(getRefreshDateSpy).toHaveBeenCalled();
+  });
+
+  it('should return null when expiration time for access token is null', () => {
+    const getSpy = jest
+      .spyOn(configService, 'get')
+      .mockReturnValue({ expirationTimeAccessToken: null });
+
+    expect(controller.accessTokenExpiration()).toEqual(null);
+    expect(getSpy).toHaveBeenCalledWith('jwt');
+  });
+
+  it('should return date with time extended by expiration time for access token', () => {
+    mockdate.set('2021-01-01 00:00:00');
+    const getSpy = jest
+      .spyOn(configService, 'get')
+      .mockReturnValue({ expirationTimeAccessToken: 30000 });
+
+    const expectedDate = moment().add(30000, 'milliseconds');
+
+    const expirationDate = controller.accessTokenExpiration();
+    expect(moment(expirationDate).isSame(expectedDate)).toEqual(true);
+    expect(getSpy).toHaveBeenCalledWith('jwt');
+  });
+
+  it('should return null when expiration time for refresh token is null', () => {
+    const getSpy = jest
+      .spyOn(configService, 'get')
+      .mockReturnValue({ expirationTimeRefreshToken: null });
+
+    expect(controller.refreshTokenExpiration()).toEqual(null);
+    expect(getSpy).toHaveBeenCalledWith('jwt');
+  });
+
+  it('should return date with time extended by expiration time for refresh token', () => {
+    mockdate.set('2021-01-01 00:00:00');
+    const getSpy = jest
+      .spyOn(configService, 'get')
+      .mockReturnValue({ expirationTimeRefreshToken: 30000 });
+
+    const expectedDate = moment().add(30000, 'milliseconds');
+
+    const expirationDate = controller.refreshTokenExpiration();
+    expect(moment(expirationDate).isSame(expectedDate)).toEqual(true);
+    expect(getSpy).toHaveBeenCalledWith('jwt');
   });
 });

@@ -6,6 +6,7 @@ import { clusterConfig } from './configs/cluster';
 import { getEnvFileName } from '../helpers/utils/check-env-file';
 import { mailConfig } from './configs/mail';
 import { sessionConfig } from './configs/session';
+import { jwtConfig } from './configs/jwt';
 
 const envSuffix = !!process.env.OVERRIDE_ENV
   ? `.${process.env.OVERRIDE_ENV}`
@@ -22,6 +23,7 @@ const envFileName = getEnvFileName(envSuffix);
         clusterConfig,
         mailConfig,
         sessionConfig,
+        jwtConfig,
       ],
       envFilePath: envFileName,
       isGlobal: true,

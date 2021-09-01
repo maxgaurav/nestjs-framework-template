@@ -41,3 +41,8 @@ export interface MailConfig extends MailerOptions {
 export interface SessionConfig extends Partial<SessionOptions> {
   driver: 'memory' | 'file';
 }
+
+export interface JwtConfig {
+  expirationTimeAccessToken: number | null;
+  expirationTimeRefreshToken: number | null;
+}

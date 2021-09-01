@@ -6,6 +6,8 @@ import { Request } from 'express';
 import { RefreshTokenDto } from '../../../dtos/refresh-token/refresh-token.dto';
 import { RefreshTokenModel } from '../../../../databases/models/oauth/refresh-token.model';
 import { IsNotEmpty } from 'class-validator';
+import * as mockdate from 'mockdate';
+import * as moment from 'moment';
 
 class PassValidation {
   constructor(public content: any) {}
@@ -135,5 +137,45 @@ describe('RefreshTokenService', () => {
     }
 
     expect(errorThrown).toEqual(true);
+  });
+
+  it('should throw unauthorized exception when date has expired', async () => {
+    mockdate.set('2021-01-01 00:00:00');
+    const request: Request = {
+      headers: { accept: 'application/json' },
+      body: { test: 'test' },
+    } as any;
+
+    const dto = new RefreshTokenDto({ refresh_token: 'token' });
+    const validateContentSpy = jest
+      .spyOn(service, 'validateContent')
+      .mockReturnValue(Promise.resolve(dto));
+
+    const token: RefreshTokenModel = {
+      id: 1,
+      expires_at: moment().subtract(1, 'day'),
+    } as any;
+
+    const findTokenSpy = jest
+      .spyOn(authService, 'findRefreshToken')
+      .mockReturnValue(Promise.resolve(token));
+
+    let errorThrown = false;
+
+    try {
+      await service.validate(request);
+    } catch (err) {
+      if (err instanceof UnauthorizedException) {
+        errorThrown = true;
+      }
+    }
+
+    expect(errorThrown).toEqual(true);
+    expect(validateContentSpy).toHaveBeenCalledWith(
+      request.body,
+      expect.anything(),
+    );
+
+    expect(findTokenSpy).toHaveBeenCalledWith(dto.refresh_token);
   });
 });

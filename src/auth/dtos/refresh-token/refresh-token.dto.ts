@@ -15,6 +15,7 @@ export class RefreshTokenDto {
 
   constructor(content: { [key: string]: any } = {}) {
     for (const key in content) {
+      /* istanbul ignore next */
       if (content.hasOwnProperty(key)) {
         this[key] = content[key];
       }

@@ -42,6 +42,7 @@ export class LoginAccessTokenGuard
         throw new UnprocessableEntityException(errors);
       }
 
+      /* istanbul ignore else */
       if (err instanceof UnprocessableEntityException) {
         throw err;
       }

@@ -74,10 +74,14 @@ export class RefreshTokenRepoService {
   /**
    * Consumes current refresh token and generates new refresh and access token.
    * @param refreshToken
+   * @param refreshTokenExpiresAt
+   * @param accessTokenExpiresAt
    * @param transaction
    */
   public async consumeToken(
     refreshToken: RefreshTokenModel,
+    refreshTokenExpiresAt: Date | null = null,
+    accessTokenExpiresAt: Date | null = null,
     transaction?: Transaction,
   ): Promise<{
     refreshToken: RefreshTokenModel;
@@ -90,10 +94,10 @@ export class RefreshTokenRepoService {
     const user = await currentAccessToken.$get('user', { transaction });
 
     return this.accessTokenRepo
-      .create(client, user, null, transaction)
+      .create(client, user, refreshTokenExpiresAt, transaction)
       .then((newAccessToken) => {
         return Promise.all([
-          this.create(newAccessToken, null, transaction).then(
+          this.create(newAccessToken, accessTokenExpiresAt, transaction).then(
             (newRefreshToken) => ({
               refreshToken: newRefreshToken,
               accessToken: newAccessToken,
