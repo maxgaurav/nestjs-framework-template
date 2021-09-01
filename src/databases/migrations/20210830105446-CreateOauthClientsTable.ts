@@ -44,7 +44,7 @@ module.exports = {
     });
   },
 
-  down: async (queryInterface: QueryInterface, Sequelize: Sequelize) => {
+  down: async (queryInterface: QueryInterface) => {
     /**
      * Add reverting commands here.
      *
