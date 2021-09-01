@@ -7,6 +7,8 @@ import { ConfigService } from '@nestjs/config';
 import { AccessTokenRepoService } from '../oauth/access-token-repo/access-token-repo.service';
 import { JwtService } from '@nestjs/jwt';
 import { AccessTokenModel } from '../../../databases/models/oauth/access-token.model';
+import { RefreshTokenRepoService } from '../oauth/refresh-token-repo/refresh-token-repo.service';
+import { RefreshTokenModel } from '../../../databases/models/oauth/refresh-token.model';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -23,6 +25,10 @@ describe('AuthService', () => {
   const userRepo: UserRepoService = {
     findByEmail: (value) => value,
     findOrFail: (value) => value,
+  } as any;
+
+  const refreshTokenRepo: RefreshTokenRepoService = {
+    find: (value) => value,
   } as any;
 
   beforeEach(async () => {
@@ -44,6 +50,10 @@ describe('AuthService', () => {
         {
           provide: JwtService,
           useValue: jwtService,
+        },
+        {
+          provide: RefreshTokenRepoService,
+          useValue: refreshTokenRepo,
         },
         HashEncryptService,
       ],
@@ -227,5 +237,17 @@ describe('AuthService', () => {
     expect(await service.findUserByToken('token')).toEqual(null);
     expect(decodeSpy).toHaveBeenCalledWith('token');
     expect(findActiveToken).toHaveBeenCalledWith('decoded');
+  });
+
+  it('should return refresh token from hashed token', async () => {
+    const decodeSpy = jest.spyOn(jwtService, 'decode').mockReturnValue('token');
+    const refreshToken: RefreshTokenModel = { id: 'token' } as any;
+    const findSpy = jest
+      .spyOn(refreshTokenRepo, 'find')
+      .mockReturnValue(Promise.resolve(refreshToken));
+
+    expect(await service.findRefreshToken('hashed')).toEqual(refreshToken);
+    expect(decodeSpy).toHaveBeenCalledWith('hashed');
+    expect(findSpy).toHaveBeenCalledWith('token');
   });
 });

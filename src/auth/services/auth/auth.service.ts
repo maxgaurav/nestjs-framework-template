@@ -5,6 +5,9 @@ import { HashEncryptService } from '../hash-encrypt/hash-encrypt.service';
 import { Session } from 'express-session';
 import { JwtService } from '@nestjs/jwt';
 import { AccessTokenRepoService } from '../oauth/access-token-repo/access-token-repo.service';
+import { RefreshTokenRepoService } from '../oauth/refresh-token-repo/refresh-token-repo.service';
+import { RefreshTokenModel } from '../../../databases/models/oauth/refresh-token.model';
+import { ClientModel } from '../../../databases/models/oauth/client.model';
 
 @Injectable()
 export class AuthService {
@@ -13,6 +16,7 @@ export class AuthService {
     private hashEncryptService: HashEncryptService,
     private accessTokenRepo: AccessTokenRepoService,
     private jwtService: JwtService,
+    private refreshTokenRepo: RefreshTokenRepoService,
   ) {}
 
   /**
@@ -94,5 +98,22 @@ export class AuthService {
     }
 
     return this.getLoggedInUser(accessToken.user_id);
+  }
+
+  /**
+   * Find refresh token from encrypted token
+   * @param token
+   */
+  public async findRefreshToken(
+    token: string,
+  ): Promise<RefreshTokenModel | null> {
+    let decodedId;
+    try {
+      decodedId = this.jwtService.decode(token);
+    } catch {
+      // @Todo handle decoding error
+    }
+
+    return this.refreshTokenRepo.find(decodedId);
   }
 }
