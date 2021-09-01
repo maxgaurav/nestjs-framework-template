@@ -6,6 +6,7 @@ import { UserRepoService } from '../../../user/services/user-repo/user-repo.serv
 import { IntendManagerService } from '../../../session-manager/services/intend-manager/intend-manager.service';
 import { AccessTokenRepoService } from '../../services/oauth/access-token-repo/access-token-repo.service';
 import { JwtService } from '@nestjs/jwt';
+import { RefreshTokenRepoService } from '../../services/oauth/refresh-token-repo/refresh-token-repo.service';
 
 describe('LoginController', () => {
   let controller: LoginController;
@@ -21,6 +22,10 @@ describe('LoginController', () => {
       controllers: [LoginController],
       providers: [
         AuthService,
+        {
+          provide: RefreshTokenRepoService,
+          useValue: {}
+        },
         { provide: HashEncryptService, useValue: {} },
         {
           provide: UserRepoService,

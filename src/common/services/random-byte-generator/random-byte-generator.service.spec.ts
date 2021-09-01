@@ -29,4 +29,15 @@ describe('RandomByteGeneratorService', () => {
     expect(result.toString()).toEqual(stringContent);
     expect(randomSpy).toHaveBeenCalledWith(50);
   });
+
+  it('should generate random byte with default', () => {
+    const stringContent = 'sample';
+
+    const randomSpy = jest
+      .spyOn(crypto, 'randomBytes')
+      .mockReturnValue(Buffer.from(stringContent) as any);
+    const result = service.generateRandomByte();
+    expect(result.toString()).toEqual(stringContent);
+    expect(randomSpy).toHaveBeenCalledWith(40);
+  });
 });

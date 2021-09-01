@@ -33,6 +33,22 @@ export class RefreshTokenRepoService {
   }
 
   /**
+   * Finds refresh token or return null
+   * @param id
+   * @param transaction
+   */
+  public find(
+    id: string,
+    transaction?: Transaction,
+  ): Promise<RefreshTokenModel | null> {
+    return this.refreshToken
+      .findByPk(id, {
+        transaction,
+      })
+      .then((refreshToken) => (!!refreshToken ? refreshToken : null));
+  }
+
+  /**
    * Creates new refresh token
    * @param accessToken
    * @param expiresAt
