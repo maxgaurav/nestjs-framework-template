@@ -7,7 +7,6 @@ import { JwtService } from '@nestjs/jwt';
 import { AccessTokenRepoService } from '../oauth/access-token-repo/access-token-repo.service';
 import { RefreshTokenRepoService } from '../oauth/refresh-token-repo/refresh-token-repo.service';
 import { RefreshTokenModel } from '../../../databases/models/oauth/refresh-token.model';
-import { ClientModel } from '../../../databases/models/oauth/client.model';
 
 @Injectable()
 export class AuthService {

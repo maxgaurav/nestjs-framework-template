@@ -24,7 +24,7 @@ describe('LoginController', () => {
         AuthService,
         {
           provide: RefreshTokenRepoService,
-          useValue: {}
+          useValue: {},
         },
         { provide: HashEncryptService, useValue: {} },
         {
