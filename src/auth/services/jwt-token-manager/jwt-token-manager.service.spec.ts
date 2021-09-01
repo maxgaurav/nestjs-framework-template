@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { JwtTokenManagerService } from './jwt-token-manager.service';
 import { join } from 'path';
-import { promises as fsPromises } from 'fs';
+import { promises as fsPromises, constants as fsConstants } from 'fs';
 
 describe('JwtTokenManagerService', () => {
   let service: JwtTokenManagerService;
@@ -34,10 +34,14 @@ describe('JwtTokenManagerService', () => {
     const readFileSpy = jest
       .spyOn(fsPromises, 'readFile')
       .mockReturnValue(Promise.resolve(Buffer.from(content)));
+    const existsFileSpy = jest
+      .spyOn(service, 'createFileIfNotExists')
+      .mockReturnValue(Promise.resolve(true));
 
     expect(await service.publicKey()).toEqual(Buffer.from(content));
     expect(keyPathSpy).toHaveBeenCalledWith('public-key.pem');
     expect(readFileSpy).toHaveBeenCalledWith('/test/public-key.pem');
+    expect(existsFileSpy).toHaveBeenCalled();
   });
 
   it('should return private key content', async () => {
@@ -49,9 +53,14 @@ describe('JwtTokenManagerService', () => {
       .spyOn(fsPromises, 'readFile')
       .mockReturnValue(Promise.resolve(Buffer.from(content)));
 
+    const existsFileSpy = jest
+      .spyOn(service, 'createFileIfNotExists')
+      .mockReturnValue(Promise.resolve(true));
+
     expect(await service.privateKey()).toEqual(Buffer.from(content));
     expect(keyPathSpy).toHaveBeenCalledWith('private-key.pem');
     expect(readFileSpy).toHaveBeenCalledWith('/test/private-key.pem');
+    expect(existsFileSpy).toHaveBeenCalled();
   });
 
   it('should return correct jwt options', async () => {
@@ -71,5 +80,28 @@ describe('JwtTokenManagerService', () => {
 
     expect(privateKeySpy).toHaveBeenCalled();
     expect(publicKeySpy).toHaveBeenCalled();
+  });
+
+  it('should return true if file exists', async () => {
+    const accessSpy = jest
+      .spyOn(fsPromises, 'access')
+      .mockReturnValue(Promise.resolve());
+
+    expect(await service.createFileIfNotExists('test')).toEqual(true);
+    expect(accessSpy).toHaveBeenCalledWith('test', fsConstants.F_OK);
+  });
+
+  it('should return false and create file if file does not exists', async () => {
+    const accessSpy = jest
+      .spyOn(fsPromises, 'access')
+      .mockReturnValue(Promise.reject());
+
+    const writeSpy = jest
+      .spyOn(fsPromises, 'writeFile')
+      .mockReturnValue(Promise.resolve());
+
+    expect(await service.createFileIfNotExists('test')).toEqual(false);
+    expect(accessSpy).toHaveBeenCalledWith('test', fsConstants.F_OK);
+    expect(writeSpy).toHaveBeenCalledWith('test', '');
   });
 });
