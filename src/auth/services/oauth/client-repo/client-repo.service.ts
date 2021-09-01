@@ -24,6 +24,25 @@ export class ClientRepoService {
   }
 
   /**
+   * Finds client for the id and secret
+   * @param id
+   * @param secret
+   * @param transaction
+   */
+  public findForIdAndSecret(
+    id: string,
+    secret: string,
+    transaction?: Transaction,
+  ): Promise<ClientModel | null> {
+    return this.clientModel
+      .findOne({
+        where: { id, secret },
+        transaction,
+      })
+      .then((result) => (!!result ? result : null));
+  }
+
+  /**
    * Generates new oauth client
    * @param name
    * @param transaction

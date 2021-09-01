@@ -13,12 +13,35 @@ import { RefreshTokenModel } from '../../../databases/models/oauth/refresh-token
 import { ConfigService } from '@nestjs/config';
 import { JwtConfig } from '../../../environment/interfaces/environment-types.interface';
 import * as moment from 'moment';
+import {
+  ApiBody,
+  ApiHeader,
+  ApiOkResponse,
+  ApiProperty,
+  ApiResponse,
+} from '@nestjs/swagger';
+import { RefreshTokenDto } from '../../dtos/refresh-token/refresh-token.dto';
+import { AccessTokenDto } from '../../dtos/access-token/access-token.dto';
 
 export interface BearerTokenResult {
   expires_at: Date | string | null;
   access_token: string;
   refresh_token: string;
   type: 'Bearer';
+}
+
+class BearerTokenResponse implements BearerTokenResult {
+  @ApiProperty()
+  public access_token: string;
+
+  @ApiProperty({ nullable: true })
+  expires_at: Date;
+
+  @ApiProperty()
+  public refresh_token: string;
+
+  @ApiProperty()
+  public type: 'Bearer';
 }
 
 @Controller('oauth')
@@ -34,6 +57,24 @@ export class OauthController {
    * @param user
    * @param transaction
    */
+  @ApiHeader({
+    name: 'accept',
+    allowEmptyValue: false,
+    required: true,
+    schema: {
+      type: 'string',
+      enum: ['application/json'],
+    },
+  })
+  @ApiBody({ type: AccessTokenDto })
+  @ApiResponse({
+    type: BearerTokenResponse,
+    links: {
+      requestBody: {
+        $ref: '#/components/schemas/AccessTokenDto',
+      },
+    },
+  })
   @UseInterceptors(TransactionInterceptor)
   @UseGuards(LoginAccessTokenGuard)
   @Post('token')
@@ -71,6 +112,24 @@ export class OauthController {
    * @param currentRefreshToken
    * @param transaction
    */
+  @ApiHeader({
+    name: 'accept',
+    allowEmptyValue: false,
+    required: true,
+    schema: {
+      type: 'string',
+      enum: ['application/json'],
+    },
+  })
+  @ApiBody({ type: RefreshTokenDto })
+  @ApiOkResponse({
+    type: BearerTokenResponse,
+    links: {
+      requestBody: {
+        $ref: '#/components/schemas/RefreshTokenDot',
+      },
+    },
+  })
   @UseInterceptors(TransactionInterceptor)
   @UseGuards(RefreshAccessTokenGuard)
   @Post('refresh')

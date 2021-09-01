@@ -3,6 +3,7 @@ import {
   NotFoundException,
   UnauthorizedException,
   UnprocessableEntityException,
+  ValidationError,
 } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-custom';
@@ -12,13 +13,17 @@ import { RefreshTokenDto } from '../../../dtos/refresh-token/refresh-token.dto';
 import { validateOrReject } from 'class-validator';
 import { AuthService } from '../../../services/auth/auth.service';
 import * as moment from 'moment';
+import { ClientRepoService } from '../../../services/oauth/client-repo/client-repo.service';
 
 @Injectable()
 export class RefreshTokenService extends PassportStrategy(
   Strategy,
   'refreshToken',
 ) {
-  constructor(private readonly authService: AuthService) {
+  constructor(
+    private readonly authService: AuthService,
+    private readonly clientRepo: ClientRepoService,
+  ) {
     super();
   }
 
@@ -29,6 +34,23 @@ export class RefreshTokenService extends PassportStrategy(
     }
 
     const payload = await this.validateContent(request.body, RefreshTokenDto);
+
+    const client = await this.clientRepo.findForIdAndSecret(
+      payload.client_id,
+      payload.client_secret,
+    );
+    if (!client) {
+      const errors: ValidationError[] = [
+        {
+          property: 'credentials',
+          constraints: {
+            credentials: 'Client credentials are invalid',
+          },
+          children: [],
+        },
+      ];
+      throw new UnprocessableEntityException(errors);
+    }
 
     const refreshToken = await this.authService.findRefreshToken(
       payload.refresh_token,
