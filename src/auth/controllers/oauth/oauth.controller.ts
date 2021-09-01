@@ -10,9 +10,12 @@ import { ReqTransaction } from '../../../transaction-manager/decorators/transact
 import { Transaction } from 'sequelize';
 import { RefreshAccessTokenGuard } from '../../guards/refresh-access-token/refresh-access-token.guard';
 import { RefreshTokenModel } from '../../../databases/models/oauth/refresh-token.model';
+import { ConfigService } from '@nestjs/config';
+import { JwtConfig } from '../../../environment/interfaces/environment-types.interface';
+import * as moment from 'moment';
 
 export interface BearerTokenResult {
-  expires_in: string | null;
+  expires_at: Date | string | null;
   access_token: string;
   refresh_token: string;
   type: 'Bearer';
@@ -23,6 +26,7 @@ export class OauthController {
   constructor(
     private accessTokenRepo: AccessTokenRepoService,
     private refreshTokenRepo: RefreshTokenRepoService,
+    private configService: ConfigService,
   ) {}
 
   /**
@@ -37,15 +41,18 @@ export class OauthController {
     @AuthUser() user: { user: UserModel; client: ClientModel },
     @ReqTransaction() transaction?: Transaction,
   ): Promise<BearerTokenResult> {
+    const accessTokenExpiration = this.accessTokenExpiration();
+    const refreshTokenExpiration = this.refreshTokenExpiration();
+
     const accessToken = await this.accessTokenRepo.create(
       user.client,
       user.user,
-      null,
+      accessTokenExpiration,
       transaction,
     );
     const refreshToken = await this.refreshTokenRepo.create(
       accessToken,
-      null,
+      refreshTokenExpiration,
       transaction,
     );
 
@@ -55,7 +62,7 @@ export class OauthController {
       refresh_token: await this.refreshTokenRepo.createBearerToken(
         refreshToken,
       ),
-      expires_in: null,
+      expires_at: accessTokenExpiration,
     };
   }
 
@@ -71,9 +78,14 @@ export class OauthController {
     @AuthUser() currentRefreshToken: RefreshTokenModel,
     @ReqTransaction() transaction?: Transaction,
   ): Promise<BearerTokenResult> {
+    const accessTokenExpiration = this.accessTokenExpiration();
+    const refreshTokenExpiration = this.refreshTokenExpiration();
+
     const { accessToken, refreshToken } =
       await this.refreshTokenRepo.consumeToken(
         currentRefreshToken,
+        refreshTokenExpiration,
+        accessTokenExpiration,
         transaction,
       );
 
@@ -83,7 +95,35 @@ export class OauthController {
       refresh_token: await this.refreshTokenRepo.createBearerToken(
         refreshToken,
       ),
-      expires_in: null,
+      expires_at: accessTokenExpiration,
     };
+  }
+
+  /**
+   * Returns access token expiration time
+   */
+  public accessTokenExpiration(): Date | null {
+    const config: JwtConfig = this.configService.get<JwtConfig>('jwt');
+    if (!config.expirationTimeAccessToken) {
+      return null;
+    }
+
+    return moment()
+      .add(config.expirationTimeAccessToken, 'milliseconds')
+      .toDate();
+  }
+
+  /**
+   * Returns refresh token expiration time
+   */
+  public refreshTokenExpiration(): Date | null {
+    const config: JwtConfig = this.configService.get<JwtConfig>('jwt');
+    if (!config.expirationTimeRefreshToken) {
+      return null;
+    }
+
+    return moment()
+      .add(config.expirationTimeRefreshToken, 'milliseconds')
+      .toDate();
   }
 }

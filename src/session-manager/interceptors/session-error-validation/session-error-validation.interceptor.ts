@@ -30,6 +30,7 @@ export class SessionErrorValidationInterceptor implements NestInterceptor {
         (errors, errorKey) => {
           let errorValuesForKey = [];
 
+          /* istanbul ignore else */
           if (validationErrors.hasOwnProperty(errorKey)) {
             errorValuesForKey = validationErrors[errorKey];
           }

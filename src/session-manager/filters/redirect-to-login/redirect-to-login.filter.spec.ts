@@ -52,6 +52,41 @@ describe('RedirectToLoginFilter', () => {
     expect(saveSpy).toHaveBeenCalled();
   });
 
+  it('should redirect to login route when request is not json/ajax but not set intend url to null when method is post', () => {
+    const request = {
+      xhr: false,
+      accepts: () => 'will-not-match',
+      method: 'POST',
+      url: 'currentUrl',
+      session: { save: (value) => value },
+    };
+    const response = {
+      redirect: (value) => value,
+    };
+    const host = {
+      switchToHttp: () => ({
+        getRequest: () => request,
+        getResponse: () => response,
+      }),
+    };
+    const exception = new UnauthorizedException();
+
+    const redirectSpy = jest.spyOn(response, 'redirect');
+    const getUrlSpy = jest
+      .spyOn(intendManager, 'getUrl')
+      .mockReturnValueOnce('currentIntend');
+    const setUrlSpy = jest.spyOn(intendManager, 'setUrl').mockImplementation();
+    const saveSpy = jest
+      .spyOn(request.session, 'save')
+      .mockImplementation((callback: () => void) => callback());
+
+    filter.catch(exception, host as any);
+    expect(getUrlSpy).not.toHaveBeenCalledWith(request);
+    expect(setUrlSpy).toHaveBeenCalledWith(request, null);
+    expect(redirectSpy).toHaveBeenCalledWith('/');
+    expect(saveSpy).toHaveBeenCalled();
+  });
+
   it('should return json when set to xhr and method is get', () => {
     const request = { xhr: true, accepts: () => 'will-not-match' };
     const response = {

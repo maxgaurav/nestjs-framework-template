@@ -175,7 +175,93 @@ describe('RefreshTokenRepoService', () => {
 
     const transaction = null;
 
-    expect(await service.consumeToken(refreshToken, transaction)).toEqual({
+    expect(
+      await service.consumeToken(refreshToken, null, null, transaction),
+    ).toEqual({
+      accessToken: newAccessToken,
+      refreshToken: newRefreshToken,
+    });
+
+    expect(currentRefreshTokenGetSpy).toHaveBeenCalledWith('accessToken', {
+      transaction,
+    });
+    expect(currentAccessTokenGetSpy).toHaveBeenCalledTimes(2);
+    expect(currentAccessTokenGetSpy).toHaveBeenNthCalledWith(1, 'client', {
+      transaction,
+    });
+    expect(currentAccessTokenGetSpy).toHaveBeenNthCalledWith(2, 'user', {
+      transaction,
+    });
+
+    expect(createAccessTokenSpy).toHaveBeenCalledWith(
+      client,
+      mappedUser,
+      null,
+      transaction,
+    );
+    expect(createRefreshTokenSpy).toHaveBeenCalledWith(
+      newAccessToken,
+      null,
+      transaction,
+    );
+    expect(currentAccessTokenDestroySpy).toHaveBeenCalledWith({ transaction });
+  });
+
+  it('should consume refresh token and generate new access and refresh token with default dates', async () => {
+    const refreshToken: RefreshTokenModel = {
+      id: 1,
+      $get: (value) => value,
+    } as any;
+
+    const currentAccessToken: AccessTokenModel = {
+      id: 'current',
+      $get: (value) => value,
+      destroy: (value) => value,
+    } as any;
+
+    const mappedUser: UserModel = { id: 1 } as any;
+
+    const currentRefreshTokenGetSpy = jest
+      .spyOn(refreshToken, '$get')
+      .mockReturnValue(Promise.resolve(currentAccessToken));
+
+    const client: ClientModel = { id: 'client' } as any;
+
+    const currentAccessTokenGetSpy = jest
+      .spyOn(currentAccessToken, '$get')
+      .mockImplementation((type: string) => {
+        if (type === 'user') {
+          return Promise.resolve(mappedUser);
+        }
+
+        if (type === 'client') {
+          return Promise.resolve(client);
+        }
+
+        Promise.reject(new Error(`incorrect type injected: ${type}`));
+      });
+
+    const currentAccessTokenDestroySpy = jest
+      .spyOn(currentAccessToken, 'destroy')
+      .mockReturnValue(Promise.resolve());
+
+    const newAccessToken: AccessTokenModel = {
+      id: 'new',
+    } as any;
+
+    const createAccessTokenSpy = jest
+      .spyOn(accessTokenRepo, 'create')
+      .mockReturnValue(Promise.resolve(newAccessToken));
+
+    const newRefreshToken: RefreshTokenModel = { id: 'new' } as any;
+
+    const createRefreshTokenSpy = jest
+      .spyOn(service, 'create')
+      .mockReturnValue(Promise.resolve(newRefreshToken));
+
+    const transaction = undefined;
+
+    expect(await service.consumeToken(refreshToken)).toEqual({
       accessToken: newAccessToken,
       refreshToken: newRefreshToken,
     });

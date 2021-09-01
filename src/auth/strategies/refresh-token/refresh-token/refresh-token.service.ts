@@ -11,6 +11,7 @@ import { RefreshTokenModel } from '../../../../databases/models/oauth/refresh-to
 import { RefreshTokenDto } from '../../../dtos/refresh-token/refresh-token.dto';
 import { validateOrReject } from 'class-validator';
 import { AuthService } from '../../../services/auth/auth.service';
+import * as moment from 'moment';
 
 @Injectable()
 export class RefreshTokenService extends PassportStrategy(
@@ -34,6 +35,13 @@ export class RefreshTokenService extends PassportStrategy(
     );
 
     if (!refreshToken) {
+      throw new UnauthorizedException();
+    }
+
+    if (
+      !!refreshToken.expires_at &&
+      moment().isAfter(moment(refreshToken.expires_at))
+    ) {
       throw new UnauthorizedException();
     }
 

@@ -118,6 +118,47 @@ describe('AccessTokenRepoService', () => {
     expect(saveSpy).toHaveBeenCalledWith({ transaction });
   });
 
+  it('should create new access token with user with default expire at value', async () => {
+    const accessToken: AccessTokenModel = {
+      id: 'test',
+      save: (value) => value,
+      setAttributes: (value) => value,
+    } as any;
+
+    const buildSpy = jest.spyOn(model, 'build').mockReturnValue(accessToken);
+
+    const user: UserModel = { id: 1 } as any;
+    const client: ClientModel = { id: 'test' } as any;
+
+    const setAttributeSpy = jest
+      .spyOn(accessToken, 'setAttributes')
+      .mockReturnValue(accessToken);
+    const saveSpy = jest
+      .spyOn(accessToken, 'save')
+      .mockReturnValue(Promise.resolve(accessToken));
+
+    const sample = 'sample';
+    const randomSpy = jest
+      .spyOn(randomByteGenerate, 'generateRandomByte')
+      .mockReturnValue(Buffer.from(sample));
+
+    const expiresAt = null;
+    const transaction = undefined;
+
+    expect(await service.create(client, user)).toEqual(accessToken);
+
+    expect(buildSpy).toHaveBeenCalled();
+    expect(setAttributeSpy).toHaveBeenCalledWith({
+      client_id: client.id,
+      user_id: user.id,
+      expires_at: expiresAt,
+      id: Buffer.from(sample).toString('hex'),
+    });
+    expect(randomSpy).toHaveBeenCalledWith(40);
+
+    expect(saveSpy).toHaveBeenCalledWith({ transaction });
+  });
+
   it('should create new access token with user null', async () => {
     const accessToken: AccessTokenModel = {
       id: 'test',

@@ -26,10 +26,11 @@ export class RedirectFromLoginFilter implements ExceptionFilter {
       return;
     }
 
-    const intendUrl =
-      request.method.toUpperCase() === 'GET'
-        ? request.url
-        : this.intendManager.getUrl(request);
+    let intendUrl = null;
+    if (request.method.toUpperCase() === 'GET') {
+      intendUrl = request.url;
+    }
+
     this.intendManager.setUrl(request, intendUrl);
 
     request.session.save(() => {
