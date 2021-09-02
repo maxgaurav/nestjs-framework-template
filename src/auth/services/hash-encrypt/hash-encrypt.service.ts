@@ -3,6 +3,7 @@ import { hash, compare } from 'bcrypt';
 import { createCipheriv, randomBytes, scrypt, createDecipheriv } from 'crypto';
 import { ConfigService } from '@nestjs/config';
 import { promisify } from 'util';
+import { Buffer } from 'buffer';
 
 @Injectable()
 export class HashEncryptService implements OnApplicationBootstrap {

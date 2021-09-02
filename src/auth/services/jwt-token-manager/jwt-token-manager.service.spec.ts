@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { JwtTokenManagerService } from './jwt-token-manager.service';
 import { join } from 'path';
 import { promises as fsPromises, constants as fsConstants } from 'fs';
+import { Buffer } from 'buffer';
 
 describe('JwtTokenManagerService', () => {
   let service: JwtTokenManagerService;

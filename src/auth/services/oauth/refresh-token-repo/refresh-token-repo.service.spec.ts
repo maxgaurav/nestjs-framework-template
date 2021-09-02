@@ -8,6 +8,7 @@ import { getModelToken } from '@nestjs/sequelize';
 import { AccessTokenModel } from '../../../../databases/models/oauth/access-token.model';
 import { ClientModel } from '../../../../databases/models/oauth/client.model';
 import { UserModel } from '../../../../databases/models/user.model';
+import { Buffer } from 'buffer';
 
 describe('RefreshTokenRepoService', () => {
   let service: RefreshTokenRepoService;

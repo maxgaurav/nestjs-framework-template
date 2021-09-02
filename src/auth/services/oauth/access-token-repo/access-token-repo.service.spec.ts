@@ -6,6 +6,7 @@ import { JwtService } from '@nestjs/jwt';
 import { RandomByteGeneratorService } from '../../../../common/services/random-byte-generator/random-byte-generator.service';
 import { UserModel } from '../../../../databases/models/user.model';
 import { ClientModel } from '../../../../databases/models/oauth/client.model';
+import { Buffer } from 'buffer';
 
 describe('AccessTokenRepoService', () => {
   let service: AccessTokenRepoService;

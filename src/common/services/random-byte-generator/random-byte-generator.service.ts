@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { randomBytes } from 'crypto';
+import { Buffer } from 'buffer';
 
 @Injectable()
 export class RandomByteGeneratorService {

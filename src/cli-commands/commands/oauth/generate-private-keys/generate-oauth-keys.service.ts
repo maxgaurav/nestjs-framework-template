@@ -3,6 +3,7 @@ import { Command } from 'nestjs-command';
 import { generateKeyPair } from 'crypto';
 import { promises as fsPromises } from 'fs';
 import { join } from 'path';
+import { Buffer } from 'buffer';
 
 @Injectable()
 export class GenerateOauthKeysService {

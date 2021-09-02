@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { JwtModuleOptions, JwtOptionsFactory } from '@nestjs/jwt';
 import { promises as fsPromises, constants as fsConstants } from 'fs';
 import { join } from 'path';
+import { Buffer } from 'buffer';
 
 @Injectable()
 export class JwtTokenManagerService implements JwtOptionsFactory {

@@ -3,6 +3,7 @@ import { ClientRepoService } from './client-repo.service';
 import { RandomByteGeneratorService } from '../../../../common/services/random-byte-generator/random-byte-generator.service';
 import { ClientModel } from '../../../../databases/models/oauth/client.model';
 import { getModelToken } from '@nestjs/sequelize';
+import { Buffer } from 'buffer';
 
 describe('ClientRepoService', () => {
   let service: ClientRepoService;

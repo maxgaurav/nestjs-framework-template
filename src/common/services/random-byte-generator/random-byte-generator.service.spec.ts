@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { RandomByteGeneratorService } from './random-byte-generator.service';
 import * as crypto from 'crypto';
+import { Buffer } from 'buffer';
 
 describe('RandomByteGeneratorService', () => {
   let service: RandomByteGeneratorService;
