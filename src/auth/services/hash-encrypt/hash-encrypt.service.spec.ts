@@ -41,7 +41,7 @@ describe('HashEncryptService', () => {
   });
 
   it('should encrypt content', async () => {
-    const secret = '12345';
+    const secret = '9a3821cd5152199f';
     const text = 'sample';
     const configGetSpy = jest
       .spyOn(configService, 'get')
@@ -51,6 +51,6 @@ describe('HashEncryptService', () => {
     const encryptedText = await service.encrypt(text);
     const decryptedText = await service.decrypt(encryptedText);
     expect(decryptedText).toEqual(text);
-    expect(configGetSpy).toHaveBeenCalled();
+    expect(configGetSpy).toHaveBeenCalledTimes(2);
   });
 });

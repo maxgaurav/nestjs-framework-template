@@ -1,6 +1,6 @@
 import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { hash, compare } from 'bcrypt';
-import { createCipheriv, randomBytes, scrypt, createDecipheriv } from 'crypto';
+import { createCipheriv, scrypt, createDecipheriv } from 'crypto';
 import { ConfigService } from '@nestjs/config';
 import { promisify } from 'util';
 import { Buffer } from 'buffer';
@@ -62,8 +62,10 @@ export class HashEncryptService implements OnApplicationBootstrap {
    * Configure various buffer keys
    */
   public async configureConfig(): Promise<void> {
-    this.ivBuffer = randomBytes(16);
     const secret = this.configService.get<string>('APP_SECRET');
+    this.ivBuffer = Buffer.from(
+      this.configService.get<string>('APP_ENCRYPT_HEX_KEY', '1bce5155bf46c13c'),
+    );
     this.key = (await promisify(scrypt)(secret, 'salt', 32)) as Buffer;
   }
 }
