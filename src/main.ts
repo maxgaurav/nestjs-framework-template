@@ -64,7 +64,9 @@ async function bootstrap() {
   );
 
   app.useStaticAssets(join(process.cwd(), 'public'));
-  app.setBaseViewsDir(join(process.cwd(), 'views'));
+  app.setBaseViewsDir(
+    join(process.cwd(), 'dist', 'view-engine', 'views', 'emails'),
+  );
   app.setViewEngine('hbs');
 
   await app.listen(config.get<SystemConfig>('system').port);
