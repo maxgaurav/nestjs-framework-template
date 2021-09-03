@@ -25,6 +25,7 @@ import { UserModule } from './user/user.module';
 import { PassportModule } from '@nestjs/passport';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { MethodChangeMiddleware } from './helpers/middlewares/method-change/method-change.middleware';
+import { ModelBootstrapModule } from './databases/model-bootstrap/model-bootstrap.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { MethodChangeMiddleware } from './helpers/middlewares/method-change/meth
     }),
     EnvironmentModule,
     DatabasesModule,
+    ModelBootstrapModule,
     HealthModule,
     DocumentationHelperModule,
     CommonModule.register(),

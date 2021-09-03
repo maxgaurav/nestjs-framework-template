@@ -4,7 +4,6 @@ import { HashEncryptService } from './services/hash-encrypt/hash-encrypt.service
 import { SessionStrategyService } from './strategies/session-strategy/session-strategy.service';
 import { LoginController } from './controllers/login/login.controller';
 import { UserRepoService } from '../user/services/user-repo/user-repo.service';
-import { ModelBootstrapModule } from '../databases/model-bootstrap/model-bootstrap.module';
 import { WebGuard } from './guards/web/web.guard';
 import { LoginWebGuard } from './guards/login-web/login-web.guard';
 import { IntendManagerService } from '../session-manager/services/intend-manager/intend-manager.service';
@@ -20,7 +19,6 @@ import { RefreshTokenRepoService } from './services/oauth/refresh-token-repo/ref
 @Global()
 @Module({
   imports: [
-    ModelBootstrapModule.register(),
     JwtModule.registerAsync({
       useClass: JwtTokenManagerService,
     }),

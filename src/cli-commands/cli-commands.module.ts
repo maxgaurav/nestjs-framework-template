@@ -16,7 +16,7 @@ import { ClientRepoService } from '../auth/services/oauth/client-repo/client-rep
 import { ModelBootstrapModule } from '../databases/model-bootstrap/model-bootstrap.module';
 
 @Module({
-  imports: [CommandModule, EnvironmentModule, ModelBootstrapModule.register()],
+  imports: [CommandModule, EnvironmentModule, ModelBootstrapModule],
   providers: [
     RouteListService,
     Logger,
