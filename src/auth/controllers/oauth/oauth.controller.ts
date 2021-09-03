@@ -126,7 +126,7 @@ export class OauthController {
     type: BearerTokenResponse,
     links: {
       requestBody: {
-        $ref: '#/components/schemas/RefreshTokenDot',
+        $ref: '#/components/schemas/RefreshTokenDto',
       },
     },
   })
