@@ -1,7 +1,10 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
-import { SystemConfig } from './environment/interfaces/environment-types.interface';
+import {
+  SystemConfig,
+  ViewConfig,
+} from './environment/interfaces/environment-types.interface';
 import {
   INestApplication,
   UnprocessableEntityException,
@@ -63,10 +66,9 @@ async function bootstrap() {
     new ContextInterceptor(),
   );
 
-  app.useStaticAssets(join(process.cwd(), 'public'));
-  app.setBaseViewsDir(
-    join(process.cwd(), 'dist', 'view-engine', 'views', 'emails'),
-  );
+  const viewConfig = config.get<ViewConfig>('view');
+  app.useStaticAssets(viewConfig.publicPath);
+  app.setBaseViewsDir(viewConfig.viewPath);
   app.setViewEngine('hbs');
 
   await app.listen(config.get<SystemConfig>('system').port);

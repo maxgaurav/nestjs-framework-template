@@ -46,3 +46,8 @@ export interface JwtConfig {
   expirationTimeAccessToken: number | null;
   expirationTimeRefreshToken: number | null;
 }
+
+export interface ViewConfig {
+  viewPath: string;
+  publicPath: string;
+}

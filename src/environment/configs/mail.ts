@@ -8,15 +8,27 @@ export const mailConfig = () => {
     driver: process.env.MAIL_DRIVER,
     template: {
       dir: join(process.cwd(), 'dist', 'view-engine', 'views', 'emails'),
-      adapter: new HandlebarsAdapter(undefined, {
-        inlineCssEnabled: true,
-      }),
       options: {
         strict: true,
       },
       inlineCssOptions: {
         url: ' ',
         preserveMediaQueries: true,
+      },
+    },
+    options: {
+      partials: {
+        dir: join(
+          process.cwd(),
+          'dist',
+          'view-engine',
+          'views',
+          'emails',
+          'partials',
+        ),
+        options: {
+          strict: true,
+        },
       },
     },
   } as MailConfig;

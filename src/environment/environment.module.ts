@@ -7,6 +7,7 @@ import { getEnvFileName } from '../helpers/utils/check-env-file';
 import { mailConfig } from './configs/mail';
 import { sessionConfig } from './configs/session';
 import { jwtConfig } from './configs/jwt';
+import { viewConfig } from './configs/view';
 
 const envSuffix = !!process.env.OVERRIDE_ENV
   ? `.${process.env.OVERRIDE_ENV}`
@@ -24,6 +25,7 @@ const envFileName = getEnvFileName(envSuffix);
         mailConfig,
         sessionConfig,
         jwtConfig,
+        viewConfig,
       ],
       envFilePath: envFileName,
       isGlobal: true,
