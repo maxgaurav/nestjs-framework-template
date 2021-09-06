@@ -10,10 +10,10 @@ describe('AppController (e2e)', () => {
   });
 
   it('/ (GET)', () => {
-    return request(app.getHttpServer())
-      .get('/')
-      .expect((res) => {
-        expect(res.text).toContain('Hello World!');
-      });
+    const testRequest = request(app.getHttpServer()).get('/');
+
+    return testRequest.expect((res) => {
+      expect(res.text).toContain('Hello World!');
+    });
   });
 });

@@ -1,6 +1,5 @@
 import { MailConfig } from '../interfaces/environment-types.interface';
 import { join } from 'path';
-import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 
 export const mailConfig = () => {
   console.log(join(process.cwd(), 'emails'));

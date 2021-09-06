@@ -15,7 +15,6 @@ import { ContextInterceptor } from '../src/helpers/interceptors/context/context.
 import { ErrorValidationFormatFilter } from '../src/helpers/filters/error-validation-format/error-validation-format.filter';
 import * as request from 'supertest';
 import { LoggingService } from '../src/services/logging/logging.service';
-import { join } from 'path';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { SessionConfigService } from '../src/session-manager/services/session-config/session-config.service';
 import { TransactionProviderService } from '../src/transaction-manager/services/transaction-provider/transaction-provider.service';
@@ -26,6 +25,8 @@ import * as flash from 'connect-flash';
 import { SessionMapPreviousUrlInterceptor } from '../src/session-manager/interceptors/session-map-previous-url/session-map-previous-url-interceptor.service';
 import { SetupIntendInterceptor } from '../src/session-manager/interceptors/setup-intend/setup-intend.interceptor';
 import * as helmet from 'helmet';
+import { ViewConfig } from '../src/environment/interfaces/environment-types.interface';
+import { ConfigService } from '@nestjs/config';
 
 /**
  * Hook for overriding the testing module
@@ -92,10 +93,11 @@ export async function basicE2eSetup(
 
   app.useLogger(app.get<LoggingService>(LoggingService));
 
-  app.use(await app.get<SessionConfigService>(SessionConfigService).session());
-
-  app.useStaticAssets(join(process.cwd(), 'public'));
-  app.setBaseViewsDir(join(process.cwd(), 'views'));
+  const viewConfig = app
+    .get<ConfigService>(ConfigService)
+    .get<ViewConfig>('view');
+  app.useStaticAssets(viewConfig.publicPath);
+  app.setBaseViewsDir(viewConfig.viewPath);
   app.setViewEngine('hbs');
 
   app.useGlobalFilters(new ErrorValidationFormatFilter());
@@ -107,6 +109,10 @@ export async function basicE2eSetup(
   return [await app.init(), moduleFixture];
 }
 
+/**
+ * Creates a transaction and sets it in global application level
+ * @param app
+ */
 export const createTransaction = async (
   app: INestApplication,
 ): Promise<Transaction> => {
@@ -136,6 +142,10 @@ export const createTransaction = async (
   return transaction;
 };
 
+/**
+ * A helper to check if response is not a validation error
+ * @param res
+ */
 export const checkValidationErrors = (res: request.Response) => {
   if (res.status === HttpStatus.UNPROCESSABLE_ENTITY) {
     console.error('Validation Errors', res.body);

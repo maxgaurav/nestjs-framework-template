@@ -13,7 +13,7 @@ export class LoginController {
    * Default redirect url
    * @protected
    */
-  protected defaultRedirectUrl = '/profile';
+  static DefaultRedirectUrl = '/profile';
 
   constructor(
     private authService: AuthService,
@@ -53,6 +53,6 @@ export class LoginController {
       return intendUrl;
     }
 
-    return this.defaultRedirectUrl;
+    return LoginController.DefaultRedirectUrl;
   }
 }

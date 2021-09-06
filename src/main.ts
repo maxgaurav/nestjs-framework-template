@@ -21,7 +21,6 @@ import { ErrorValidationFormatFilter } from './helpers/filters/error-validation-
 import { LoggingService } from './services/logging/logging.service';
 import * as helmet from 'helmet';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { join } from 'path';
 import { SessionConfigService } from './session-manager/services/session-config/session-config.service';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore

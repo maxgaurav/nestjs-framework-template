@@ -86,7 +86,9 @@ describe('LoginController', () => {
       }),
     );
     expect(saveSpy).toHaveBeenCalledTimes(2);
-    expect(redirectSpy).toHaveBeenCalledWith('/profile');
+    expect(redirectSpy).toHaveBeenCalledWith(
+      LoginController.DefaultRedirectUrl,
+    );
     expect(getSpy).toHaveBeenCalledWith(request);
   });
 
@@ -163,7 +165,9 @@ describe('LoginController', () => {
       }),
     );
     expect(saveSpy).toHaveBeenCalledTimes(2);
-    expect(redirectSpy).toHaveBeenCalledWith('/profile');
+    expect(redirectSpy).toHaveBeenCalledWith(
+      LoginController.DefaultRedirectUrl,
+    );
     expect(getSpy).toHaveBeenCalledWith(request);
   });
 
