@@ -6,7 +6,7 @@ import { Sequelize, Transaction, TransactionOptions } from 'sequelize';
 export class TransactionProviderService {
   private parentTransaction: Transaction | null = null;
 
-  constructor(@InjectConnection() private connection: Sequelize) {}
+  constructor(@InjectConnection() public readonly connection: Sequelize) {}
 
   /**
    * Creates transaction

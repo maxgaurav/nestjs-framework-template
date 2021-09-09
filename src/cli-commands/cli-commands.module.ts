@@ -14,6 +14,7 @@ import { GenerateOauthKeysService } from './commands/oauth/generate-private-keys
 import { GenerateClientService } from './commands/oauth/generate-client/generate-client.service';
 import { ClientRepoService } from '../auth/services/oauth/client-repo/client-repo.service';
 import { ModelBootstrapModule } from '../databases/model-bootstrap/model-bootstrap.module';
+import { SeederService } from './commands/seeder/seeder.service';
 
 @Module({
   imports: [CommandModule, EnvironmentModule, ModelBootstrapModule],
@@ -31,6 +32,7 @@ import { ModelBootstrapModule } from '../databases/model-bootstrap/model-bootstr
     GenerateOauthKeysService,
     GenerateClientService,
     ClientRepoService,
+    SeederService,
   ],
 })
 export class CliCommandsModule {}
