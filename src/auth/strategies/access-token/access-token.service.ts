@@ -35,7 +35,7 @@ export class AccessTokenService extends PassportStrategy(
     request: Request,
   ): Promise<{ user: UserModel; client: ClientModel }> {
     // aborting with 404 as accept content is not correct
-    if (request.headers.accept.toLowerCase() !== 'application/json') {
+    if (!request.headers.accept.toLowerCase().includes('application/json')) {
       throw new NotFoundException();
     }
 

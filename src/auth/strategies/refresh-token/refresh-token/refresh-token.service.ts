@@ -29,7 +29,7 @@ export class RefreshTokenService extends PassportStrategy(
 
   public async validate(request: Request): Promise<RefreshTokenModel> {
     // aborting with 404 as accept content is not correct
-    if (request.headers.accept.toLowerCase() !== 'application/json') {
+    if (!request.headers.accept.toLowerCase().includes('application/json')) {
       throw new NotFoundException();
     }
 

@@ -39,7 +39,7 @@ export class AccessTokenGuard extends AuthGuard() implements CanActivate {
    * @param headers
    */
   public getBearerToken(headers: IncomingHttpHeaders): string {
-    if (headers.accept !== 'application/json') {
+    if (!headers.accept.toLowerCase().includes('application/json')) {
       throw new NotFoundException();
     }
 
