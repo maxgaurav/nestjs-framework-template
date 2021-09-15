@@ -51,7 +51,7 @@ export class AccessTokenRepoService {
                 },
                 {
                   expires_at: {
-                    [Op.lte]: new Date(),
+                    [Op.gte]: new Date(),
                   },
                 },
               ],
