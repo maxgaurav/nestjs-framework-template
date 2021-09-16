@@ -91,6 +91,14 @@ function setupApiDocumentation(app: INestApplication) {
   const options = new DocumentBuilder()
     .setTitle('Api for {CHANGE TEMPLATE NAME}')
     .setVersion('1.0')
+    .addBearerAuth({
+      type: 'http',
+      scheme: 'bearer',
+      bearerFormat: 'JWT',
+      name: 'JWT',
+      description: 'Enter JWT token',
+      in: 'header',
+    })
     .build();
 
   const document = SwaggerModule.createDocument(app, options);
