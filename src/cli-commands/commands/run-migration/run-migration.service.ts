@@ -1,15 +1,19 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { DatabaseHelperService } from '../../services/database-helper/database-helper.service';
-import { Command, Option } from 'nestjs-command';
+import { Injectable } from '@nestjs/common';
+import { Command } from 'nestjs-command';
 import { ConnectionNames } from '../../../databases/connection-names';
-import { join } from 'path';
-import { exec } from 'child_process';
+import { DatabaseConnectionConfig } from '../../../environment/interfaces/environment-types.interface';
+import { SequelizeStorage, Umzug } from 'umzug';
+import { ConfigService } from '@nestjs/config';
+import { InjectConnection } from '@nestjs/sequelize';
+import { Sequelize } from 'sequelize';
+import { LoggingService } from '../../../services/logging/logging.service';
 
 @Injectable()
 export class RunMigrationService {
   constructor(
-    private databaseHelper: DatabaseHelperService,
-    private logger: Logger,
+    private logger: LoggingService,
+    private config: ConfigService,
+    @InjectConnection() private connection: Sequelize,
   ) {}
 
   @Command({
@@ -18,40 +22,30 @@ export class RunMigrationService {
     autoExit: true,
   })
   public async runMigration(
-    @Option({
-      name: 'connection',
-      describe: 'The connection name',
-      default: ConnectionNames.DefaultConnection,
-      demandOption: false,
-      type: 'string',
-    })
     connectionName: ConnectionNames = ConnectionNames.DefaultConnection,
   ) {
-    const sequelizeCliPath = `${join(
-      __dirname,
-      '../../../../node_modules/.bin/sequelize-cli db:migrate',
-    )}  --url ${this.databaseHelper.databaseUrl(
-      connectionName,
-    )} --migrations-path ${this.databaseHelper.migrationPath(
-      connectionName,
-      true,
-    )}`;
-    this.logger.log('Running migration command');
-    this.logger.log(sequelizeCliPath);
-    await new Promise((resolve, reject) => {
-      const process = exec(sequelizeCliPath);
-      process.stdout.addListener('data', (chunk) => console.log(chunk));
-      process.addListener('exit', (code, signal) => {
-        if (code === 0) {
-          resolve([code, signal]);
-        } else {
-          reject([code, signal]);
-        }
-      });
-      process.addListener('error', (err) => {
-        this.logger.error(err);
-        reject(err);
-      });
+    const connectionConfig =
+      this.config.get<Record<ConnectionNames, DatabaseConnectionConfig>>(
+        'databases',
+      )[connectionName];
+
+    const umzug = new Umzug({
+      migrations: {
+        glob: `${connectionConfig.migrationDirectory}/*.ts`,
+        resolve: ({ name, path, context }) => {
+          const migration = (require as any)(path);
+          return {
+            name,
+            up: async () => migration.up(context, this.connection.Sequelize),
+            down: async () =>
+              migration.down(context, this.connection.Sequelize),
+          };
+        },
+      },
+      context: this.connection.getQueryInterface(),
+      storage: new SequelizeStorage({ sequelize: this.connection }),
+      logger: this.logger as any,
     });
+    return umzug.up();
   }
 }

@@ -13,4 +13,8 @@ export class LoggingService extends ConsoleLogger {
       super.debug(message, context);
     }
   }
+
+  public info(message: any, context?: string): void {
+    return this.log(message, context);
+  }
 }

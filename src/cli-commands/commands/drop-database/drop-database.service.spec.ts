@@ -1,7 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { DropDatabaseService } from './drop-database.service';
-import { DatabaseHelperService } from '../../services/database-helper/database-helper.service';
-import { Logger } from '@nestjs/common';
+import { LoggingService } from '../../../services/logging/logging.service';
+import { ConfigService } from '@nestjs/config';
+import { getConnectionToken } from '@nestjs/sequelize';
 
 describe('DropDatabaseService', () => {
   let service: DropDatabaseService;
@@ -10,11 +11,15 @@ describe('DropDatabaseService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         DropDatabaseService,
+        LoggingService,
         {
-          provide: DatabaseHelperService,
+          provide: ConfigService,
           useValue: {},
         },
-        Logger,
+        {
+          provide: getConnectionToken(),
+          useValue: {},
+        },
       ],
     }).compile();
 

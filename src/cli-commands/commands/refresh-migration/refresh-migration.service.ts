@@ -1,17 +1,18 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { Command, Option } from 'nestjs-command';
-import { ConnectionNames } from '../../../databases/connection-names';
-import { DropDatabaseService } from '../drop-database/drop-database.service';
-import { CreateDatabaseService } from '../create-database/create-database.service';
+import { Injectable } from '@nestjs/common';
+import { Command } from 'nestjs-command';
 import { RunMigrationService } from '../run-migration/run-migration.service';
+import { LoggingService } from '../../../services/logging/logging.service';
+import { ConfigService } from '@nestjs/config';
+import { InjectConnection } from '@nestjs/sequelize';
+import { Sequelize } from 'sequelize';
 
 @Injectable()
 export class RefreshMigrationService {
   constructor(
-    private dropDatabaseCommand: DropDatabaseService,
-    private createDatabaseCommand: CreateDatabaseService,
     private runMigrationCommand: RunMigrationService,
-    private logger: Logger,
+    private logger: LoggingService,
+    private config: ConfigService,
+    @InjectConnection() private connection: Sequelize,
   ) {}
 
   @Command({
@@ -19,18 +20,8 @@ export class RefreshMigrationService {
     describe: 'Refresh all migrations',
     autoExit: true,
   })
-  public async refreshMigrations(
-    @Option({
-      name: 'connection',
-      describe: 'The connection name',
-      default: ConnectionNames.DefaultConnection,
-      demandOption: false,
-      type: 'string',
-    })
-    connectionName: ConnectionNames = ConnectionNames.DefaultConnection,
-  ) {
-    await this.dropDatabaseCommand.dropDatabase(connectionName);
-    await this.createDatabaseCommand.createDatabase(connectionName);
-    await this.runMigrationCommand.runMigration(connectionName);
+  public async refreshMigrations() {
+    await this.connection.getQueryInterface().dropAllTables();
+    await this.runMigrationCommand.runMigration();
   }
 }

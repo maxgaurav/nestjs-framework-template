@@ -1,7 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { RollbackMigrationService } from './rollback-migration.service';
-import { DatabaseHelperService } from '../../services/database-helper/database-helper.service';
-import { Logger } from '@nestjs/common';
+import { LoggingService } from '../../../services/logging/logging.service';
+import { ConfigService } from '@nestjs/config';
+import { getConnectionToken } from '@nestjs/sequelize';
 
 describe('RollbackMigrationService', () => {
   let service: RollbackMigrationService;
@@ -10,11 +11,15 @@ describe('RollbackMigrationService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         RollbackMigrationService,
+        LoggingService,
         {
-          provide: DatabaseHelperService,
+          provide: ConfigService,
           useValue: {},
         },
-        Logger,
+        {
+          provide: getConnectionToken(),
+          useValue: {},
+        },
       ],
     }).compile();
 

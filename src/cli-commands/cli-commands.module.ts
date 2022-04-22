@@ -13,14 +13,16 @@ import { CreateDatabaseService } from './commands/create-database/create-databas
 import { GenerateOauthKeysService } from './commands/oauth/generate-private-keys/generate-oauth-keys.service';
 import { GenerateClientService } from './commands/oauth/generate-client/generate-client.service';
 import { ClientRepoService } from '../auth/services/oauth/client-repo/client-repo.service';
-import { ModelBootstrapModule } from '../databases/model-bootstrap/model-bootstrap.module';
 import { SeederService } from './commands/seeder/seeder.service';
+import { DatabasesModule } from '../databases/databases.module';
+import { LoggingService } from '../services/logging/logging.service';
 
 @Module({
-  imports: [CommandModule, EnvironmentModule, ModelBootstrapModule],
+  imports: [CommandModule, EnvironmentModule, DatabasesModule],
   providers: [
     RouteListService,
     Logger,
+    LoggingService,
     MakeMigrationService,
     RunMigrationService,
     RollbackMigrationService,

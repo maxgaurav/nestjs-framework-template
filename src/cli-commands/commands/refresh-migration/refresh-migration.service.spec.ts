@@ -1,10 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { RefreshMigrationService } from './refresh-migration.service';
-import { DatabaseHelperService } from '../../services/database-helper/database-helper.service';
-import { Logger } from '@nestjs/common';
-import { DropDatabaseService } from '../drop-database/drop-database.service';
-import { CreateDatabaseService } from '../create-database/create-database.service';
 import { RunMigrationService } from '../run-migration/run-migration.service';
+import { LoggingService } from '../../../services/logging/logging.service';
+import { ConfigService } from '@nestjs/config';
+import { getConnectionToken } from '@nestjs/sequelize';
 
 describe('RefreshMigrationService', () => {
   let service: RefreshMigrationService;
@@ -13,23 +12,19 @@ describe('RefreshMigrationService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         RefreshMigrationService,
+        LoggingService,
         {
-          provide: DatabaseHelperService,
+          provide: ConfigService,
           useValue: {},
         },
         {
-          provide: DropDatabaseService,
-          useValue: {},
-        },
-        {
-          provide: CreateDatabaseService,
+          provide: getConnectionToken(),
           useValue: {},
         },
         {
           provide: RunMigrationService,
           useValue: {},
         },
-        Logger,
       ],
     }).compile();
 
