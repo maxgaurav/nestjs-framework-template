@@ -26,6 +26,7 @@ import { PassportModule } from '@nestjs/passport';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { MethodChangeMiddleware } from './helpers/middlewares/method-change/method-change.middleware';
 import { ModelBootstrapModule } from './databases/model-bootstrap/model-bootstrap.module';
+import { FileManagementModule } from './file-management/file-management.module';
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { ModelBootstrapModule } from './databases/model-bootstrap/model-bootstra
       wildcard: true,
       delimiter: '.',
     }),
+    FileManagementModule,
   ],
   controllers: [AppController],
   providers: [

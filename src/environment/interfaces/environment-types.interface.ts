@@ -51,3 +51,8 @@ export interface ViewConfig {
   viewPath: string;
   publicPath: string;
 }
+
+export type FilesystemNames = 'local';
+export interface FilesystemConfig {
+  defaultDriver: FilesystemNames;
+}
