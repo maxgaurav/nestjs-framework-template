@@ -46,7 +46,7 @@ export class MakeMigrationService {
       create: {
         template: (filepath) => [[filepath, stubFileContents]],
       },
-      logger: this.logger as any,
+      logger: this.logger,
     });
 
     const prefix = new Intl.DateTimeFormat('en', {

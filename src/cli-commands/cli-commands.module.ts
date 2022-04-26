@@ -7,7 +7,6 @@ import { RollbackMigrationService } from './commands/rollback-migration/rollback
 import { RefreshMigrationService } from './commands/refresh-migration/refresh-migration.service';
 import { EnvironmentModule } from '../environment/environment.module';
 import { ConfigService } from '@nestjs/config';
-import { DatabaseHelperService } from './services/database-helper/database-helper.service';
 import { DropDatabaseService } from './commands/drop-database/drop-database.service';
 import { CreateDatabaseService } from './commands/create-database/create-database.service';
 import { GenerateOauthKeysService } from './commands/oauth/generate-private-keys/generate-oauth-keys.service';
@@ -28,7 +27,6 @@ import { LoggingService } from '../services/logging/logging.service';
     RollbackMigrationService,
     RefreshMigrationService,
     ConfigService,
-    DatabaseHelperService,
     DropDatabaseService,
     CreateDatabaseService,
     GenerateOauthKeysService,
