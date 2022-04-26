@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { MakeMigrationService } from './make-migration.service';
-import { DatabaseHelperService } from '../../services/database-helper/database-helper.service';
-import { Logger } from '@nestjs/common';
+import { LoggingService } from '../../../services/logging/logging.service';
+import { ConfigService } from '@nestjs/config';
 
 describe('MakeMigrationService', () => {
   let service: MakeMigrationService;
@@ -10,11 +10,11 @@ describe('MakeMigrationService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         MakeMigrationService,
+        LoggingService,
         {
-          provide: DatabaseHelperService,
+          provide: ConfigService,
           useValue: {},
         },
-        Logger,
       ],
     }).compile();
 
