@@ -1,16 +1,16 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { Command, Option, Positional } from 'nestjs-command';
-import { exec } from 'child_process';
+import { Injectable } from '@nestjs/common';
+import { Command, Positional } from 'nestjs-command';
 import { join } from 'path';
+import { Umzug } from 'umzug';
+import { readFileSync } from 'fs';
+import { LoggingService } from '../../../services/logging/logging.service';
+import { ConfigService } from '@nestjs/config';
 import { ConnectionNames } from '../../../databases/connection-names';
-import { DatabaseHelperService } from '../../services/database-helper/database-helper.service';
+import { DatabaseConnectionConfig } from '../../../environment/interfaces/environment-types.interface';
 
 @Injectable()
 export class MakeMigrationService {
-  constructor(
-    private databaseHelper: DatabaseHelperService,
-    private logger: Logger,
-  ) {}
+  constructor(private logger: LoggingService, private config: ConfigService) {}
 
   @Command({
     command: 'migration:make',
@@ -24,32 +24,69 @@ export class MakeMigrationService {
       type: 'string',
     })
     name: string,
-    @Option({
-      name: 'connection',
-      describe: 'The connection name',
-      default: ConnectionNames.DefaultConnection,
-      demandOption: false,
-      type: 'string',
-    })
-    connectionName: ConnectionNames = ConnectionNames.DefaultConnection,
   ) {
-    const sequelizeCliPath = join(
-      __dirname,
-      `../../../../node_modules/.bin/sequelize-cli migration:generate --name ${name} --migrations-path ${this.databaseHelper.migrationPath(
-        connectionName,
-      )}`,
-    );
-    this.logger.log('Running migration generation command');
-    this.logger.log(sequelizeCliPath);
-
-    await new Promise((resolve, reject) => {
-      const process = exec(sequelizeCliPath);
-      process.stdout.addListener('data', (chunk) => console.log(chunk));
-      process.addListener('exit', (code, signal) => resolve([code, signal]));
-      process.addListener('error', (err) => {
-        this.logger.error(err);
-        reject(err);
-      });
+    const stubFileContents: string = readFileSync(
+      join(
+        process.cwd(),
+        'src',
+        'cli-commands',
+        'commands',
+        'make-migration',
+        'migration.stub',
+      ),
+    ).toString('utf-8');
+    const connectionConfig =
+      this.config.get<Record<ConnectionNames, DatabaseConnectionConfig>>(
+        'databases',
+      )[ConnectionNames.DefaultConnection];
+    const umzug = new Umzug({
+      migrations: {
+        glob: `${connectionConfig.migrationDirectory}/*.ts`,
+      },
+      create: {
+        template: (filepath) => [[filepath, stubFileContents]],
+      },
+      logger: this.logger as any,
     });
+
+    const prefix = new Intl.DateTimeFormat('en', {
+      month: '2-digit',
+      year: 'numeric',
+      second: '2-digit',
+      day: '2-digit',
+      minute: '2-digit',
+      hour: '2-digit',
+    })
+      .formatToParts(new Date())
+      .reduce<string[]>((dateFormat, formatPart) => {
+        let index: number;
+        switch (formatPart.type) {
+          case 'year':
+            index = 0;
+            break;
+          case 'month':
+            index = 1;
+            break;
+          case 'day':
+            index = 2;
+            break;
+          case 'hour':
+            index = 3;
+            break;
+          case 'minute':
+            index = 4;
+            break;
+          case 'second':
+            index = 5;
+            break;
+          default:
+            return dateFormat;
+        }
+        dateFormat[index] = formatPart.value;
+        return dateFormat;
+      }, new Array(6))
+      .join('');
+
+    return umzug.create({ name: `${prefix}-${name}.ts`, prefix: 'NONE' });
   }
 }

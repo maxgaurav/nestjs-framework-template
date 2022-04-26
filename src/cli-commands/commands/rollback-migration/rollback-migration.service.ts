@@ -42,12 +42,16 @@ export class RollbackMigrationService {
       migrations: {
         glob: `${connectionConfig.migrationDirectory}/*.ts`,
         resolve: ({ name, path, context }) => {
-          const migration = (require as any)(path);
           return {
             name,
-            up: async () => migration.up(context, this.connection.Sequelize),
+            up: async () =>
+              import(path).then((migration) =>
+                migration.up(context, this.connection.Sequelize),
+              ),
             down: async () =>
-              migration.down(context, this.connection.Sequelize),
+              import(path).then((migration) =>
+                migration.down(context, this.connection.Sequelize),
+              ),
           };
         },
       },
