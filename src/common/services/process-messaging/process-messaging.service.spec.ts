@@ -4,7 +4,10 @@ import { Logger } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { firstValueFrom, of, timer } from 'rxjs';
 import { InterProcessCommunication } from '../../../interfaces/inter-process-communication';
-import { CommunicationCommands } from '../../../cluster/communication-commands';
+import {
+  BroadcastCommandMessage,
+  CommunicationCommands,
+} from '../../../cluster/communication-commands';
 import { catchError, map } from 'rxjs/operators';
 import { Worker } from 'cluster';
 import { SystemEvents } from '../../../system-events/system-events';
@@ -120,8 +123,27 @@ describe('ProcessMessagingService', () => {
 
   it('should send command through send action', () => {
     const sendSpy = jest.spyOn(process, 'send');
+    const isPrimary = jest
+      .spyOn(service, 'isPrimaryProcess')
+      .mockReturnValue(false);
     service.sendCommand(CommunicationCommands.HealthCheckStatus, null);
+    expect(isPrimary).toHaveBeenCalled();
     expect(sendSpy).toHaveBeenCalledWith({
+      command: CommunicationCommands.HealthCheckStatus,
+      message: null,
+    });
+  });
+
+  it('should send command through send action will convert to self event', () => {
+    const convertToSystemEvent = jest
+      .spyOn(service, 'convertCommandsToSystemEvents')
+      .mockImplementation();
+    const isPrimary = jest
+      .spyOn(service, 'isPrimaryProcess')
+      .mockReturnValue(true);
+    service.sendCommand(CommunicationCommands.HealthCheckStatus, null);
+    expect(isPrimary).toHaveBeenCalled();
+    expect(convertToSystemEvent).toHaveBeenCalledWith({
       command: CommunicationCommands.HealthCheckStatus,
       message: null,
     });
@@ -283,6 +305,19 @@ describe('ProcessMessagingService', () => {
     service.convertCommandsToSystemEvents({
       command: CommunicationCommands.HealthCheckRequest,
       message: null,
+    });
+
+    expect(emitSpy).toHaveBeenCalledWith(SystemEvents.SelfHealthStatus, null);
+  });
+
+  it('should recursively call system event converter when broadcast command is found', () => {
+    const emitSpy = jest.spyOn(eventEmitter, 'emit');
+    service.convertCommandsToSystemEvents({
+      command: CommunicationCommands.BroadcastCommand,
+      message: {
+        message: null,
+        command: CommunicationCommands.HealthCheckRequest,
+      } as BroadcastCommandMessage,
     });
 
     expect(emitSpy).toHaveBeenCalledWith(SystemEvents.SelfHealthStatus, null);

@@ -1,11 +1,13 @@
 import { Injectable, Logger, OnApplicationBootstrap } from '@nestjs/common';
 import {
+  BroadcastCommandMessage,
   CommandToSystemEvent,
   CommunicationCommands,
 } from '../../../cluster/communication-commands';
 import { InterProcessCommunication } from '../../../interfaces/inter-process-communication';
 import { finalize, Observable, Subject } from 'rxjs';
 import { Worker } from 'cluster';
+import * as cluster from 'cluster';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Injectable()
@@ -69,7 +71,35 @@ export class ProcessMessagingService implements OnApplicationBootstrap {
     message: T,
   ): void {
     const messageStructure: InterProcessCommunication = { command, message };
-    process.send(messageStructure);
+    this.dispatchCommand(messageStructure);
+  }
+
+  protected dispatchCommand(message: InterProcessCommunication): void {
+    if (this.isPrimaryProcess()) {
+      this.convertCommandsToSystemEvents(message);
+      return;
+    }
+    process.send(message);
+  }
+
+  /**
+   * Returns true if process is primary master process
+   */
+  public isPrimaryProcess(): boolean {
+    return (cluster as any).isPrimary;
+  }
+
+  /**
+   * Broadcast the command to all worker's
+   * @param message
+   */
+  public broadcastCommand<T extends any = any>(
+    message: BroadcastCommandMessage<T>,
+  ): void {
+    this.sendCommand<BroadcastCommandMessage<T>>(
+      CommunicationCommands.BroadcastCommand,
+      message,
+    );
   }
 
   /**
@@ -93,7 +123,7 @@ export class ProcessMessagingService implements OnApplicationBootstrap {
   }
 
   /**
-   * Subscribe to commands send to current process
+   * Subscribe to command's send to current process
    */
   public subscribeToCommands<T extends any = any>(): Observable<
     InterProcessCommunication<T>
@@ -140,6 +170,14 @@ export class ProcessMessagingService implements OnApplicationBootstrap {
           CommandToSystemEvent[commandReceived.command],
           commandReceived.message,
         );
+        break;
+      case CommunicationCommands.BroadcastCommand:
+        const broadcastMessageCommand: BroadcastCommandMessage =
+          commandReceived.message;
+        this.convertCommandsToSystemEvents({
+          command: broadcastMessageCommand.command as any,
+          message: broadcastMessageCommand.message,
+        });
         break;
       default:
         this.logger.warn(

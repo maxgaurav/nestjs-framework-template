@@ -10,12 +10,16 @@ import {
   interval,
   race,
   Subject,
+  Subscription,
   switchMap,
   tap,
   timer,
 } from 'rxjs';
 import { ProcessMessagingService } from '../../../common/services/process-messaging/process-messaging.service';
-import { CommunicationCommands } from '../../communication-commands';
+import {
+  BroadcastCommandMessage,
+  CommunicationCommands,
+} from '../../communication-commands';
 import { map } from 'rxjs/operators';
 import { HealthCheckResult } from '@nestjs/terminus';
 
@@ -26,6 +30,9 @@ interface WorkerConfig {
   attemptsRemaining: number;
   workerCpuId: number;
   allWorkerPid: number[];
+  worker: Worker | null;
+  broadcastSubscription?: Subscription | undefined;
+  isOnline: boolean;
 }
 
 @Injectable()
@@ -82,6 +89,8 @@ export class SetupClusterService {
         attemptsRemaining:
           this.configService.get<ClusterConfig>('cluster').maxWorkerAttempts,
         allWorkerPid: [],
+        worker: null,
+        isOnline: false,
       };
       this.workerAttemptCheck.push(workerConfig);
     }
@@ -115,6 +124,9 @@ export class SetupClusterService {
     const worker = clusterManager.fork();
     workerConfig.allWorkerPid.push(worker.process.pid);
     workerConfig.currentWorkerPid = worker.process.pid;
+    workerConfig.worker = worker;
+
+    this.setupSubscriptions(workerConfig, worker);
 
     console.log(
       `Worker being started on cpu: ${workerCpuId} with process id ${worker.process.pid}`,
@@ -127,11 +139,13 @@ export class SetupClusterService {
       console.warn(
         `Attempting to fork new worker for exited worker ${worker.process.pid}`,
       );
+      workerConfig.isOnline = false;
       this.startWorker(workerCpuId, worker);
     });
 
     worker.on('online', () => {
       console.log(`Worker with pid ${worker.process.pid} is online`);
+      workerConfig.isOnline = true;
       this.startHealthCheckOnWorker(worker);
     });
   }
@@ -194,9 +208,9 @@ export class SetupClusterService {
     // auditing for attempts as configured default 15.
     // Audit starts when previous state is was not in audit mode and a failed health status is found other wise status is passed to auditor
     // for the attempts passed checks counter and attempt counter are kept in audit state
-    // audit state skips final till main check counter equals total check counter
+    //  skips final till main check counter equals total check counter
     // at final stage the auditor decides to keep or kill the process
-    // it is wise to keep audit interval same of bit higher then main check interval
+    // it is wise to keep audit interval same of bit higher than main check interval
     const auditSubscription = primaryCheckTimerObserver
       .pipe(filter((healthState) => !(healthState && !auditState.isAuditing)))
       .pipe(
@@ -282,5 +296,56 @@ export class SetupClusterService {
       );
       this.closeEvent.next(true);
     }
+  }
+
+  /**
+   * Setups various subscription that master needs to have on worker and clear any that is no longer needed from
+   * previous worker if any
+   * @param workerConfig
+   * @param worker
+   * @protected
+   */
+  protected setupSubscriptions(
+    workerConfig: WorkerConfig,
+    worker: Worker,
+  ): void {
+    if (!!workerConfig.broadcastSubscription) {
+      workerConfig.broadcastSubscription.unsubscribe();
+    }
+
+    workerConfig.broadcastSubscription = this.processMessaging
+      .subscribeCommandsFromWorker<BroadcastCommandMessage>(worker)
+      .pipe(
+        filter(
+          (commandMessage) =>
+            commandMessage.command === CommunicationCommands.BroadcastCommand,
+        ),
+      )
+      .subscribe((commandMessage) => {
+        this.broadcastToAllWorkers(
+          commandMessage.command,
+          commandMessage.message,
+        );
+      });
+  }
+
+  /**
+   * Broadcast command to all workers
+   * @param command
+   * @param message
+   */
+  public broadcastToAllWorkers<T extends any>(
+    command: CommunicationCommands,
+    message: T,
+  ): void {
+    this.workerAttemptCheck
+      .filter((worker) => worker.isOnline)
+      .forEach((worker) =>
+        this.processMessaging.sendCommandToWorker(
+          worker.worker,
+          command,
+          message,
+        ),
+      );
   }
 }
