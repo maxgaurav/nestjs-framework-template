@@ -98,7 +98,7 @@ export async function basicE2eSetup(
     .get<ViewConfig>('view');
   app.useStaticAssets(viewConfig.publicPath);
   app.setBaseViewsDir(viewConfig.viewPath);
-  app.setViewEngine('hbs');
+  app.setViewEngine('twig');
 
   app.useGlobalFilters(new ErrorValidationFormatFilter());
 

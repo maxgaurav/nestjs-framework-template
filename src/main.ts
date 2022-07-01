@@ -68,7 +68,7 @@ async function bootstrap() {
   const viewConfig = config.get<ViewConfig>('view');
   app.useStaticAssets(viewConfig.publicPath);
   app.setBaseViewsDir(viewConfig.viewPath);
-  app.setViewEngine('hbs');
+  app.setViewEngine('twig');
 
   await app.listen(config.get<SystemConfig>('system').port);
 }
