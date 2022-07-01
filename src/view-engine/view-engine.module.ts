@@ -1,10 +1,10 @@
 import { Global, Module, Provider } from '@nestjs/common';
 import { ViewEngineConfigService } from './services/view-engine-config/view-engine-config.service';
-import { HANDLEBAR_ENGINE } from './constants';
+import { VIEW_RENDER_ENGINE } from './constants';
 import * as hbs from 'hbs';
 
 const ViewEngineProvider: Provider = {
-  provide: HANDLEBAR_ENGINE,
+  provide: VIEW_RENDER_ENGINE,
   useValue: hbs,
 };
 

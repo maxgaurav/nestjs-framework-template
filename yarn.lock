@@ -349,6 +349,13 @@
   dependencies:
     "@babel/helper-plugin-utils" "^7.14.5"
 
+"@babel/runtime@^7.8.4":
+  version "7.18.6"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.18.6.tgz#6a1ef59f838debd670421f8c7f2cbb8da9751580"
+  integrity sha512-t9wi7/AW6XtKahAe20Yw0/mMljKq0B1r2fPdvaAdV/KPDZewFXdaaa6K7lxmZBZ8FBNpCiAT6iHPmd6QO9bKfQ==
+  dependencies:
+    regenerator-runtime "^0.13.4"
+
 "@babel/template@^7.14.5", "@babel/template@^7.3.3":
   version "7.14.5"
   resolved "https://registry.yarnpkg.com/@babel/template/-/template-7.14.5.tgz#a9bc9d8b33354ff6e55a9c60d1109200a68974f4"
@@ -1053,13 +1060,6 @@
   dependencies:
     "@types/node" "*"
 
-"@types/hbs@^4.0.1":
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/@types/hbs/-/hbs-4.0.1.tgz#9231d2d6c18b3eac1cc3140c76990f72a890fb8f"
-  integrity sha512-kbgeYPLGOG8LQhqNlAvMm7vMz6Iu3IaXDEufpkEYT/viTko1ZlIrj+b6lvo4cAIDRkh6eg+JdKVZkriDGTisEw==
-  dependencies:
-    handlebars "^4.1.0"
-
 "@types/istanbul-lib-coverage@*", "@types/istanbul-lib-coverage@^2.0.0", "@types/istanbul-lib-coverage@^2.0.1":
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/@types/istanbul-lib-coverage/-/istanbul-lib-coverage-2.0.3.tgz#4ba8ddb720221f432e443bd5f9117fd22cfd4762"
@@ -1258,6 +1258,11 @@
   integrity sha512-uci4Esokrw9qGb9bvhhSVEjd6rkny/dk5PK/Qz4yxKiyppEI+dOPlNrZBahE3i+PoKFYyDxChVXZ/ysS/nrm1Q==
   dependencies:
     "@types/superagent" "*"
+
+"@types/twig@^1.12.9":
+  version "1.12.9"
+  resolved "https://registry.yarnpkg.com/@types/twig/-/twig-1.12.9.tgz#76502345e4c85c303541dd6d700c3b86c4fed837"
+  integrity sha512-dHQOzWNbS+GKIF1bfp+Zg8HK2n4XIfznXJMUfQpBpu4Tuw0JB//uo2Llg8TB33C4NOYhqVo/MTUUU9tI4KHUQQ==
 
 "@types/umzug@^2.3.3":
   version "2.3.3"
@@ -3562,12 +3567,7 @@ graceful-fs@^4.2.9:
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.10.tgz#147d3a006da4ca3ce14728c7aefc287c367d7a6c"
   integrity sha512-9ByhssR2fPVsNZj478qUUbKfmL0+t5BDVyjShtyZZLiK7ZDAArFFfopyOTj0M05wE2tJPisA4iTnnXl2YoPvOA==
 
-handlebars-layout@^0.1.4:
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/handlebars-layout/-/handlebars-layout-0.1.4.tgz#d5126b0f8f502d90d2941220c68eed336f595f75"
-  integrity sha1-1RJrD49QLZDSlBIgxo7tM29ZX3U=
-
-handlebars@4.7.7, handlebars@^4.1.0, handlebars@^4.7.6:
+handlebars@^4.7.6:
   version "4.7.7"
   resolved "https://registry.yarnpkg.com/handlebars/-/handlebars-4.7.7.tgz#9ce33416aad02dbd6c8fafa8240d5d98004945a1"
   integrity sha512-aAcXm5OAfE/8IXkcZvCepKU3VzW1/39Fb5ZuqMtgI/hT8X2YgoMvBY5dLhq/cpOvw7Lk1nK/UF71aLG/ZnVYRA==
@@ -3612,14 +3612,6 @@ has@^1.0.3:
   integrity sha512-f2dvO0VU6Oej7RkWJGrehjbzMAjFp5/VKPp5tTpWIV4JHHZK1/BxbFRtf/siA2SWTe09caDmVtYYzWEIbBS4zw==
   dependencies:
     function-bind "^1.1.1"
-
-hbs@^4.1.2:
-  version "4.1.2"
-  resolved "https://registry.yarnpkg.com/hbs/-/hbs-4.1.2.tgz#8d8c07b50d985b580a3d6eae9bf52393a47b9aaf"
-  integrity sha512-WfBnQbozbdiTLjJu6P6Wturgvy0FN8xtRmIjmP0ebX9OGQrt+2S6UC7xX0IebHTCS1sXe20zfTzQ7yhjrEvrfQ==
-  dependencies:
-    handlebars "4.7.7"
-    walk "2.3.14"
 
 he@1.2.0, he@^1.2.0:
   version "1.2.0"
@@ -4756,6 +4748,11 @@ locate-path@^5.0.0:
   dependencies:
     p-locate "^4.1.0"
 
+locutus@^2.0.11:
+  version "2.0.16"
+  resolved "https://registry.yarnpkg.com/locutus/-/locutus-2.0.16.tgz#1da15532f1d735712a27e35a1caf0ccb7041f6b3"
+  integrity sha512-pGfl6Hb/1mXLzrX5kl5lH7gz25ey0vwQssZp8Qo2CEF59di6KrAgdFm+0pW8ghLnvNzzJGj5tlWhhv2QbK3jeQ==
+
 lodash.assignin@^4.0.9:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/lodash.assignin/-/lodash.assignin-4.2.0.tgz#ba8df5fb841eb0a3e8044232b0e263a8dc6a28a2"
@@ -5061,6 +5058,13 @@ minimalistic-assert@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/minimalistic-assert/-/minimalistic-assert-1.0.1.tgz#2e194de044626d4a10e7f7fbc00ce73e83e4d5c7"
   integrity sha512-UtJcAD4yEaGtjPezWuO9wC4nwUnVH/8/Im3yEHQP4b67cXlD/Qr9hdITCU1xDbSEXg2XKNaP8jsReV7vQd00/A==
+
+minimatch@3.0.x:
+  version "3.0.8"
+  resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-3.0.8.tgz#5e6a59bd11e2ab0de1cfb843eb2d82e546c321c1"
+  integrity sha512-6FsRAQsxQ61mw+qP1ZzbL9Bc78x2p5OqNgNpnoAFLTrX8n5Kxph0CsnhmKKNXTWjXqU5L0pGPR7hYk+XWZr60Q==
+  dependencies:
+    brace-expansion "^1.1.7"
 
 minimatch@^3.0.2:
   version "3.1.2"
@@ -6063,6 +6067,11 @@ reflect-metadata@^0.1.13:
   resolved "https://registry.yarnpkg.com/reflect-metadata/-/reflect-metadata-0.1.13.tgz#67ae3ca57c972a2aa1642b10fe363fe32d49dc08"
   integrity sha512-Ts1Y/anZELhSsjMcU605fU9RE4Oi3p5ORujwbIKXfWa+0Zxs510Qrmrce5/Jowq3cHSZSJqBjypxmHarc+vEWg==
 
+regenerator-runtime@^0.13.4:
+  version "0.13.9"
+  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.13.9.tgz#8925742a98ffd90814988d7566ad30ca3b263b52"
+  integrity sha512-p3VT+cOEgxFsRRA9X4lkI1E+k2/CtnKtU4gcxyaCUreilL/vqI6CdZ3wxVUx3UOUg+gnUOQQcRI7BmSI656MYA==
+
 regexpp@^3.1.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/regexpp/-/regexpp-3.2.0.tgz#0425a2768d8f23bad70ca4b90461fa2f1213e1b2"
@@ -6970,6 +6979,16 @@ tsutils@^3.21.0:
   dependencies:
     tslib "^1.8.1"
 
+twig@^1.15.4:
+  version "1.15.4"
+  resolved "https://registry.yarnpkg.com/twig/-/twig-1.15.4.tgz#314b00eaf98a57e70ed7dcfd6def93d0d8f3d627"
+  integrity sha512-gRpGrpdf+MswqF6eSjEdYZTa/jt3ZWHK/NU59IbTYJMBQXJ1W+7IxaGEwLkQjd+mNT15j9sQTzQumxUBkuQueQ==
+  dependencies:
+    "@babel/runtime" "^7.8.4"
+    locutus "^2.0.11"
+    minimatch "3.0.x"
+    walk "2.3.x"
+
 type-check@^0.4.0, type-check@~0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/type-check/-/type-check-0.4.0.tgz#07b8203bfa7056c0657050e3ccd2c37730bab8f1"
@@ -7150,10 +7169,10 @@ w3c-xmlserializer@^2.0.0:
   dependencies:
     xml-name-validator "^3.0.0"
 
-walk@2.3.14:
-  version "2.3.14"
-  resolved "https://registry.yarnpkg.com/walk/-/walk-2.3.14.tgz#60ec8631cfd23276ae1e7363ce11d626452e1ef3"
-  integrity sha512-5skcWAUmySj6hkBdH6B6+3ddMjVQYH5Qy9QGbPmN8kVmLteXk+yVXg+yfk1nbX30EYakahLrr8iPcCxJQSCBeg==
+walk@2.3.x:
+  version "2.3.15"
+  resolved "https://registry.yarnpkg.com/walk/-/walk-2.3.15.tgz#1b4611e959d656426bc521e2da5db3acecae2424"
+  integrity sha512-4eRTBZljBfIISK1Vnt69Gvr2w/wc3U6Vtrw7qiN5iqYJPH7LElcYh/iU4XWhdCy2dZqv1ToMyYlybDylfG/5Vg==
   dependencies:
     foreachasync "^3.0.0"
 

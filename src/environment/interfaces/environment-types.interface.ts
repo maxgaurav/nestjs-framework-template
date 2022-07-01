@@ -50,6 +50,7 @@ export interface JwtConfig {
 export interface ViewConfig {
   viewPath: string;
   publicPath: string;
+  templateCaching: boolean;
 }
 
 export type FilesystemNames = 'local';

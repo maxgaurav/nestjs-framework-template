@@ -1,18 +1,17 @@
 import { Inject, Injectable } from '@nestjs/common';
-import * as HBS from 'hbs';
 import { ISendMailOptions } from '@nestjs-modules/mailer/dist/interfaces/send-mail-options.interface';
-import { HANDLEBAR_ENGINE } from '../../../view-engine/constants';
+import { VIEW_RENDER_ENGINE } from '../../../view-engine/constants';
 import { MailerService } from '@nestjs-modules/mailer';
-import { promises as fsPromises } from 'fs';
 import { ConfigService } from '@nestjs/config';
 import { join } from 'path';
 import { ViewConfig } from '../../../environment/interfaces/environment-types.interface';
-import { Buffer } from 'buffer';
+import * as Twig from 'twig';
+import { RenderOptions } from 'twig';
 
 @Injectable()
 export class MailService {
   constructor(
-    @Inject(HANDLEBAR_ENGINE) private hbs: typeof HBS,
+    @Inject(VIEW_RENDER_ENGINE) private twig: typeof Twig,
     private mailer: MailerService,
     private configService: ConfigService,
   ) {}
@@ -22,20 +21,37 @@ export class MailService {
    * @param sendMailOptions
    */
   public async sendMail(sendMailOptions: ISendMailOptions) {
-    const template = await this.hbs.handlebars.compile(
-      (await this.fileContent(sendMailOptions.template)).toString('utf8'),
+    sendMailOptions.html = await this.fileContent(
+      sendMailOptions.template,
+      sendMailOptions.context,
     );
     sendMailOptions.template = undefined;
-    sendMailOptions.html = template(sendMailOptions.context);
     return this.mailer.sendMail(sendMailOptions);
   }
 
   /**
    * Returns content of file
    * @param fileName
+   * @param contexts
    */
-  public async fileContent(fileName): Promise<Buffer> {
+  public async fileContent(
+    fileName: string,
+    contexts: RenderOptions,
+  ): Promise<string> {
     const viewPath = this.configService.get<ViewConfig>('view');
-    return fsPromises.readFile(join(viewPath.viewPath, `${fileName}.hbs`));
+    return new Promise<string>((res, rej) => {
+      this.twig.renderFile(
+        join(viewPath.viewPath, `${fileName}.twig`),
+        contexts,
+        (err, result) => {
+          if (err) {
+            rej(err);
+            return;
+          }
+
+          res(result);
+        },
+      );
+    });
   }
 }

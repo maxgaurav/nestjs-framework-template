@@ -1,1 +1,1 @@
-export const HANDLEBAR_ENGINE = 'HANDLEBAR_ENGINE';
+export const VIEW_RENDER_ENGINE = Symbol('VIEW_RENDER_ENGINE');

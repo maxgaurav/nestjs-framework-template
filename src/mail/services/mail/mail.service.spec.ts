@@ -1,11 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { MailService } from './mail.service';
 import { MailerService } from '@nestjs-modules/mailer';
-import * as HBS from 'hbs';
+import * as Twig from 'twig';
 import { ConfigService } from '@nestjs/config';
-import { HANDLEBAR_ENGINE } from '../../../view-engine/constants';
-import { promises as fsPromises } from 'fs';
-import { Buffer } from 'buffer';
+import { VIEW_RENDER_ENGINE } from '../../../view-engine/constants';
 import { ISendMailOptions } from '@nestjs-modules/mailer/dist/interfaces/send-mail-options.interface';
 
 describe('MailService', () => {
@@ -14,8 +12,8 @@ describe('MailService', () => {
   const mailer: MailerService = {
     sendMail: (value) => value,
   } as any;
-  const handlebar: typeof HBS = {
-    handlebars: { compile: (value) => value },
+  const twigTemplateEngine: typeof Twig = {
+    renderFile: (value) => value,
   } as any;
   const configService: ConfigService = {
     get: (value) => value,
@@ -34,8 +32,8 @@ describe('MailService', () => {
           useValue: mailer,
         },
         {
-          provide: HANDLEBAR_ENGINE,
-          useValue: handlebar,
+          provide: VIEW_RENDER_ENGINE,
+          useValue: twigTemplateEngine,
         },
       ],
     }).compile();
@@ -47,36 +45,36 @@ describe('MailService', () => {
     expect(service).toBeDefined();
   });
 
-  it('should return file content as buffer', async () => {
-    const content = 'content';
+  it('should return file content as string', async () => {
     const configGetSpy = jest
       .spyOn(configService, 'get')
       .mockReturnValue({ viewPath: 'path' });
+    const renderSpy = jest
+      .spyOn(twigTemplateEngine, 'renderFile')
+      .mockImplementation((...params: any[]) => {
+        if (params.length !== 3) {
+          throw new Error('invalid number of arguments');
+        }
 
-    const readFileSpy = jest
-      .spyOn(fsPromises, 'readFile')
-      .mockReturnValue(Promise.resolve(Buffer.from(content)));
+        params[2](null, 'sample');
+      });
 
-    expect(await service.fileContent('test')).toEqual(Buffer.from('content'));
+    expect(await service.fileContent('test', { content: 'any' })).toEqual(
+      'sample',
+    );
+
     expect(configGetSpy).toHaveBeenCalledWith('view');
-    expect(readFileSpy).toHaveBeenCalledWith('path/test.hbs');
+    expect(renderSpy).toHaveBeenCalledWith(
+      'path/test.twig',
+      { content: 'any' },
+      expect.anything(),
+    );
   });
 
   it('should render template and send mail', async () => {
-    const templateParser = { template: (value) => value };
-    const templateParserSpy = jest
-      .spyOn(templateParser, 'template')
-      .mockReturnValue('html');
-    const compileSpy = jest
-      .spyOn(handlebar.handlebars, 'compile')
-      .mockReturnValue(templateParser.template);
-
-    const content = 'content';
-
     const fileContentSpy = jest
       .spyOn(service, 'fileContent')
-      .mockReturnValue(Promise.resolve(Buffer.from(content)));
-
+      .mockReturnValue(Promise.resolve('sample'));
     const sendMailSpy = jest
       .spyOn(mailer, 'sendMail')
       .mockReturnValue(Promise.resolve(true));
@@ -88,14 +86,12 @@ describe('MailService', () => {
     };
 
     expect(await service.sendMail(mailOptions)).toEqual(true);
+    expect(fileContentSpy).toHaveBeenCalledWith('test', mailOptions.context);
 
-    expect(fileContentSpy).toHaveBeenCalledWith('test');
-    expect(compileSpy).toHaveBeenCalledWith(content);
-    expect(templateParserSpy).toHaveBeenCalledWith(mailOptions.context);
     expect(sendMailSpy).toHaveBeenCalledWith({
       template: undefined,
       context: mailOptions.context,
-      html: 'html',
+      html: 'sample',
     });
   });
 });

@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ViewEngineConfigService } from './view-engine-config.service';
-import { HANDLEBAR_ENGINE } from '../../constants';
+import { VIEW_RENDER_ENGINE } from '../../constants';
 import { ConfigService } from '@nestjs/config';
 
 describe('ViewEngineConfigService', () => {
@@ -13,7 +13,7 @@ describe('ViewEngineConfigService', () => {
       providers: [
         ViewEngineConfigService,
         {
-          provide: HANDLEBAR_ENGINE,
+          provide: VIEW_RENDER_ENGINE,
           useValue: {},
         },
         {
