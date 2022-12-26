@@ -8,7 +8,7 @@ describe('not-found-pipe', () => {
   test('should return not found exception when entity not found is thrown', async () => {
     const action = of(true).pipe(
       map(() => {
-        throw new EmptyResultError();
+        throw new EmptyResultError('');
       }),
     );
     let isResolved = false;

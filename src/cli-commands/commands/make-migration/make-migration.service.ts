@@ -15,7 +15,6 @@ export class MakeMigrationService {
   @Command({
     command: 'migration:make',
     describe: 'Generates migration stub',
-    autoExit: true,
   })
   public async generateStub(
     @Positional({

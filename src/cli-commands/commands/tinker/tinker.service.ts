@@ -32,7 +32,6 @@ export class TinkerService {
   @Command({
     command: 'tinker',
     describe: 'Start a tinker session with application context.',
-    autoExit: false,
   })
   public tinker() {
     global.tinkerContext = { app: this.applicationContext, getModelToken };

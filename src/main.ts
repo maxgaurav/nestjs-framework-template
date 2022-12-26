@@ -19,7 +19,7 @@ import { NotFoundConverterInterceptor } from './helpers/interceptors/not-found-c
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ErrorValidationFormatFilter } from './helpers/filters/error-validation-format/error-validation-format.filter';
 import { LoggingService } from './services/logging/logging.service';
-import * as helmet from 'helmet';
+import helmet from 'helmet';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { SessionConfigService } from './session-manager/services/session-config/session-config.service';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment

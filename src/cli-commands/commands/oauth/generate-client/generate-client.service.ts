@@ -12,7 +12,6 @@ export class GenerateClientService {
   @Command({
     command: 'oauth:generate-client',
     describe: 'Generate a new client id and secret',
-    autoExit: true,
   })
   public async generateClient(
     @Positional({

@@ -19,7 +19,6 @@ export class RunMigrationService {
   @Command({
     command: 'migration:run',
     describe: 'Runs all pending migrations',
-    autoExit: true,
   })
   public async runMigration(
     connectionName: ConnectionNames = ConnectionNames.DefaultConnection,

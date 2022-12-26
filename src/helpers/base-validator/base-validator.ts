@@ -5,7 +5,7 @@ import {
   ValidatorConstraintInterface,
 } from 'class-validator';
 
-export type MappedValueType<T extends any> = { value: T; state: boolean };
+export type MappedValueType<T = any> = { value: T; state: boolean };
 
 type BaseValidatorConstructor = { new (...args: any[]): BaseValidator };
 
@@ -20,7 +20,7 @@ export type DecoratorFunctionWithConfig<T> = (
   validationOptions?: ValidationOptions,
 ) => DecoratorReturnType;
 
-export abstract class BaseValidator<T extends any = any>
+export abstract class BaseValidator<T = any>
   implements ValidatorConstraintInterface
 {
   protected valueMap: Map<string, MappedValueType<T>[]> = new Map<

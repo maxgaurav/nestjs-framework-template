@@ -20,7 +20,6 @@ export class RollbackMigrationService {
     command: 'migration:rollback',
     describe:
       'Roll back last migration or till the migration point provided as till',
-    autoExit: true,
   })
   public async rollbackMigration(
     connectionName: ConnectionNames = ConnectionNames.DefaultConnection,

@@ -16,7 +16,6 @@ export class DropDatabaseService {
   @Command({
     command: 'database:drop',
     describe: 'Drop database',
-    autoExit: true,
   })
   public async dropDatabase() {
     return this.connection

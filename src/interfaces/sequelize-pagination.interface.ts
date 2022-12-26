@@ -1,4 +1,4 @@
-export interface SequelizePagination<T extends any> {
+export interface SequelizePagination<T = any> {
   items: T[];
   offset: number; // starting point of count (respect to total count) for current page
   totalItems: number; // total number of items across all pages

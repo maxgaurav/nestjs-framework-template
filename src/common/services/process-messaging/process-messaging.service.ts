@@ -66,7 +66,7 @@ export class ProcessMessagingService implements OnApplicationBootstrap {
    * @param command
    * @param message
    */
-  public sendCommand<T extends any = any>(
+  public sendCommand<T = any>(
     command: CommunicationCommands,
     message: T,
   ): void {
@@ -93,9 +93,7 @@ export class ProcessMessagingService implements OnApplicationBootstrap {
    * Broadcast the command to all worker's
    * @param message
    */
-  public broadcastCommand<T extends any = any>(
-    message: BroadcastCommandMessage<T>,
-  ): void {
+  public broadcastCommand<T = any>(message: BroadcastCommandMessage<T>): void {
     this.sendCommand<BroadcastCommandMessage<T>>(
       CommunicationCommands.BroadcastCommand,
       message,
@@ -108,7 +106,7 @@ export class ProcessMessagingService implements OnApplicationBootstrap {
    * @param command
    * @param message
    */
-  public sendCommandToWorker<T extends any = any>(
+  public sendCommandToWorker<T = any>(
     worker: Worker,
     command: CommunicationCommands,
     message: T,
@@ -125,7 +123,7 @@ export class ProcessMessagingService implements OnApplicationBootstrap {
   /**
    * Subscribe to command's send to current process
    */
-  public subscribeToCommands<T extends any = any>(): Observable<
+  public subscribeToCommands<T = any>(): Observable<
     InterProcessCommunication<T>
   > {
     return this.commandEmitter.asObservable();
@@ -135,7 +133,7 @@ export class ProcessMessagingService implements OnApplicationBootstrap {
    * Subscribe to commands received from worker process
    * @param worker
    */
-  public subscribeCommandsFromWorker<T extends any = any>(
+  public subscribeCommandsFromWorker<T = any>(
     worker: Worker,
   ): Observable<InterProcessCommunication<T>> {
     const emitter = new Subject<InterProcessCommunication<T>>();

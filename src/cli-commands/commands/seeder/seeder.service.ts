@@ -15,7 +15,6 @@ export class SeederService {
   @Command({
     command: 'seeder:seed',
     describe: 'Seed database',
-    autoExit: true,
   })
   public async seed() {
     for (const seeder of SeederService.SeedMaps) {

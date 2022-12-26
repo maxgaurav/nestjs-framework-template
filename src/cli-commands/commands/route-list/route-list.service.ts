@@ -11,7 +11,6 @@ export class RouteListService {
   @Command({
     command: 'route:list',
     describe: 'Returns list of routes registered',
-    autoExit: true,
   })
   async listRoutes() {
     const server = this.adapterHost.httpAdapter.getHttpServer();

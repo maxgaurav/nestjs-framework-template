@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UserModel } from '../../../databases/models/user.model';
-import { EmptyResultError, Transaction } from 'sequelize';
+import { Transaction } from 'sequelize';
 import { InjectModel } from '@nestjs/sequelize';
 
 @Injectable()
@@ -8,7 +8,7 @@ export class UserRepoService {
   constructor(@InjectModel(UserModel) public userModel: typeof UserModel) {}
 
   /**
-   * Find by email or returns null when not not found
+   * Find by email or returns null when not found
    * @param email
    * @param transaction
    */
@@ -30,11 +30,10 @@ export class UserRepoService {
     email: string,
     transaction?: Transaction,
   ): Promise<UserModel> {
-    return this.findByEmail(email, transaction).then((result) => {
-      if (!result) {
-        throw new EmptyResultError();
-      }
-      return result;
+    return this.userModel.findOne({
+      where: { email },
+      transaction,
+      rejectOnEmpty: true,
     });
   }
 

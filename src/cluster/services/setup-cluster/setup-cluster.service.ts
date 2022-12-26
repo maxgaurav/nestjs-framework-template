@@ -334,7 +334,7 @@ export class SetupClusterService {
    * @param command
    * @param message
    */
-  public broadcastToAllWorkers<T extends any>(
+  public broadcastToAllWorkers<T = any>(
     command: CommunicationCommands,
     message: T,
   ): void {

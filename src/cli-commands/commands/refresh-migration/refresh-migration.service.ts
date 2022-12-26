@@ -18,7 +18,6 @@ export class RefreshMigrationService {
   @Command({
     command: 'migration:refresh',
     describe: 'Refresh all migrations',
-    autoExit: true,
   })
   public async refreshMigrations() {
     await this.connection.getQueryInterface().dropAllTables();

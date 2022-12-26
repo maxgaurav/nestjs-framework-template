@@ -12,7 +12,6 @@ export class GenerateOauthKeysService {
   @Command({
     command: 'oauth:generate-keys',
     describe: 'Generates private and public keys for jwt',
-    autoExit: true,
   })
   public async generateKeys() {
     this.log.debug('Starting generation of keys');
