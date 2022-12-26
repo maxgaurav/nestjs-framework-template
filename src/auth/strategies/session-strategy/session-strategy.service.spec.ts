@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { LoginPasswordDto } from '../../dtos/login-password/login-password.dto';
 
+const FakedEmail = 'email@email.com';
 describe('LocalStrategyService', () => {
   let service: SessionStrategyService;
 
@@ -36,7 +37,7 @@ describe('LocalStrategyService', () => {
   it('should return user when found by auth handler', async () => {
     const user: UserModel = {
       id: 1,
-      email: 'email@email.com',
+      email: FakedEmail,
       password: 'password',
     } as any;
 
@@ -60,7 +61,7 @@ describe('LocalStrategyService', () => {
 
   it('should throw unauthorized exception when user is not found', async () => {
     const dto = new LoginPasswordDto({
-      email: 'email@email.com',
+      email: FakedEmail,
       password: 'password',
     });
     const validateContentSpy = jest
@@ -80,7 +81,7 @@ describe('LocalStrategyService', () => {
     }
 
     expect(errorThrown).toEqual(true);
-    expect(validateSpy).toHaveBeenCalledWith('email@email.com', 'password');
+    expect(validateSpy).toHaveBeenCalledWith(FakedEmail, 'password');
     expect(validateContentSpy).toHaveBeenCalled();
   });
 

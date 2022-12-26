@@ -10,6 +10,7 @@ import { AccessTokenModel } from '../../../databases/models/oauth/access-token.m
 import { RefreshTokenRepoService } from '../oauth/refresh-token-repo/refresh-token-repo.service';
 import { RefreshTokenModel } from '../../../databases/models/oauth/refresh-token.model';
 
+const FakedEmail = 'email@email.com';
 describe('AuthService', () => {
   let service: AuthService;
   let hashService: HashEncryptService;
@@ -70,7 +71,7 @@ describe('AuthService', () => {
   it('should return user when user is found and hash passes', async () => {
     const user: UserModel = {
       id: 1,
-      email: 'email@email.com',
+      email: FakedEmail,
       password: await hashService.createHash('password'),
     } as any;
     const findByEmailSpy = jest
@@ -86,7 +87,7 @@ describe('AuthService', () => {
   it('should return null when user is not found', async () => {
     const user: UserModel = {
       id: 1,
-      email: 'email@email.com',
+      email: FakedEmail,
       password: await hashService.createHash('password'),
     } as any;
 
@@ -103,7 +104,7 @@ describe('AuthService', () => {
   it('should return null when password hash do not match', async () => {
     const user: UserModel = {
       id: 1,
-      email: 'email@email.com',
+      email: FakedEmail,
       password: await hashService.createHash('passwordNotMatch'),
     } as any;
 
@@ -120,7 +121,7 @@ describe('AuthService', () => {
   it('should return the user model form service for the user id', async () => {
     const user: UserModel = {
       id: 1,
-      email: 'email@email.com',
+      email: FakedEmail,
       password: 'passwordHash',
     } as any;
 

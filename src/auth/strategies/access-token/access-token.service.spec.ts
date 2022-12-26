@@ -20,6 +20,8 @@ class FailureClass {
   constructor(public content) {}
 }
 
+const FakedEmail = 'test@test.com';
+const ApplicationJson = 'application/json';
 describe('AccessTokenService', () => {
   let service: AccessTokenService;
 
@@ -54,7 +56,7 @@ describe('AccessTokenService', () => {
 
   it('should return user and client model on successful validation', async () => {
     const dto = new AccessTokenDto({
-      email: 'test@test.com',
+      email: FakedEmail,
       password: 'password',
       client_id: 'clientId',
       client_secret: 'secret',
@@ -76,7 +78,7 @@ describe('AccessTokenService', () => {
       .mockReturnValue(Promise.resolve(client));
 
     const request: Request = {
-      headers: { accept: 'application/json' },
+      headers: { accept: ApplicationJson },
       body: { test: 'test' },
     } as any;
 
@@ -109,7 +111,7 @@ describe('AccessTokenService', () => {
 
   it('should throw unauthorized exception when user is not found', async () => {
     const dto = new AccessTokenDto({
-      email: 'test@test.com',
+      email: FakedEmail,
       password: 'password',
       client_id: 'clientId',
     });
@@ -123,7 +125,7 @@ describe('AccessTokenService', () => {
       .mockReturnValue(Promise.resolve(null));
 
     const request: Request = {
-      headers: { accept: 'application/json' },
+      headers: { accept: ApplicationJson },
     } as any;
 
     let errorThrown = false;
@@ -168,7 +170,7 @@ describe('AccessTokenService', () => {
 
   it('should throw unprocessable error when client is not found', async () => {
     const dto = new AccessTokenDto({
-      email: 'test@test.com',
+      email: FakedEmail,
       password: 'password',
       client_id: 'clientId',
       client_secret: 'secret',
@@ -183,7 +185,7 @@ describe('AccessTokenService', () => {
       .mockReturnValue(Promise.resolve(null));
 
     const request: Request = {
-      headers: { accept: 'application/json' },
+      headers: { accept: ApplicationJson },
       body: { test: 'test' },
     } as any;
 

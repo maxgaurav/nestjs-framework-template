@@ -8,6 +8,7 @@ import { AccessTokenRepoService } from '../../services/oauth/access-token-repo/a
 import { JwtService } from '@nestjs/jwt';
 import { RefreshTokenRepoService } from '../../services/oauth/refresh-token-repo/refresh-token-repo.service';
 
+const DefaultRedirectUrl = '/intendUrl';
 describe('LoginController', () => {
   let controller: LoginController;
   let module: TestingModule;
@@ -111,7 +112,7 @@ describe('LoginController', () => {
     const redirectSpy = jest.spyOn(response, 'redirect');
     const getSpy = jest
       .spyOn(intendManager, 'getUrl')
-      .mockReturnValueOnce('/intendUrl');
+      .mockReturnValueOnce(DefaultRedirectUrl);
 
     const setSpy = jest.spyOn(intendManager, 'setUrl').mockImplementation();
 
@@ -127,7 +128,7 @@ describe('LoginController', () => {
       }),
     );
     expect(saveSpy).toHaveBeenCalledTimes(2);
-    expect(redirectSpy).toHaveBeenCalledWith('/intendUrl');
+    expect(redirectSpy).toHaveBeenCalledWith(DefaultRedirectUrl);
     expect(getSpy).toHaveBeenCalledWith(request);
     expect(setSpy).toHaveBeenCalledWith(request, null);
   });
@@ -194,7 +195,7 @@ describe('LoginController', () => {
       });
 
     const redirectSpy = jest.spyOn(response, 'redirect');
-    jest.spyOn(intendManager, 'getUrl').mockReturnValueOnce('/intendUrl');
+    jest.spyOn(intendManager, 'getUrl').mockReturnValueOnce(DefaultRedirectUrl);
 
     jest.spyOn(intendManager, 'setUrl').mockImplementation();
     let errorThrown = false;

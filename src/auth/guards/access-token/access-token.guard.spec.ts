@@ -4,6 +4,7 @@ import { NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { UserModel } from '../../../databases/models/user.model';
 import { firstValueFrom } from 'rxjs';
 
+const AcceptApplicationJson = 'application/json';
 describe('AccessTokenGuard', () => {
   let guard: AccessTokenGuard;
 
@@ -21,7 +22,7 @@ describe('AccessTokenGuard', () => {
 
   it('should return bearer value from header', () => {
     const headers = {
-      accept: 'application/json',
+      accept: AcceptApplicationJson,
       authorization: 'Bearer test',
     };
 
@@ -48,7 +49,7 @@ describe('AccessTokenGuard', () => {
 
   it('should throw unauthorized exception when authorization is not type of string', () => {
     const headers = {
-      accept: 'application/json',
+      accept: AcceptApplicationJson,
       authorization: undefined,
     };
 
@@ -66,7 +67,7 @@ describe('AccessTokenGuard', () => {
 
   it('should throw unauthorized exception when authorization does not contain bearer content', () => {
     const headers = {
-      accept: 'application/json',
+      accept: AcceptApplicationJson,
       authorization: 'test',
     };
 

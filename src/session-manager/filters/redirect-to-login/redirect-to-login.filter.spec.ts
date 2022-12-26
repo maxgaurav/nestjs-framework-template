@@ -2,6 +2,7 @@ import { RedirectFromLoginFilter } from './redirect-to-login.filter';
 import { HttpStatus, UnauthorizedException } from '@nestjs/common';
 import { IntendManagerService } from '../../services/intend-manager/intend-manager.service';
 
+const DefaultValue = 'will-not-match';
 describe('RedirectToLoginFilter', () => {
   let filter: RedirectFromLoginFilter;
   const intendManager: IntendManagerService = {
@@ -20,7 +21,7 @@ describe('RedirectToLoginFilter', () => {
   it('should redirect to login route when request is not json/ajax', () => {
     const request = {
       xhr: false,
-      accepts: () => 'will-not-match',
+      accepts: () => DefaultValue,
       method: 'GET',
       url: 'currentUrl',
       session: { save: (value) => value },
@@ -55,7 +56,7 @@ describe('RedirectToLoginFilter', () => {
   it('should redirect to login route when request is not json/ajax but not set intend url to null when method is post', () => {
     const request = {
       xhr: false,
-      accepts: () => 'will-not-match',
+      accepts: () => DefaultValue,
       method: 'POST',
       url: 'currentUrl',
       session: { save: (value) => value },
@@ -88,7 +89,7 @@ describe('RedirectToLoginFilter', () => {
   });
 
   it('should return json when set to xhr and method is get', () => {
-    const request = { xhr: true, accepts: () => 'will-not-match' };
+    const request = { xhr: true, accepts: () => DefaultValue };
     const response = {
       status: (value) => value,
       json: (value) => value,

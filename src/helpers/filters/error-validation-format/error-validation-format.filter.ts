@@ -79,10 +79,12 @@ export class ErrorValidationFormatFilter implements ExceptionFilter {
 
     const finalFormattedErrors: { [key: string]: string[] } = {};
     for (const errorKey of Object.keys(formattedErrors)) {
-      if (formattedErrors.hasOwnProperty(errorKey)) {
-        if (formattedErrors[errorKey].length > 0) {
-          finalFormattedErrors[errorKey] = formattedErrors[errorKey];
-        }
+      if (!formattedErrors.hasOwnProperty(errorKey)) {
+        continue;
+      }
+
+      if (formattedErrors[errorKey].length > 0) {
+        finalFormattedErrors[errorKey] = formattedErrors[errorKey];
       }
     }
 

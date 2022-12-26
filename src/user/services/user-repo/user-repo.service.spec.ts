@@ -3,6 +3,7 @@ import { UserRepoService } from './user-repo.service';
 import { UserModel } from '../../../databases/models/user.model';
 import { getModelToken } from '@nestjs/sequelize';
 
+const FakedEmail = 'email@email.com';
 describe('UserRepoService', () => {
   let service: UserRepoService;
 
@@ -30,7 +31,7 @@ describe('UserRepoService', () => {
   });
 
   it('should return user model by email when found', async () => {
-    const userModel: UserModel = { id: 1, email: 'email@email.com' } as any;
+    const userModel: UserModel = { id: 1, email: FakedEmail } as any;
     const findOneSpy = jest
       .spyOn(model, 'findOne')
       .mockReturnValueOnce(Promise.resolve(userModel));
@@ -48,7 +49,7 @@ describe('UserRepoService', () => {
   });
 
   it('should return null when find by email fails to find user', async () => {
-    const userModel: UserModel = { id: 1, email: 'email@email.com' } as any;
+    const userModel: UserModel = { id: 1, email: FakedEmail } as any;
     const findOneSpy = jest
       .spyOn(model, 'findOne')
       .mockReturnValueOnce(Promise.resolve(undefined));
@@ -66,7 +67,7 @@ describe('UserRepoService', () => {
   });
 
   it('should find the user by id', async () => {
-    const userModel: UserModel = { id: 1, email: 'email@email.com' } as any;
+    const userModel: UserModel = { id: 1, email: FakedEmail } as any;
     const findSpy = jest
       .spyOn(model, 'findByPk')
       .mockReturnValueOnce(Promise.resolve(userModel));
@@ -84,7 +85,7 @@ describe('UserRepoService', () => {
   });
 
   it('should return user when find by email results in user', async () => {
-    const userModel: UserModel = { id: 1, email: 'email@email.com' } as any;
+    const userModel: UserModel = { id: 1, email: FakedEmail } as any;
 
     const transaction = null;
 

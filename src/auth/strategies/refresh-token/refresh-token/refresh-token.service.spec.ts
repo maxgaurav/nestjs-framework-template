@@ -26,6 +26,7 @@ class FailValidation {
   constructor(public content: any) {}
 }
 
+const AcceptApplicationJson = 'application/json';
 describe('RefreshTokenService', () => {
   let service: RefreshTokenService;
 
@@ -79,7 +80,7 @@ describe('RefreshTokenService', () => {
 
   it('should return refresh token when found', async () => {
     const request: Request = {
-      headers: { accept: 'application/json' },
+      headers: { accept: AcceptApplicationJson },
       body: { test: 'test' },
     } as any;
 
@@ -120,7 +121,7 @@ describe('RefreshTokenService', () => {
 
   it('should throw unauthorized exception when refresh token not found', async () => {
     const request: Request = {
-      headers: { accept: 'application/json' },
+      headers: { accept: AcceptApplicationJson },
       body: { test: 'test' },
     } as any;
 
@@ -171,7 +172,7 @@ describe('RefreshTokenService', () => {
   it('should throw unauthorized exception when date has expired', async () => {
     mockdate.set('2021-01-01 00:00:00');
     const request: Request = {
-      headers: { accept: 'application/json' },
+      headers: { accept: AcceptApplicationJson },
       body: { test: 'test' },
     } as any;
 
@@ -210,7 +211,7 @@ describe('RefreshTokenService', () => {
 
   it('should throw unprocessable error when client is not found', async () => {
     const request: Request = {
-      headers: { accept: 'application/json' },
+      headers: { accept: AcceptApplicationJson },
       body: { test: 'test' },
     } as any;
 
