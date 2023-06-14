@@ -4,6 +4,7 @@ import { SessionMapPreviousUrlInterceptor } from './interceptors/session-map-pre
 import { IntendManagerService } from './services/intend-manager/intend-manager.service';
 import { RedirectFromLoginFilter } from './filters/redirect-to-login/redirect-to-login.filter';
 import { SetupIntendInterceptor } from './interceptors/setup-intend/setup-intend.interceptor';
+import { KillForApiInterceptor } from './interceptors/kill-for-api/kill-for-api.interceptor';
 
 @Module({
   providers: [
@@ -12,6 +13,7 @@ import { SetupIntendInterceptor } from './interceptors/setup-intend/setup-intend
     IntendManagerService,
     RedirectFromLoginFilter,
     SetupIntendInterceptor,
+    KillForApiInterceptor,
   ],
 })
 export class SessionManagerModule {}
