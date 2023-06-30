@@ -2,7 +2,6 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Command } from 'nestjs-command';
 import { HttpAdapterHost } from '@nestjs/core';
 import { IRoute, Router } from 'express';
-import { firstValueFrom, timer } from 'rxjs';
 
 @Injectable()
 export class RouteListService {

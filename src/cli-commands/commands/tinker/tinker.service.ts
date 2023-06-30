@@ -35,6 +35,11 @@ export class TinkerService {
   })
   public tinker() {
     global.tinkerContext = { app: this.applicationContext, getModelToken };
-    createRepl({ service: process[REGISTER_INSTANCE] }).start();
+    const repl = createRepl({ service: process[REGISTER_INSTANCE] });
+    repl.start();
+    return new Promise(() => {
+      // NO OPERATION
+      // This is to allow the REPL to take over the main process and its exit strategy
+    });
   }
 }
