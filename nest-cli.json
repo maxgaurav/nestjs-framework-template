@@ -2,10 +2,5 @@
   "collection": "@nestjs/schematics",
   "sourceRoot": "src",
   "compilerOptions": {
-    "assets": [{
-      "include": "**/*.twig",
-      "watchAssets": true
-    }
-    ]
   }
 }
