@@ -29,6 +29,5 @@ export class RouteListService {
       .filter((item) => item !== undefined)
       .forEach((route) => this.logger.log(route));
     this.logger.log('-------------END OF ROUTE LIST----------------------');
-    await firstValueFrom(timer(100000));
   }
 }
