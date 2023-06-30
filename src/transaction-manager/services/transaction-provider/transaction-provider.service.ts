@@ -18,6 +18,19 @@ export class TransactionProviderService {
   }
 
   /**
+   * Creates a managed transaction
+   * @param callback
+   * @param options
+   */
+  public createManaged<T = any>(
+    callback: (transaction: Transaction) => PromiseLike<T>,
+    options: TransactionOptions = {},
+  ): Promise<T> {
+    options.transaction = options.transaction || this.getParentTransaction();
+    return this.connection.transaction(options, callback);
+  }
+
+  /**
    * Set parent transaction
    * @param transaction
    */

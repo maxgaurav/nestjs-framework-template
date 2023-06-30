@@ -10,6 +10,7 @@ import {
   UnprocessableEntityException,
   ValidationError,
   ValidationPipe,
+  VersioningType,
 } from '@nestjs/common';
 import { ClusterModule } from './cluster/cluster.module';
 import { SetupClusterService } from './cluster/services/setup-cluster/setup-cluster.service';
@@ -55,6 +56,7 @@ async function bootstrap() {
 
   app.useGlobalFilters(new ErrorValidationFormatFilter());
   app.useGlobalFilters(app.get(RedirectFromLoginFilter));
+  app.enableVersioning({ type: VersioningType.URI, prefix: 'api/v' });
   setupApiDocumentation(app);
 
   app.use(await app.get<SessionConfigService>(SessionConfigService).session());
