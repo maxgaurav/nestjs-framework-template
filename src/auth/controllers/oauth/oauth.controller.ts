@@ -6,7 +6,7 @@ import { TransactionInterceptor } from '../../../transaction-manager/interceptor
 import { AuthUser } from '../../decorators/auth-user.decorator';
 import { UserModel } from '../../../databases/models/user.model';
 import { ClientModel } from '../../../databases/models/oauth/client.model';
-import { ReqTransaction } from '../../../transaction-manager/decorators/transaction/transaction.decorator';
+import { ReqTransaction } from '../../../transaction-manager/decorators/transaction.decorator';
 import { Transaction } from 'sequelize';
 import { RefreshAccessTokenGuard } from '../../guards/refresh-access-token/refresh-access-token.guard';
 import { RefreshTokenModel } from '../../../databases/models/oauth/refresh-token.model';
