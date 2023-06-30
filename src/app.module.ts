@@ -27,6 +27,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { MethodChangeMiddleware } from './helpers/middlewares/method-change/method-change.middleware';
 import { ModelBootstrapModule } from './databases/model-bootstrap/model-bootstrap.module';
 import { FileManagementModule } from './file-management/file-management.module';
+import { PaginateOverwriteModule } from './paginate-overwrite/paginate-overwrite.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { FileManagementModule } from './file-management/file-management.module';
     EnvironmentModule,
     DatabasesModule,
     ModelBootstrapModule,
+    PaginateOverwriteModule,
     HealthModule,
     DocumentationHelperModule,
     CommonModule.register(),
