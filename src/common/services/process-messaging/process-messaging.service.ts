@@ -25,7 +25,10 @@ export class ProcessMessagingService implements OnApplicationBootstrap {
    */
   protected generalMessageEmitter: Subject<any> = new Subject<any>();
 
-  constructor(private logger: Logger, private eventEmitter: EventEmitter2) {}
+  constructor(
+    private logger: Logger,
+    private eventEmitter: EventEmitter2,
+  ) {}
 
   /**
    * Hook on application bootstrap to start process message listening

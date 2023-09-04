@@ -6,6 +6,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Transaction } from 'sequelize';
 import { AccessTokenModel } from '../../../../databases/models/oauth/access-token.model';
 import { AccessTokenRepoService } from '../access-token-repo/access-token-repo.service';
+import { Buffer } from 'buffer';
 
 @Injectable()
 export class RefreshTokenRepoService {
@@ -37,15 +38,14 @@ export class RefreshTokenRepoService {
    * @param id
    * @param transaction
    */
-  public find(
+  public async find(
     id: string,
     transaction?: Transaction,
   ): Promise<RefreshTokenModel | null> {
-    return this.refreshToken
-      .findByPk(id, {
-        transaction,
-      })
-      .then((refreshToken) => (!!refreshToken ? refreshToken : null));
+    const refreshToken = await this.refreshToken.findByPk(id, {
+      transaction,
+    });
+    return !!refreshToken ? refreshToken : null;
   }
 
   /**
@@ -54,7 +54,7 @@ export class RefreshTokenRepoService {
    * @param expiresAt
    * @param transaction
    */
-  public async create(
+  public create(
     accessToken: AccessTokenModel,
     expiresAt: Date | null = null,
     transaction?: Transaction,
@@ -62,9 +62,7 @@ export class RefreshTokenRepoService {
     return this.refreshToken
       .build()
       .setAttributes({
-        id: await this.randomByteGenerate
-          .generateRandomByte(40)
-          .toString('hex'),
+        id: this.randomByteGenerate.generateRandomByte(40).toString('hex'),
         access_token_id: accessToken.id,
         expires_at: expiresAt,
       })
@@ -95,8 +93,8 @@ export class RefreshTokenRepoService {
 
     return this.accessTokenRepo
       .create(client, user, refreshTokenExpiresAt, transaction)
-      .then((newAccessToken) => {
-        return Promise.all([
+      .then(async (newAccessToken) => {
+        const [result] = await Promise.all([
           this.create(newAccessToken, accessTokenExpiresAt, transaction).then(
             (newRefreshToken) => ({
               refreshToken: newRefreshToken,
@@ -104,7 +102,8 @@ export class RefreshTokenRepoService {
             }),
           ),
           currentAccessToken.destroy({ transaction }),
-        ]).then(([result]) => result);
+        ]);
+        return result;
       });
   }
 
@@ -115,7 +114,7 @@ export class RefreshTokenRepoService {
   public async createBearerToken(
     refreshToken: RefreshTokenModel,
   ): Promise<string> {
-    return this.jwtService.signAsync(refreshToken.id, {
+    return this.jwtService.signAsync(Buffer.from(refreshToken.id), {
       algorithm: 'HS256',
     });
   }

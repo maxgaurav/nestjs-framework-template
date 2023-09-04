@@ -35,40 +35,39 @@ export class AccessTokenRepoService {
    * @param id
    * @param transaction
    */
-  public findForActiveState(
+  public async findForActiveState(
     id: string,
     transaction?: Transaction,
   ): Promise<AccessTokenModel | null> {
-    return this.accessToken
-      .findOne({
-        where: {
-          id,
-          [Op.and]: [
-            {
-              [Op.or]: [
-                {
-                  expires_at: null,
-                },
-                {
-                  expires_at: {
-                    [Op.gte]: new Date(),
-                  },
-                },
-              ],
-            },
-          ],
-        },
-        include: [
+    const token = await this.accessToken.findOne({
+      where: {
+        id,
+        [Op.and]: [
           {
-            model: ClientModel as any,
-            where: {
-              is_revoked: false,
-            },
+            [Op.or]: [
+              {
+                expires_at: null,
+              },
+              {
+                expires_at: {
+                  [Op.gte]: new Date(),
+                },
+              },
+            ],
           },
         ],
-        transaction,
-      })
-      .then((token) => (!!token ? token : null));
+      },
+      include: [
+        {
+          model: ClientModel as any,
+          where: {
+            is_revoked: false,
+          },
+        },
+      ],
+      transaction,
+    });
+    return !!token ? token : null;
   }
 
   /**
@@ -102,7 +101,7 @@ export class AccessTokenRepoService {
   public async createBearerToken(
     accessToken: AccessTokenModel,
   ): Promise<string> {
-    return this.jwtService.signAsync(accessToken.id, {
+    return this.jwtService.signAsync(Buffer.from(accessToken.id), {
       algorithm: 'HS256',
     });
   }

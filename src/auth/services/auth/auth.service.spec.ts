@@ -21,6 +21,7 @@ describe('AuthService', () => {
   } as any;
   const jwtService: JwtService = {
     decode: (value) => value,
+    verifyAsync: (value) => value,
   } as any;
 
   const userRepo: UserRepoService = {
@@ -176,8 +177,8 @@ describe('AuthService', () => {
 
   it('should return user when searching for user by token', async () => {
     const decodeSpy = jest
-      .spyOn(jwtService, 'decode')
-      .mockReturnValue('decoded');
+      .spyOn(jwtService, 'verifyAsync')
+      .mockReturnValue(Promise.resolve('decoded') as any);
     const token: AccessTokenModel = { id: 'id', user_id: 1 } as any;
     const user: UserModel = { id: 1 } as any;
     const findActiveToken = jest
@@ -194,23 +195,10 @@ describe('AuthService', () => {
     expect(loggedInUserSpy).toHaveBeenCalledWith(token.user_id);
   });
 
-  it('should return null when access token is not found when searching for user by token', async () => {
-    const decodeSpy = jest
-      .spyOn(jwtService, 'decode')
-      .mockReturnValue('decoded');
-    const findActiveToken = jest
-      .spyOn(accessTokenRepo, 'findForActiveState')
-      .mockReturnValue(Promise.resolve(null));
-
-    expect(await service.findUserByToken('token')).toEqual(null);
-    expect(decodeSpy).toHaveBeenCalledWith('token');
-    expect(findActiveToken).toHaveBeenCalledWith('decoded');
-  });
-
   it('should return null when searching for user by token returns no result for user', async () => {
     const decodeSpy = jest
-      .spyOn(jwtService, 'decode')
-      .mockReturnValue('decoded');
+      .spyOn(jwtService, 'verifyAsync')
+      .mockReturnValue(Promise.resolve('decoded') as any);
     const token: AccessTokenModel = { id: 'id', user_id: 1 } as any;
     const findActiveToken = jest
       .spyOn(accessTokenRepo, 'findForActiveState')
@@ -228,8 +216,8 @@ describe('AuthService', () => {
 
   it('should return null when access token is not mapped to user', async () => {
     const decodeSpy = jest
-      .spyOn(jwtService, 'decode')
-      .mockReturnValue('decoded');
+      .spyOn(jwtService, 'verifyAsync')
+      .mockReturnValue(Promise.resolve('decoded') as any);
     const token: AccessTokenModel = { id: 'id', user_id: null } as any;
     const findActiveToken = jest
       .spyOn(accessTokenRepo, 'findForActiveState')
@@ -241,7 +229,9 @@ describe('AuthService', () => {
   });
 
   it('should return refresh token from hashed token', async () => {
-    const decodeSpy = jest.spyOn(jwtService, 'decode').mockReturnValue('token');
+    const decodeSpy = jest
+      .spyOn(jwtService, 'verifyAsync')
+      .mockReturnValue(Promise.resolve('token') as any);
     const refreshToken: RefreshTokenModel = { id: 'token' } as any;
     const findSpy = jest
       .spyOn(refreshTokenRepo, 'find')

@@ -66,7 +66,7 @@ export class ErrorValidationFormatFilter implements ExceptionFilter {
         );
       }
 
-      if ((error?.children?.length || []) > 0) {
+      if ((error?.children || []).length > 0) {
         formattedErrors = {
           ...this.formattedErrors(
             error.children,

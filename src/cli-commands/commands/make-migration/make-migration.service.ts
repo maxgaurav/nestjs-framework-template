@@ -10,7 +10,10 @@ import { DatabaseConnectionConfig } from '../../../environment/interfaces/enviro
 
 @Injectable()
 export class MakeMigrationService {
-  constructor(private logger: LoggingService, private config: ConfigService) {}
+  constructor(
+    private logger: LoggingService,
+    private config: ConfigService,
+  ) {}
 
   @Command({
     command: 'migration:make',

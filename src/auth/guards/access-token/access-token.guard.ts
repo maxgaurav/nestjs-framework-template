@@ -5,12 +5,13 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { from, Observable } from 'rxjs';
+import { from, Observable, throwError } from 'rxjs';
 import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
-import { map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { AuthService } from '../../services/auth/auth.service';
 import { IncomingHttpHeaders } from 'http2';
+import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export class AccessTokenGuard extends AuthGuard() implements CanActivate {
@@ -31,6 +32,13 @@ export class AccessTokenGuard extends AuthGuard() implements CanActivate {
         request.user = user;
         return true;
       }),
+      catchError((err) =>
+        throwError(() =>
+          err instanceof jwt.JsonWebTokenError
+            ? new UnauthorizedException()
+            : err,
+        ),
+      ),
     );
   }
 

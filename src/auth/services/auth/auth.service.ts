@@ -78,16 +78,11 @@ export class AuthService {
    * @param bearerToken
    */
   public async findUserByToken(bearerToken: string): Promise<UserModel | null> {
-    let decodedId;
-    try {
-      decodedId = this.jwtService.decode(bearerToken) as string;
-    } catch (err) {
-      // @Todo
-    }
+    const decodedId: string =
+      await this.jwtService.verifyAsync<any>(bearerToken);
 
-    const accessToken = await this.accessTokenRepo.findForActiveState(
-      decodedId,
-    );
+    const accessToken =
+      await this.accessTokenRepo.findForActiveState(decodedId);
     if (accessToken === null) {
       return null;
     }
@@ -106,12 +101,7 @@ export class AuthService {
   public async findRefreshToken(
     token: string,
   ): Promise<RefreshTokenModel | null> {
-    let decodedId;
-    try {
-      decodedId = this.jwtService.decode(token);
-    } catch {
-      // @Todo handle decoding error
-    }
+    const decodedId: string = await this.jwtService.verifyAsync<any>(token);
 
     return this.refreshTokenRepo.find(decodedId);
   }

@@ -100,9 +100,8 @@ export class OauthController {
     return {
       type: 'Bearer',
       access_token: await this.accessTokenRepo.createBearerToken(accessToken),
-      refresh_token: await this.refreshTokenRepo.createBearerToken(
-        refreshToken,
-      ),
+      refresh_token:
+        await this.refreshTokenRepo.createBearerToken(refreshToken),
       expires_at: accessTokenExpiration,
     };
   }
@@ -151,9 +150,8 @@ export class OauthController {
     return {
       type: 'Bearer',
       access_token: await this.accessTokenRepo.createBearerToken(accessToken),
-      refresh_token: await this.refreshTokenRepo.createBearerToken(
-        refreshToken,
-      ),
+      refresh_token:
+        await this.refreshTokenRepo.createBearerToken(refreshToken),
       expires_at: accessTokenExpiration,
     };
   }

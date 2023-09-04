@@ -5,7 +5,10 @@ import { IRoute, Router } from 'express';
 
 @Injectable()
 export class RouteListService {
-  constructor(private logger: Logger, private adapterHost: HttpAdapterHost) {}
+  constructor(
+    private logger: Logger,
+    private adapterHost: HttpAdapterHost,
+  ) {}
 
   @Command({
     command: 'route:list',
