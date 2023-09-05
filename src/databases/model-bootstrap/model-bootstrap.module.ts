@@ -9,7 +9,6 @@ import { DEFAULT_CONNECTION_NAME } from '@nestjs/sequelize/dist/sequelize.consta
 import { Sequelize } from 'sequelize-typescript';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { EventRegisterCallbackService } from '../../common/services/event-register-callback/event-register-callback.service';
-import { UrlGeneratorService } from 'nestjs-url-generator';
 import { EntitiesMetadataStorage } from '@nestjs/sequelize/dist/entities-metadata.storage';
 
 const providers: Provider[] = DefaultConnectionModels.map((model: any) => ({
@@ -18,11 +17,10 @@ const providers: Provider[] = DefaultConnectionModels.map((model: any) => ({
     connection: Sequelize,
     eventEmitter: EventEmitter2,
     eventRegisterCallback: EventRegisterCallbackService,
-    urlGenerator: UrlGeneratorService,
   ) => {
     model.EventEmitter = eventEmitter;
     model.EventCallBackService = eventRegisterCallback;
-    model.UrlGenerator = urlGenerator;
+    model.UrlGenerator = {};
 
     if (!connection) {
       return model;
@@ -33,7 +31,6 @@ const providers: Provider[] = DefaultConnectionModels.map((model: any) => ({
     getConnectionToken(DEFAULT_CONNECTION_NAME),
     EventEmitter2,
     EventRegisterCallbackService,
-    UrlGeneratorService,
   ],
 }));
 

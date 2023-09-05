@@ -17,8 +17,6 @@ import { TransactionManagerModule } from './transaction-manager/transaction-mana
 import { CliCommandsModule } from './cli-commands/cli-commands.module';
 import { MailModule } from './mail/mail.module';
 import { ViewEngineModule } from './view-engine/view-engine.module';
-import { UrlGeneratorModule } from 'nestjs-url-generator';
-import { UrlConfigServiceService } from './services/url-config-service/url-config-service.service';
 import { SessionManagerModule } from './session-manager/session-manager.module';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
@@ -28,6 +26,7 @@ import { MethodChangeMiddleware } from './helpers/middlewares/method-change/meth
 import { ModelBootstrapModule } from './databases/model-bootstrap/model-bootstrap.module';
 import { FileManagementModule } from './file-management/file-management.module';
 import { PaginateOverwriteModule } from './paginate-overwrite/paginate-overwrite.module';
+import { UrlManagementModule } from './url-management/url-management.module';
 
 @Module({
   imports: [
@@ -45,9 +44,6 @@ import { PaginateOverwriteModule } from './paginate-overwrite/paginate-overwrite
     CliCommandsModule,
     MailModule,
     ViewEngineModule,
-    UrlGeneratorModule.forRootAsync({
-      useClass: UrlConfigServiceService,
-    }),
     SessionManagerModule,
     AuthModule,
     UserModule,
@@ -56,6 +52,7 @@ import { PaginateOverwriteModule } from './paginate-overwrite/paginate-overwrite
       delimiter: '.',
     }),
     FileManagementModule,
+    UrlManagementModule,
   ],
   controllers: [AppController],
   providers: [
@@ -63,7 +60,6 @@ import { PaginateOverwriteModule } from './paginate-overwrite/paginate-overwrite
     NotFoundConverterInterceptor,
     ClassSerializerInterceptor,
     LoggingService,
-    UrlConfigServiceService,
   ],
 })
 export class AppModule implements NestModule {

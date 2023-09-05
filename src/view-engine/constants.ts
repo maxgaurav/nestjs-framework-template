@@ -1,1 +1,2 @@
 export const VIEW_RENDER_ENGINE = Symbol('VIEW_RENDER_ENGINE');
+export const TEMPLATE_FUNCTIONS = Symbol('TEMPLATE_FUNCTIONS');

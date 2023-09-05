@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ViewEngineConfigService } from './view-engine-config.service';
-import { VIEW_RENDER_ENGINE } from '../../constants';
+import { TEMPLATE_FUNCTIONS, VIEW_RENDER_ENGINE } from '../../constants';
 import { ConfigService } from '@nestjs/config';
 
 describe('ViewEngineConfigService', () => {
@@ -19,6 +19,10 @@ describe('ViewEngineConfigService', () => {
         {
           provide: ConfigService,
           useValue: configService,
+        },
+        {
+          provide: TEMPLATE_FUNCTIONS,
+          useValue: [],
         },
       ],
     }).compile();

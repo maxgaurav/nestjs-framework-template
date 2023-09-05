@@ -44,7 +44,6 @@
     "nestjs-command": "^3.1.4",
     "nestjs-form-data": "^1.9.0",
     "nestjs-sequelize-paginate": "^1.0.0",
-    "nestjs-url-generator": "^1.0.2",
     "nodemailer": "^6.9.4",
     "passport": "^0.6.0",
     "passport-custom": "^1.1.1",
