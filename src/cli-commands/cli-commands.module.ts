@@ -12,7 +12,6 @@ import { GenerateClientService } from './commands/oauth/generate-client/generate
 import { ClientRepoService } from '../auth/services/oauth/client-repo/client-repo.service';
 import { SeederService } from './commands/seeder/seeder.service';
 import { LoggingService } from '../services/logging/logging.service';
-import { TinkerService } from './commands/tinker/tinker.service';
 
 @Module({
   imports: [CommandModule],
@@ -30,7 +29,6 @@ import { TinkerService } from './commands/tinker/tinker.service';
     GenerateClientService,
     ClientRepoService,
     SeederService,
-    TinkerService,
   ],
 })
 export class CliCommandsModule {}

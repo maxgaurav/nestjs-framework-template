@@ -9,7 +9,7 @@ export const sessionConfig = () => {
       resave: !!process.env.SESSION_RESAVE
         ? process.env.SESSION_RESAVE === 'true'
         : true,
-      saveUninitialized: true,
+      saveUninitialized: process.env.SAVE_UNINITIALIZED === 'true',
     } as SessionConfig,
   };
 };

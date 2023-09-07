@@ -11,7 +11,7 @@ export class UserModel extends BaseModel<UserModel> {
   public password: string | null;
 
   public toJSON(): any {
-    const content = super.toJSON() as Record<keyof UserModel, any>;
+    const content = super.toJSON();
     delete content.password;
     return content;
   }
