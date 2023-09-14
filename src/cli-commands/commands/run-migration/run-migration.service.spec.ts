@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { RunMigrationService } from './run-migration.service';
-import { LoggingService } from '../../../services/logging/logging.service';
 import { ConfigService } from '@nestjs/config';
 import { getConnectionToken } from '@nestjs/sequelize';
+import { Logger } from '@nestjs/common';
 
 describe('RunMigrationService', () => {
   let service: RunMigrationService;
@@ -11,7 +11,7 @@ describe('RunMigrationService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         RunMigrationService,
-        LoggingService,
+        Logger,
         {
           provide: ConfigService,
           useValue: {},

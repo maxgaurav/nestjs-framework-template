@@ -22,6 +22,7 @@ import {
 } from '@nestjs/swagger';
 import { RefreshTokenDto } from '../../dtos/refresh-token/refresh-token.dto';
 import { AccessTokenDto } from '../../dtos/access-token/access-token.dto';
+import { LoggingDecorator } from '../../../common/decorators/logging.decorator';
 
 export interface BearerTokenResult {
   expires_at: Date | string | null;
@@ -78,6 +79,10 @@ export class OauthController {
   @UseInterceptors(TransactionInterceptor)
   @UseGuards(LoginAccessTokenGuard)
   @Post('token')
+  @LoggingDecorator({
+    messageBefore: 'Starting Oauth2 token Implicit login',
+    messageAfter: 'Oauth2 Token created for login',
+  })
   public async login(
     @AuthUser() user: { user: UserModel; client: ClientModel },
     @ReqTransaction() transaction?: Transaction,

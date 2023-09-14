@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Command } from 'nestjs-command';
 import { ConnectionNames } from '../../../databases/connection-names';
 import { DatabaseConnectionConfig } from '../../../environment/interfaces/environment-types.interface';
@@ -6,12 +6,11 @@ import { SequelizeStorage, Umzug } from 'umzug';
 import { ConfigService } from '@nestjs/config';
 import { InjectConnection } from '@nestjs/sequelize';
 import { Sequelize } from 'sequelize';
-import { LoggingService } from '../../../services/logging/logging.service';
 
 @Injectable()
 export class RunMigrationService {
   constructor(
-    private logger: LoggingService,
+    private logger: Logger,
     private config: ConfigService,
     @InjectConnection() private connection: Sequelize,
   ) {}

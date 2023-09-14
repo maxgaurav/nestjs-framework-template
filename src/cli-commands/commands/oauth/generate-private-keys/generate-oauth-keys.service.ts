@@ -7,7 +7,7 @@ import { Buffer } from 'buffer';
 
 @Injectable()
 export class GenerateOauthKeysService {
-  constructor(private log: Logger) {}
+  constructor(public log: Logger) {}
 
   @Command({
     command: 'oauth:generate-keys',

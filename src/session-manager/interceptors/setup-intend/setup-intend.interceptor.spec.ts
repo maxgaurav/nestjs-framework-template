@@ -18,7 +18,9 @@ describe('SetupIntendInterceptor', () => {
   });
 
   it('should setup intend in session', async () => {
-    const request = {};
+    const request = {
+      url: '',
+    };
     const context = {
       switchToHttp: () => ({
         getRequest: () => request,

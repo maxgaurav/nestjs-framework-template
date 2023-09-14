@@ -7,6 +7,7 @@ import { Transaction } from 'sequelize';
 import { AccessTokenModel } from '../../../../databases/models/oauth/access-token.model';
 import { AccessTokenRepoService } from '../access-token-repo/access-token-repo.service';
 import { Buffer } from 'buffer';
+import { LoggingDecorator } from '../../../../common/decorators/logging.decorator';
 
 @Injectable()
 export class RefreshTokenRepoService {
@@ -54,6 +55,9 @@ export class RefreshTokenRepoService {
    * @param expiresAt
    * @param transaction
    */
+  @LoggingDecorator({
+    messageBefore: 'Creating refresh token against access token',
+  })
   public create(
     accessToken: AccessTokenModel,
     expiresAt: Date | null = null,

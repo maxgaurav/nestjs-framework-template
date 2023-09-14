@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as session from 'express-session';
 import { RequestHandler } from 'express';
@@ -6,11 +6,13 @@ import { SessionConfig } from '../../../environment/interfaces/environment-types
 import { MemoryStore, Store } from 'express-session';
 import { FileStore } from '../../session-stores/file-store/file-store';
 import { join } from 'path';
-import { LoggingService } from '../../../services/logging/logging.service';
 
 @Injectable()
 export class SessionConfigService {
-  constructor(private configService: ConfigService) {}
+  constructor(
+    private configService: ConfigService,
+    protected logger: Logger,
+  ) {}
 
   public async session(): Promise<RequestHandler> {
     const sessionConfig = this.configService.get<SessionConfig>('session');
@@ -18,11 +20,10 @@ export class SessionConfigService {
 
     switch (sessionConfig.driver) {
       case 'file':
-        const logger = new LoggingService(this.configService);
         sessionStore = await new FileStore(session, {
           path: join(process.cwd(), 'storage', 'session'),
           logFn: (...args) =>
-            args.forEach((arg) => logger.debug(arg, 'session-file-store')),
+            args.forEach((arg) => this.logger.debug(arg, 'session-file-store')),
         }).store();
         break;
       case 'memory':
@@ -36,7 +37,7 @@ export class SessionConfigService {
       name: sessionConfig.name,
       resave: sessionConfig.resave,
       cookie: {
-        maxAge: Date.now() + 2 * 60 * 60 * 1000,
+        maxAge: 2 * 60 * 60 * 1000,
       },
       saveUninitialized: sessionConfig.saveUninitialized,
     });

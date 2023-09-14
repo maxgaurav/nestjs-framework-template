@@ -1,4 +1,4 @@
-import { Logger, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { CommandModule } from 'nestjs-command';
 import { RouteListService } from './commands/route-list/route-list.service';
 import { MakeMigrationService } from './commands/make-migration/make-migration.service';
@@ -9,16 +9,14 @@ import { DropDatabaseService } from './commands/drop-database/drop-database.serv
 import { CreateDatabaseService } from './commands/create-database/create-database.service';
 import { GenerateOauthKeysService } from './commands/oauth/generate-private-keys/generate-oauth-keys.service';
 import { GenerateClientService } from './commands/oauth/generate-client/generate-client.service';
-import { ClientRepoService } from '../auth/services/oauth/client-repo/client-repo.service';
 import { SeederService } from './commands/seeder/seeder.service';
-import { LoggingService } from '../services/logging/logging.service';
+import { AuthModule } from '../auth/auth.module';
+import { CommonModule } from '../common/common.module';
 
 @Module({
-  imports: [CommandModule],
+  imports: [CommandModule, AuthModule, CommonModule],
   providers: [
     RouteListService,
-    Logger,
-    LoggingService,
     MakeMigrationService,
     RunMigrationService,
     RollbackMigrationService,
@@ -27,7 +25,6 @@ import { LoggingService } from '../services/logging/logging.service';
     CreateDatabaseService,
     GenerateOauthKeysService,
     GenerateClientService,
-    ClientRepoService,
     SeederService,
   ],
 })

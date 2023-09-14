@@ -14,6 +14,7 @@ import { validateOrReject } from 'class-validator';
 import { ClientRepoService } from '../../services/oauth/client-repo/client-repo.service';
 import { UserModel } from '../../../databases/models/user.model';
 import { ClientModel } from '../../../databases/models/oauth/client.model';
+import { LoggingDecorator } from '../../../common/decorators/logging.decorator';
 
 @Injectable()
 export class AccessTokenService extends PassportStrategy(
@@ -31,6 +32,10 @@ export class AccessTokenService extends PassportStrategy(
    * Main validation action
    * @param request
    */
+  @LoggingDecorator({
+    messageBefore: 'Validating Access Token generation payload',
+    messageAfter: 'Payload valid',
+  })
   public async validate(
     request: Request,
   ): Promise<{ user: UserModel; client: ClientModel }> {

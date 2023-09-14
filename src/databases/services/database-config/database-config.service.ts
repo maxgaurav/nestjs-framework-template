@@ -5,8 +5,9 @@ import {
   SequelizeOptionsFactory,
 } from '@nestjs/sequelize';
 import { ConnectionNames } from '../../connection-names';
-import { LoggingService } from '../../../services/logging/logging.service';
 import { DefaultConnectionModels } from '../../model-bootstrap/default-connection-models';
+import { LoggingService } from '../../../services/logging/logging.service';
+import { ClsServiceManager } from 'nestjs-cls';
 
 @Injectable()
 export class DatabaseConfigService implements SequelizeOptionsFactory {
@@ -35,7 +36,10 @@ export class DatabaseConfigService implements SequelizeOptionsFactory {
    * Returns logger function
    */
   public logger(): (sql: string, timing: number | undefined) => void {
-    const logger = new LoggingService(this.configService);
+    const logger = new LoggingService(
+      this.configService,
+      ClsServiceManager.getClsService(),
+    );
     return (sql, timing) =>
       logger.debug(`Executed ${sql} Elapsed time: ${timing}`, 'DatabaseModule');
   }

@@ -18,6 +18,7 @@ describe('SessionIntendedUrlInterceptor', () => {
       accepts: () => 'json',
       method: 'post',
       xhr: true,
+      url: '',
     };
 
     const context = {

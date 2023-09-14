@@ -91,6 +91,7 @@
     "eslint-plugin-sonarjs": "^0.21.0",
     "jest": "29.3.1",
     "mockdate": "^3.0.5",
+    "nestjs-cls": "^3.5.1",
     "prettier": "^3.0.3",
     "supertest": "^6.3.3",
     "ts-jest": "^29.0.3",

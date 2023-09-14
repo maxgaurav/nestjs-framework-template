@@ -39,6 +39,12 @@ import { RefreshTokenRepoService } from './services/oauth/refresh-token-repo/ref
     RefreshTokenRepoService,
   ],
   controllers: [LoginController, OauthController],
-  exports: [AuthService, HashEncryptService],
+  exports: [
+    AuthService,
+    HashEncryptService,
+    ClientRepoService,
+    AccessTokenRepoService,
+    RefreshTokenRepoService,
+  ],
 })
 export class AuthModule {}

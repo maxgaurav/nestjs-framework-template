@@ -1,9 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Command, Positional } from 'nestjs-command';
 import { join } from 'path';
 import { Umzug } from 'umzug';
 import { readFileSync } from 'fs';
-import { LoggingService } from '../../../services/logging/logging.service';
 import { ConfigService } from '@nestjs/config';
 import { ConnectionNames } from '../../../databases/connection-names';
 import { DatabaseConnectionConfig } from '../../../environment/interfaces/environment-types.interface';
@@ -11,7 +10,7 @@ import { DatabaseConnectionConfig } from '../../../environment/interfaces/enviro
 @Injectable()
 export class MakeMigrationService {
   constructor(
-    private logger: LoggingService,
+    private logger: Logger,
     private config: ConfigService,
   ) {}
 
@@ -48,7 +47,7 @@ export class MakeMigrationService {
       create: {
         template: (filepath) => [[filepath, stubFileContents]],
       },
-      logger: this.logger,
+      logger: this.logger as any,
     });
 
     const prefix = new Intl.DateTimeFormat('en', {

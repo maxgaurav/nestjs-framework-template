@@ -4,7 +4,7 @@ import { SetupClusterService } from './services/setup-cluster/setup-cluster.serv
 import { CommonModule } from '../common/common.module';
 
 @Module({
-  imports: [EnvironmentModule, CommonModule.register()],
+  imports: [EnvironmentModule, CommonModule],
   providers: [SetupClusterService],
 })
 export class ClusterModule {}

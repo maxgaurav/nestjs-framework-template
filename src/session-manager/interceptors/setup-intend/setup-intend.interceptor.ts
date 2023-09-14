@@ -16,6 +16,16 @@ export class SetupIntendInterceptor implements NestInterceptor {
     return of(true)
       .pipe(
         map(() => {
+          if (
+            context
+              .switchToHttp()
+              .getRequest<Request>()
+              .url.includes('api/v') ||
+            context.switchToHttp().getRequest<Request>().url.includes('oauth')
+          ) {
+            return true;
+          }
+
           this.intendManager.setupIntend(
             context.switchToHttp().getRequest<Request>(),
           );

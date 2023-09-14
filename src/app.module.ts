@@ -12,7 +12,6 @@ import { HealthModule } from './health/health.module';
 import { NotFoundConverterInterceptor } from './helpers/interceptors/not-found-converter/not-found-converter.interceptor';
 import { DocumentationHelperModule } from './documentation-helper/documentation-helper.module';
 import { CommonModule } from './common/common.module';
-import { LoggingService } from './services/logging/logging.service';
 import { TransactionManagerModule } from './transaction-manager/transaction-manager.module';
 import { CliCommandsModule } from './cli-commands/cli-commands.module';
 import { MailModule } from './mail/mail.module';
@@ -21,12 +20,13 @@ import { SessionManagerModule } from './session-manager/session-manager.module';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { PassportModule } from '@nestjs/passport';
-import { EventEmitterModule } from '@nestjs/event-emitter';
 import { MethodChangeMiddleware } from './helpers/middlewares/method-change/method-change.middleware';
 import { ModelBootstrapModule } from './databases/model-bootstrap/model-bootstrap.module';
 import { FileManagementModule } from './file-management/file-management.module';
 import { PaginateOverwriteModule } from './paginate-overwrite/paginate-overwrite.module';
 import { UrlManagementModule } from './url-management/url-management.module';
+import { ClsModule } from 'nestjs-cls';
+import { Request, Response } from 'express';
 
 @Module({
   imports: [
@@ -39,27 +39,34 @@ import { UrlManagementModule } from './url-management/url-management.module';
     PaginateOverwriteModule,
     HealthModule,
     DocumentationHelperModule,
-    CommonModule.register(),
-    TransactionManagerModule.register(),
+    CommonModule,
+    TransactionManagerModule,
     CliCommandsModule,
     MailModule,
     ViewEngineModule,
     SessionManagerModule,
     AuthModule,
     UserModule,
-    EventEmitterModule.forRoot({
-      wildcard: true,
-      delimiter: '.',
-    }),
     FileManagementModule,
     UrlManagementModule,
+    ClsModule.forRoot({
+      global: true,
+      middleware: {
+        mount: true,
+        setup: (cls, req: Request, res: Response) => {
+          const requestId = crypto.randomUUID();
+          res.setHeader('Request-Id', requestId);
+          cls.set('id', requestId);
+          cls.set('type', 'REQUEST');
+        },
+      },
+    }),
   ],
   controllers: [AppController],
   providers: [
     AppService,
     NotFoundConverterInterceptor,
     ClassSerializerInterceptor,
-    LoggingService,
   ],
 })
 export class AppModule implements NestModule {

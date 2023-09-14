@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CreateDatabaseService } from './create-database.service';
-import { LoggingService } from '../../../services/logging/logging.service';
 import { ConfigService } from '@nestjs/config';
 import { getConnectionToken } from '@nestjs/sequelize';
+import { Logger } from '@nestjs/common';
 
 describe('CreateDatabaseService', () => {
   let service: CreateDatabaseService;
@@ -11,7 +11,7 @@ describe('CreateDatabaseService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         CreateDatabaseService,
-        LoggingService,
+        Logger,
         {
           provide: ConfigService,
           useValue: {},

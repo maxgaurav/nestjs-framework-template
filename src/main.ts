@@ -30,10 +30,12 @@ import { SessionMapPreviousUrlInterceptor } from './session-manager/interceptors
 import { RedirectFromLoginFilter } from './session-manager/filters/redirect-to-login/redirect-to-login.filter';
 import { SetupIntendInterceptor } from './session-manager/interceptors/setup-intend/setup-intend.interceptor';
 import { KillForApiInterceptor } from './session-manager/interceptors/kill-for-api/kill-for-api.interceptor';
+import { registerApplicationContext } from './common/decorators/logging.decorator';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {});
   app.useLogger(app.get<LoggingService>(LoggingService));
+  registerApplicationContext(app);
 
   const config = app.get(ConfigService);
   app.enableCors();

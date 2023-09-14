@@ -1,9 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Command, Option } from 'nestjs-command';
 import { ConnectionNames } from '../../../databases/connection-names';
 import { DatabaseConnectionConfig } from '../../../environment/interfaces/environment-types.interface';
 import { SequelizeStorage, Umzug } from 'umzug';
-import { LoggingService } from '../../../services/logging/logging.service';
 import { ConfigService } from '@nestjs/config';
 import { InjectConnection } from '@nestjs/sequelize';
 import { Sequelize } from 'sequelize';
@@ -11,7 +10,7 @@ import { Sequelize } from 'sequelize';
 @Injectable()
 export class RollbackMigrationService {
   constructor(
-    private logger: LoggingService,
+    private logger: Logger,
     private config: ConfigService,
     @InjectConnection() private connection: Sequelize,
   ) {}

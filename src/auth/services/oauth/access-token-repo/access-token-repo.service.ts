@@ -6,6 +6,7 @@ import { ClientModel } from '../../../../databases/models/oauth/client.model';
 import { Op, Transaction } from 'sequelize';
 import { UserModel } from '../../../../databases/models/user.model';
 import { JwtService } from '@nestjs/jwt';
+import { LoggingDecorator } from '../../../../common/decorators/logging.decorator';
 
 @Injectable()
 export class AccessTokenRepoService {
@@ -77,6 +78,9 @@ export class AccessTokenRepoService {
    * @param expiresAt
    * @param transaction
    */
+  @LoggingDecorator({
+    messageBefore: 'Creating access token for user',
+  })
   public create(
     client: ClientModel,
     user: UserModel | null,
