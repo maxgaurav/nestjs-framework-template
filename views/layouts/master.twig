@@ -1,11 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>App</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>
+    {% if appTitle %} {{ appTitle }} {% else %} App {% endif %}
+  </title>
+  {% block extraStyles %} {% endblock %}
 </head>
-<body>
-{% block mainContent %}
-{% endblock %}
+<body class="{% block bodyClasses %}{% endblock %}">
+{% block mainContent %} {% endblock %}
+{% block extraScriptsEnd %}{% endblock %}
 </body>
 </html>

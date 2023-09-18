@@ -7,7 +7,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-local';
 import { AuthService } from '../../services/auth/auth.service';
 import { UserModel } from '../../../databases/models/user.model';
-import { LoginPasswordDto } from '../../dtos/login-password/login-password.dto';
+import { LoginPasswordDto } from '../../dtos/login-password.dto';
 import { validateOrReject } from 'class-validator';
 
 @Injectable()

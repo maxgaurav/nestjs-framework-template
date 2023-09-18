@@ -5,7 +5,7 @@ import { Umzug } from 'umzug';
 import { readFileSync } from 'fs';
 import { ConfigService } from '@nestjs/config';
 import { ConnectionNames } from '../../../databases/connection-names';
-import { DatabaseConnectionConfig } from '../../../environment/interfaces/environment-types.interface';
+import { DatabaseConnectionConfig } from '../../../environment/environment-types.interface';
 
 @Injectable()
 export class MakeMigrationService {

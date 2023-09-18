@@ -39,7 +39,6 @@ export class ErrorValidationFormatFilter implements ExceptionFilter {
     request.flash(SESSION_VALIDATION_INPUTS);
     request.flash(SESSION_VALIDATION_ERROR_KEY, JSON.stringify(errors));
     request.flash(SESSION_VALIDATION_INPUTS, JSON.stringify(request.body));
-    console.log(request.session);
     const sessionPreviousUrl = (request.session as any)._previous?.url || '/';
     const previousUrl = request.header('referrer') || sessionPreviousUrl;
     request.session.save(() => {

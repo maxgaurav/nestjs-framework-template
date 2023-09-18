@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as session from 'express-session';
 import { RequestHandler } from 'express';
-import { SessionConfig } from '../../../environment/interfaces/environment-types.interface';
+import { SessionConfig } from '../../../environment/environment-types.interface';
 import { MemoryStore, Store } from 'express-session';
 import { FileStore } from '../../session-stores/file-store/file-store';
 import { join } from 'path';

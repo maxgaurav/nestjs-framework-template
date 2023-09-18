@@ -6,7 +6,7 @@ import {
   UnauthorizedException,
   UnprocessableEntityException,
 } from '@nestjs/common';
-import { LoginPasswordDto } from '../../dtos/login-password/login-password.dto';
+import { LoginPasswordDto } from '../../dtos/login-password.dto';
 
 const FakedEmail = 'email@email.com';
 describe('LocalStrategyService', () => {

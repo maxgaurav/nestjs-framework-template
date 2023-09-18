@@ -4,7 +4,7 @@ import { VIEW_RENDER_ENGINE } from '../../../view-engine/constants';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
 import { join } from 'path';
-import { ViewConfig } from '../../../environment/interfaces/environment-types.interface';
+import { ViewConfig } from '../../../environment/environment-types.interface';
 import * as Twig from 'twig';
 import { RenderOptions } from 'twig';
 

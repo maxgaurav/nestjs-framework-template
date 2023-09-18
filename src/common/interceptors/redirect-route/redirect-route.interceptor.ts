@@ -4,30 +4,48 @@ import {
   Injectable,
   NestInterceptor,
 } from '@nestjs/common';
-import { from, NEVER, Observable, switchMap } from 'rxjs';
+import { from, Observable, of, switchMap } from 'rxjs';
 import { Request, Response } from 'express';
-
-export type RedirectUrlGenerator<T = any> = (
-  data: T,
-  request: Request,
-) => string;
+import { ModuleRef, Reflector } from '@nestjs/core';
+import { RedirectRouteExecutorInterface } from '../../../interfaces/redirect-route-executor.interface';
+import { REDIRECT_SERVICE_METADATA } from '../../decorators/redirect-generator.decorator';
+import { map } from 'rxjs/operators';
 
 @Injectable()
-export class RedirectRouteInterceptor<T = any> implements NestInterceptor {
-  constructor(protected urlGenerator: RedirectUrlGenerator<T>) {}
+export class RedirectRouteInterceptor implements NestInterceptor {
+  constructor(
+    private moduleRef: ModuleRef,
+    private reflector: Reflector,
+  ) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const request = context.switchToHttp().getRequest<Request>();
     return next.handle().pipe(
       switchMap((content) =>
         from(this.saveSession(request)).pipe(
-          switchMap(() => {
-            context
-              .switchToHttp()
-              .getResponse<Response>()
-              .redirect(this.urlGenerator(content, request));
-            return NEVER;
-          }),
+          switchMap(() =>
+            from(
+              this.moduleRef.resolve<RedirectRouteExecutorInterface>(
+                this.reflector.get(
+                  REDIRECT_SERVICE_METADATA,
+                  context.getHandler(),
+                ),
+              ),
+            ).pipe(
+              switchMap((redirectHandler) => {
+                const result = redirectHandler.generateUrl(request, content);
+                if (result instanceof Promise) {
+                  return from(result);
+                }
+
+                return of(result);
+              }),
+              map((url) => {
+                context.switchToHttp().getResponse<Response>().redirect(url);
+                return undefined;
+              }),
+            ),
+          ),
         ),
       ),
     );

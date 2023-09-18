@@ -9,6 +9,7 @@ import { sessionConfig } from './configs/session';
 import { jwtConfig } from './configs/jwt';
 import { viewConfig } from './configs/view';
 import { filesystemConfig } from './configs/filesystemConfig';
+import { corsConfig } from './configs/cors';
 
 const envSuffix = !!process.env.OVERRIDE_ENV
   ? `.${process.env.OVERRIDE_ENV}`
@@ -28,6 +29,7 @@ const envFileName = getEnvFileName(envSuffix);
         jwtConfig,
         viewConfig,
         filesystemConfig,
+        corsConfig,
       ],
       envFilePath: envFileName,
       isGlobal: true,

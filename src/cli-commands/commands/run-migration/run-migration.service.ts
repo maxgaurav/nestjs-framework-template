@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Command } from 'nestjs-command';
 import { ConnectionNames } from '../../../databases/connection-names';
-import { DatabaseConnectionConfig } from '../../../environment/interfaces/environment-types.interface';
+import { DatabaseConnectionConfig } from '../../../environment/environment-types.interface';
 import { SequelizeStorage, Umzug } from 'umzug';
 import { ConfigService } from '@nestjs/config';
 import { InjectConnection } from '@nestjs/sequelize';

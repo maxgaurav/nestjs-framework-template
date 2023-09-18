@@ -4,6 +4,7 @@ import { RandomByteGeneratorService } from '../../../../common/services/random-b
 import { ClientModel } from '../../../../databases/models/oauth/client.model';
 import { getModelToken } from '@nestjs/sequelize';
 import { Buffer } from 'buffer';
+import { GrantTypes } from '../../../grant-types/grant-type-implementation';
 
 describe('ClientRepoService', () => {
   let service: ClientRepoService;
@@ -73,10 +74,13 @@ describe('ClientRepoService', () => {
     const generateSpy = jest
       .spyOn(randomByeGenerator, 'generateRandomByte')
       .mockReturnValue(Buffer.from(sample));
-    expect(await service.create('test', transaction)).toEqual(client);
+    expect(
+      await service.create('test', GrantTypes.ImplicitPassword, transaction),
+    ).toEqual(client);
     expect(buildSpy).toHaveBeenCalled();
     expect(setAttributeSpy).toHaveBeenCalledWith({
       name: 'test',
+      grant_type: GrantTypes.ImplicitPassword,
       secret: Buffer.from(sample).toString('hex'),
     });
     expect(generateSpy).toHaveBeenCalledWith(40);

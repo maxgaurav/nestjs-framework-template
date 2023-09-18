@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { MailerOptions, MailerOptionsFactory } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
-import { MailConfig } from '../../../environment/interfaces/environment-types.interface';
+import { MailConfig } from '../../../environment/environment-types.interface';
 import MailMessage = require('nodemailer/lib/mailer/mail-message');
 
 @Injectable()

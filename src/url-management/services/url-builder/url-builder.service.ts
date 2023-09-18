@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { SystemConfig } from '../../../environment/interfaces/environment-types.interface';
+import { SystemConfig } from '../../../environment/environment-types.interface';
 
 @Injectable()
 export class UrlBuilderService {

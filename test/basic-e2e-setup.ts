@@ -25,7 +25,7 @@ import * as flash from 'connect-flash';
 import { SessionMapPreviousUrlInterceptor } from '../src/session-manager/interceptors/session-map-previous-url/session-map-previous-url-interceptor.service';
 import { SetupIntendInterceptor } from '../src/session-manager/interceptors/setup-intend/setup-intend.interceptor';
 import * as helmet from 'helmet';
-import { ViewConfig } from '../src/environment/interfaces/environment-types.interface';
+import { ViewConfig } from '../src/environment/environment-types.interface';
 import { ConfigService } from '@nestjs/config';
 
 /**

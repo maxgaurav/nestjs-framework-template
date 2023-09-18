@@ -4,6 +4,7 @@ import { ProcessMessagingService } from './services/process-messaging/process-me
 import { RandomByteGeneratorService } from './services/random-byte-generator/random-byte-generator.service';
 import { LoggingService } from '../services/logging/logging.service';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { RedirectRouteInterceptor } from './interceptors/redirect-route/redirect-route.interceptor';
 
 @Global()
 @Module({
@@ -18,6 +19,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     ProcessMessagingService,
     RandomByteGeneratorService,
     LoggingService,
+    RedirectRouteInterceptor,
     {
       provide: Logger,
       useClass: LoggingService,
@@ -27,6 +29,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     EventRegisterCallbackService,
     ProcessMessagingService,
     RandomByteGeneratorService,
+    RedirectRouteInterceptor,
     {
       provide: Logger,
       useClass: LoggingService,

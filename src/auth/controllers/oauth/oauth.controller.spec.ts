@@ -10,6 +10,8 @@ import { RefreshTokenModel } from '../../../databases/models/oauth/refresh-token
 import { ConfigService } from '@nestjs/config';
 import * as mockdate from 'mockdate';
 import * as moment from 'moment';
+import { HashEncryptService } from '../../services/hash-encrypt/hash-encrypt.service';
+import { AuthorizationChallengeRepoService } from '../../services/authorization-challenge-repo/authorization-challenge-repo.service';
 
 describe('OauthController', () => {
   let controller: OauthController;
@@ -47,6 +49,14 @@ describe('OauthController', () => {
         {
           provide: ConfigService,
           useValue: configService,
+        },
+        {
+          provide: HashEncryptService,
+          useValue: {},
+        },
+        {
+          provide: AuthorizationChallengeRepoService,
+          useValue: {},
         },
       ],
     }).compile();
@@ -90,7 +100,7 @@ describe('OauthController', () => {
       .spyOn(controller, 'refreshTokenExpiration')
       .mockReturnValue(null);
 
-    expect(await controller.login(authContent, transaction)).toEqual({
+    expect(await controller.token(authContent, transaction)).toEqual({
       type: 'Bearer',
       expires_at: null,
       access_token: 'accessBearer',

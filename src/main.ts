@@ -2,9 +2,10 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import {
+  CorsConfig,
   SystemConfig,
   ViewConfig,
-} from './environment/interfaces/environment-types.interface';
+} from './environment/environment-types.interface';
 import {
   INestApplication,
   UnprocessableEntityException,
@@ -30,7 +31,7 @@ import { SessionMapPreviousUrlInterceptor } from './session-manager/interceptors
 import { RedirectFromLoginFilter } from './session-manager/filters/redirect-to-login/redirect-to-login.filter';
 import { SetupIntendInterceptor } from './session-manager/interceptors/setup-intend/setup-intend.interceptor';
 import { KillForApiInterceptor } from './session-manager/interceptors/kill-for-api/kill-for-api.interceptor';
-import { registerApplicationContext } from './common/decorators/logging.decorator';
+import { registerApplicationContext } from './common/application-context';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {});
@@ -38,8 +39,20 @@ async function bootstrap() {
   registerApplicationContext(app);
 
   const config = app.get(ConfigService);
-  app.enableCors();
-  app.use(helmet());
+  app.enableCors({
+    exposedHeaders: ['request-id', 'date', 'content-type'],
+    origin: config.get<CorsConfig>('cors').origins,
+  });
+  app.use(
+    helmet({
+      referrerPolicy: {
+        policy: ['origin-when-cross-origin'],
+      },
+      dnsPrefetchControl: false,
+      xXssProtection: false,
+      hidePoweredBy: true,
+    }),
+  );
 
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 

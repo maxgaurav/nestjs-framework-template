@@ -33,6 +33,19 @@ import { Request, Response } from 'express';
     PassportModule.register({
       session: true,
     }),
+    ClsModule.forRoot({
+      global: true,
+      middleware: {
+        mount: true,
+        setup: (cls, req: Request, res: Response) => {
+          const requestId = cls.getId();
+          res.setHeader('Request-Id', requestId);
+          cls.set('type', 'REQUEST');
+        },
+        idGenerator: () => crypto.randomUUID(),
+        generateId: true,
+      },
+    }),
     EnvironmentModule,
     DatabasesModule,
     ModelBootstrapModule,
@@ -49,18 +62,6 @@ import { Request, Response } from 'express';
     UserModule,
     FileManagementModule,
     UrlManagementModule,
-    ClsModule.forRoot({
-      global: true,
-      middleware: {
-        mount: true,
-        setup: (cls, req: Request, res: Response) => {
-          const requestId = crypto.randomUUID();
-          res.setHeader('Request-Id', requestId);
-          cls.set('id', requestId);
-          cls.set('type', 'REQUEST');
-        },
-      },
-    }),
   ],
   controllers: [AppController],
   providers: [

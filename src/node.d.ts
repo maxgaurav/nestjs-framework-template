@@ -28,6 +28,8 @@ declare global {
       SESSION_RESAVE?: 'false' | 'true';
       SAVE_UNINITIALIZED?: 'true' | 'false';
       DB_USE_READ_WRITE_CLUSTER?: 'true' | 'false';
+      ALLOWED_ORIGINS?: string;
+      VIEW_TEMPLATE_CACHING?: 'true' | 'false';
     }
   }
 }

@@ -1,7 +1,7 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { TEMPLATE_FUNCTIONS, VIEW_RENDER_ENGINE } from '../../constants';
 import { ConfigService } from '@nestjs/config';
-import { ViewConfig } from '../../../environment/interfaces/environment-types.interface';
+import { ViewConfig } from '../../../environment/environment-types.interface';
 import * as Twig from 'twig';
 import type { TemplateFunctionRegistrations } from '../../template-functions/template-function-registration';
 import { ModuleRef } from '@nestjs/core';

@@ -31,6 +31,10 @@ module.exports = {
         allowNull: false,
         defaultValue: false,
       },
+      grant_type: {
+        type: DataType.STRING,
+        allowNull: false,
+      },
       created_at: {
         type: DataType.DATE,
         allowNull: false,

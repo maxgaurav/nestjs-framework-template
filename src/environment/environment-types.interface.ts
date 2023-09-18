@@ -1,5 +1,5 @@
 import { SequelizeModuleOptions } from '@nestjs/sequelize';
-import { ConnectionNames } from '../../databases/connection-names';
+import { ConnectionNames } from '../databases/connection-names';
 import { MailerOptions } from '@nestjs-modules/mailer';
 import { SessionOptions } from 'express-session';
 
@@ -56,4 +56,8 @@ export interface ViewConfig {
 export type FilesystemNames = 'local';
 export interface FilesystemConfig {
   defaultDriver: FilesystemNames;
+}
+
+export interface CorsConfig {
+  origins: string[];
 }

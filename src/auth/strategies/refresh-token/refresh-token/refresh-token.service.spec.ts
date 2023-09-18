@@ -7,7 +7,7 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { RefreshTokenDto } from '../../../dtos/refresh-token/refresh-token.dto';
+import { RefreshTokenDto } from '../../../dtos/refresh-token.dto';
 import { RefreshTokenModel } from '../../../../databases/models/oauth/refresh-token.model';
 import { IsNotEmpty } from 'class-validator';
 import * as mockdate from 'mockdate';

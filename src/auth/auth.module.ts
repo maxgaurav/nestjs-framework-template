@@ -15,6 +15,13 @@ import { OauthController } from './controllers/oauth/oauth.controller';
 import { ClientRepoService } from './services/oauth/client-repo/client-repo.service';
 import { AccessTokenRepoService } from './services/oauth/access-token-repo/access-token-repo.service';
 import { RefreshTokenRepoService } from './services/oauth/refresh-token-repo/refresh-token-repo.service';
+import { AuthorizationLoginStrategy } from './strategies/authorization-login-strategy/authorization-login.strategy';
+import { AuthorizationRedirector } from './redirections/authorization/authorization.redirector';
+import { AuthorizationChallengeRepoService } from './services/authorization-challenge-repo/authorization-challenge-repo.service';
+import { ImplicitPasswordGrantType } from './grant-types/implicit-password/implicit-password.grant-type';
+import { ClientIdExistsValidator } from './validators/client-id-exists/client-id-exists.validator';
+import { ProofKeyExchangeGrantType } from './grant-types/proof-key-exchage/proof-key-exchange.grant-type';
+import { AuthorizationCodeGrantType } from './grant-types/authorization-code/authorization-code.grant-type';
 
 @Global()
 @Module({
@@ -37,6 +44,13 @@ import { RefreshTokenRepoService } from './services/oauth/refresh-token-repo/ref
     ClientRepoService,
     AccessTokenRepoService,
     RefreshTokenRepoService,
+    AuthorizationLoginStrategy,
+    AuthorizationRedirector,
+    AuthorizationChallengeRepoService,
+    ImplicitPasswordGrantType,
+    ClientIdExistsValidator,
+    ProofKeyExchangeGrantType,
+    AuthorizationCodeGrantType,
   ],
   controllers: [LoginController, OauthController],
   exports: [
@@ -45,6 +59,7 @@ import { RefreshTokenRepoService } from './services/oauth/refresh-token-repo/ref
     ClientRepoService,
     AccessTokenRepoService,
     RefreshTokenRepoService,
+    AuthorizationChallengeRepoService,
   ],
 })
 export class AuthModule {}

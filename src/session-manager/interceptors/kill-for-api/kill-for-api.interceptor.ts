@@ -13,7 +13,11 @@ export class KillForApiInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const request = context.switchToHttp().getRequest<Request>();
 
-    if (request.url.includes('api') || request.url.includes('oauth')) {
+    if (
+      request.url.includes('api') ||
+      request.url.includes('oauth/token') ||
+      request.url.includes('oauth/refresh')
+    ) {
       return next.handle().pipe(
         switchMap((result) =>
           from(

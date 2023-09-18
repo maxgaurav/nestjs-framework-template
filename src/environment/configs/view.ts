@@ -1,5 +1,5 @@
 import { join } from 'path';
-import { ViewConfig } from '../interfaces/environment-types.interface';
+import { ViewConfig } from '../environment-types.interface';
 
 export const viewConfig = () => ({
   view: {

@@ -2,7 +2,7 @@ import { ConnectionNames } from '../../databases/connection-names';
 import {
   DatabaseConfig,
   DatabaseConnectionConfig,
-} from '../interfaces/environment-types.interface';
+} from '../environment-types.interface';
 import { ReplicationOptions } from 'sequelize';
 
 export const databaseConfig = () => {
@@ -74,9 +74,6 @@ function readWriteClusterSettings(): ReplicationOptions | false {
   }
 
   const readServerMappings: Map<number, ReadServerSetting> = new Map();
-
-  const test = process.env.DB_READ_HOST_SERVER_1;
-  console.log(test);
 
   const readServerKeyCheck = new RegExp(
     /DB_READ_(HOST|NAME|USERNAME|PASSWORD|PORT)_SERVER_([1-9](\d+)?)/,

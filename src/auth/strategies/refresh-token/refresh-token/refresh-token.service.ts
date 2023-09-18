@@ -9,7 +9,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-custom';
 import { Request } from 'express';
 import { RefreshTokenModel } from '../../../../databases/models/oauth/refresh-token.model';
-import { RefreshTokenDto } from '../../../dtos/refresh-token/refresh-token.dto';
+import { RefreshTokenDto } from '../../../dtos/refresh-token.dto';
 import { validateOrReject } from 'class-validator';
 import { AuthService } from '../../../services/auth/auth.service';
 import * as moment from 'moment';

@@ -14,7 +14,7 @@ import { OnEvent } from '@nestjs/event-emitter';
 import { SystemEvents } from '../../../system-events/system-events';
 import { ProcessMessagingService } from '../../../common/services/process-messaging/process-messaging.service';
 import { CommunicationCommands } from '../../../cluster/communication-commands';
-import { SystemConfig } from '../../../environment/interfaces/environment-types.interface';
+import { SystemConfig } from '../../../environment/environment-types.interface';
 import { HealthIndicatorFunction } from '@nestjs/terminus/dist/health-indicator';
 
 @Controller('health')

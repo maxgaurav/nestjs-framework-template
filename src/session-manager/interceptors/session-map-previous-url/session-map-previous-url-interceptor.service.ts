@@ -12,7 +12,11 @@ import { Session } from 'express-session';
 export class SessionMapPreviousUrlInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const request = context.switchToHttp().getRequest<Request>();
-    if (request.url.includes('api/v1') || request.url.includes('oauth')) {
+    if (
+      request.url.includes('api/v1') ||
+      request.url.includes('oauth/token') ||
+      request.url.includes('oauth/refresh')
+    ) {
       return next.handle();
     }
 

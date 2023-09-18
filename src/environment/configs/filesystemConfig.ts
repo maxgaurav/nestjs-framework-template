@@ -1,4 +1,4 @@
-import { FilesystemConfig } from '../interfaces/environment-types.interface';
+import { FilesystemConfig } from '../environment-types.interface';
 
 export const filesystemConfig = () => ({
   filesystem: {

@@ -13,15 +13,14 @@ import { map } from 'rxjs/operators';
 export class SetupIntendInterceptor implements NestInterceptor {
   constructor(private intendManager: IntendManagerService) {}
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+    const request = context.switchToHttp().getRequest<Request>();
     return of(true)
       .pipe(
         map(() => {
           if (
-            context
-              .switchToHttp()
-              .getRequest<Request>()
-              .url.includes('api/v') ||
-            context.switchToHttp().getRequest<Request>().url.includes('oauth')
+            request.url.includes('api/v') ||
+            request.url.includes('oauth/login') ||
+            request.url.includes('oauth/refresh')
           ) {
             return true;
           }

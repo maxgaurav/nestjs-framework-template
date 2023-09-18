@@ -1,0 +1,12 @@
+{% if _errorBag.all.length %}
+  <div class="alert alert-danger" role="alert">
+    <h4 class="alert-heading">
+      Error
+    </h4>
+    <ul class="list-unstyled">
+      {% for errors in _errorBag.all %}
+        <li>{{ errors }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endif %}

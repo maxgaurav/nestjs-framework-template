@@ -1,16 +1,11 @@
-import { INestApplication, Logger } from '@nestjs/common';
+import { Logger } from '@nestjs/common';
+import { applicationContext } from '../application-context';
 
 function parseMessage(
   message: string | ((args: any[]) => string),
   args: any[],
 ): string {
   return typeof message === 'string' ? message : message(args);
-}
-
-let applicationContext: INestApplication | null = null;
-
-export function registerApplicationContext(application: INestApplication) {
-  applicationContext = application;
 }
 
 let logger: Logger | null = null;
@@ -30,9 +25,9 @@ function getLogger(): Logger | Console {
 
 export const LoggingDecorator = (message: {
   messageBefore: string | ((args: any[]) => string);
-  ActivityTypeBefore?: 'debug' | 'log' | 'error' | 'warn';
+  LogTypeBefore?: 'debug' | 'log' | 'error' | 'warn';
   messageAfter?: string | ((args: any[]) => string) | undefined;
-  ActivityTypeAfter?: 'debug' | 'log' | 'error' | 'warn';
+  LogTypeAfter?: 'debug' | 'log' | 'error' | 'warn';
 }) => {
   return (
     target: any,
@@ -43,7 +38,7 @@ export const LoggingDecorator = (message: {
     const originalMethod = propertyDescriptor.value;
 
     propertyDescriptor.value = function (...args: any[]) {
-      getLogger()[message.ActivityTypeBefore || 'debug'](
+      getLogger()[message.LogTypeBefore || 'debug'](
         parseMessage(message.messageBefore, args),
         target.constructor.name,
       );
@@ -55,7 +50,7 @@ export const LoggingDecorator = (message: {
 
       if (result instanceof Promise) {
         return result.then((mainResult) => {
-          getLogger()[message.ActivityTypeAfter || 'debug'](
+          getLogger()[message.LogTypeAfter || 'debug'](
             parseMessage(message.messageAfter, args),
             target.constructor.name,
           );

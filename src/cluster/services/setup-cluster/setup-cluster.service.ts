@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import * as cluster from 'cluster';
 import { Cluster, Worker } from 'cluster';
 import * as os from 'os';
-import { ClusterConfig } from '../../../environment/interfaces/environment-types.interface';
+import { ClusterConfig } from '../../../environment/environment-types.interface';
 import {
   auditTime,
   filter,

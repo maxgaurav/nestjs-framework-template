@@ -1,6 +1,6 @@
 import { ConsoleLogger, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { SystemConfig } from '../../environment/interfaces/environment-types.interface';
+import { SystemConfig } from '../../environment/environment-types.interface';
 import { ClsService } from 'nestjs-cls';
 
 @Injectable()
@@ -43,8 +43,10 @@ export class LoggingService extends ConsoleLogger {
       return message;
     }
 
-    return `[${this.clsService.get('type') || 'Default'}-${this.clsService.get(
-      'id',
-    )}] ${message}`;
+    return `[${
+      this.clsService.get('type') || 'Default'
+    }-${this.clsService.getId()}] ${
+      typeof message === 'object' ? JSON.stringify(message) : message
+    }`;
   }
 }

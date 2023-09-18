@@ -119,6 +119,30 @@ export abstract class BaseValidator<T = any>
     return value?.id;
   }
 
+  public getContextContent(validationArguments: ValidationArguments): {
+    params: Record<string, any>;
+    query: Record<string, string>;
+    user: null | number;
+    id: string;
+  } {
+    return (validationArguments?.object as any)?.__CONTEXT;
+  }
+
+  /**
+   *
+   * @param validatorArg
+   */
+  public constraintInfo<T = undefined>(
+    validatorArg: ValidationArguments,
+  ): T | undefined {
+    const constraints = validatorArg.constraints;
+    if (constraints.length !== 2) {
+      return undefined;
+    }
+
+    return constraints[1];
+  }
+
   /**
    * Adds value to state
    * @param value

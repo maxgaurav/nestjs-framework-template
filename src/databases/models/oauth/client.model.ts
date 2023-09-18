@@ -6,6 +6,7 @@ import {
   Default,
 } from 'sequelize-typescript';
 import { DatesMapping } from '../dates-mapping';
+import { GrantTypes } from '../../../auth/grant-types/grant-type-implementation';
 
 @Table({ tableName: 'oauth_clients' })
 export class ClientModel extends DatesMapping<ClientModel> {
@@ -24,4 +25,7 @@ export class ClientModel extends DatesMapping<ClientModel> {
 
   @Column
   public is_revoked: boolean;
+
+  @Column(DataType.STRING)
+  public grant_type: GrantTypes;
 }

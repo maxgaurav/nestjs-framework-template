@@ -1,4 +1,4 @@
-import { ClusterConfig } from '../interfaces/environment-types.interface';
+import { ClusterConfig } from '../environment-types.interface';
 
 export const clusterConfig = () => ({
   cluster: {
