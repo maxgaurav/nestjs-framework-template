@@ -31,7 +31,7 @@ export class SessionConfigService {
         sessionStore = new MemoryStore();
     }
 
-    return session({
+    return (session as any).default({
       store: sessionStore,
       secret: sessionConfig.secret,
       name: sessionConfig.name,

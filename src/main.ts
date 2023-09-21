@@ -75,7 +75,7 @@ async function bootstrap() {
   setupApiDocumentation(app);
 
   app.use(await app.get<SessionConfigService>(SessionConfigService).session());
-  app.use(flash());
+  app.use((flash as any).default());
   app.useGlobalInterceptors(
     app.get(NotFoundConverterInterceptor),
     app.get(SessionMapPreviousUrlInterceptor),

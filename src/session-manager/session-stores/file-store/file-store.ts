@@ -10,7 +10,9 @@ export class FileStore implements SessionStoreContract {
   ) {}
 
   store(): Promise<Store> {
-    const store = new (SessionStore(this.session))(this.config);
+    const store = new ((SessionStore as any).default(this.session))(
+      this.config,
+    );
     return Promise.resolve(store);
   }
 }

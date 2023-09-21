@@ -2,6 +2,7 @@ import { DatesMapping } from '../dates-mapping';
 import {
   BelongsTo,
   Column,
+  DataType,
   ForeignKey,
   PrimaryKey,
   Table,
@@ -18,7 +19,7 @@ export class RefreshTokenModel extends DatesMapping<RefreshTokenModel> {
   @Column
   public access_token_id: string;
 
-  @Column
+  @Column(DataType.DATE)
   public expires_at: Date | null;
 
   @BelongsTo(() => AccessTokenModel)
