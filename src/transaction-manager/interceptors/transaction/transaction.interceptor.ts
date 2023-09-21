@@ -4,9 +4,7 @@ import {
   Injectable,
   NestInterceptor,
 } from '@nestjs/common';
-import { from, Observable, throwError } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
-import { Transaction } from 'sequelize';
+import { firstValueFrom, from, Observable } from 'rxjs';
 import { TransactionProviderService } from '../../services/transaction-provider/transaction-provider.service';
 import { Request } from 'express';
 
@@ -17,24 +15,11 @@ export class TransactionInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const request = context.switchToHttp().getRequest<Request>();
 
-    return from(this.transactionProvider.create())
-      .pipe(
-        switchMap((transaction: Transaction) => {
-          request.scopeTransaction = transaction;
-          return next.handle();
-        }),
-      )
-      .pipe(
-        switchMap((result) =>
-          from(request.scopeTransaction.commit()).pipe(map(() => result)),
-        ),
-      )
-      .pipe(
-        catchError((err) =>
-          from(request.scopeTransaction.rollback()).pipe(
-            switchMap(() => throwError(err)),
-          ),
-        ),
-      );
+    return from(
+      this.transactionProvider.createManaged((transaction) => {
+        request.scopeTransaction = transaction;
+        return firstValueFrom(next.handle());
+      }),
+    );
   }
 }

@@ -1,9 +1,30 @@
 import { TransactionInterceptor } from './transaction.interceptor';
-import { of } from 'rxjs';
+import { firstValueFrom, of } from 'rxjs';
+import { Test, TestingModule } from '@nestjs/testing';
+import { TransactionProviderService } from '../../services/transaction-provider/transaction-provider.service';
 
 describe('TransactionInterceptor', () => {
+  let interceptor: TransactionInterceptor;
+  let module: TestingModule;
+
+  beforeEach(async () => {
+    module = await Test.createTestingModule({
+      providers: [
+        TransactionInterceptor,
+        {
+          provide: TransactionProviderService,
+          useValue: {
+            createManaged: () => null,
+          },
+        },
+      ],
+    }).compile();
+
+    interceptor = module.get<TransactionInterceptor>(TransactionInterceptor);
+  });
+
   it('should be defined', () => {
-    expect(new TransactionInterceptor({} as any)).toBeDefined();
+    expect(interceptor).toBeDefined();
   });
 
   it('should create transaction and commit on success', async () => {
@@ -13,39 +34,33 @@ describe('TransactionInterceptor', () => {
         getRequest: () => requestSample,
       }),
     };
-
-    const transaction = {
-      commit: () => ({}),
-    };
-
-    const connection = {
-      create: () => ({}),
-    };
+    const transactionManager = module.get<TransactionProviderService>(
+      TransactionProviderService,
+    );
+    let callbackCalled = false;
 
     const transactionSpy = jest
-      .spyOn(connection, 'create')
-      .mockImplementation(() => Promise.resolve(transaction));
-
-    const commitSpy = jest
-      .spyOn(transaction, 'commit')
-      .mockImplementation(() => Promise.resolve(true));
+      .spyOn(transactionManager, 'createManaged')
+      .mockImplementation((callback: (value: any) => any) => {
+        callbackCalled = true;
+        return callback('transaction');
+      });
 
     const nextHandler = {
       handle: () => of(true),
     };
 
-    const interceptor = new TransactionInterceptor(connection as any);
-    const result = await interceptor
-      .intercept(context as any, nextHandler)
-      .toPromise();
+    const result = await firstValueFrom(
+      interceptor.intercept(context as any, nextHandler),
+    );
 
     expect(result).toEqual(true);
     expect(transactionSpy).toHaveBeenCalled();
     expect(requestSample).toEqual(
       expect.objectContaining({
-        scopeTransaction: transaction,
+        scopeTransaction: 'transaction',
       }),
     );
-    expect(commitSpy).toHaveBeenCalled();
+    expect(callbackCalled).toEqual(true);
   });
 });

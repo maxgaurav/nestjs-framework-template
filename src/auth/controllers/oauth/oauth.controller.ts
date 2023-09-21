@@ -100,8 +100,9 @@ export class OauthController {
   @UseGuards(LoginAccessTokenGuard)
   @Post('token')
   @LoggingDecorator({
-    messageBefore: 'Starting Oauth2 token Implicit login',
-    messageAfter: 'Oauth2 Token created for login',
+    messageBefore:
+      'Oauth2: Generating access token and refresh token for grant type',
+    messageAfter: 'Oauth2: Generated tokens and returning response',
   })
   public async token(
     @AuthUser() user: { user: UserModel; client: ClientModel },

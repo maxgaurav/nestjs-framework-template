@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { map, Observable } from 'rxjs';
 import { Reflector } from '@nestjs/core';
-import { RESOURCE_MAP_KEY } from '../../decorators/resource-map.decorator';
+import { ResourceMap } from '../../decorators/resource-map.decorator';
 import { plainToInstance } from 'class-transformer';
 
 @Injectable()
@@ -14,9 +14,10 @@ export class ResourceConversionInterceptor implements NestInterceptor {
   constructor(private reflector: Reflector) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    const instanceType = this.reflector.getAllAndOverride<{
-      new (...args: any[]): any;
-    }>(RESOURCE_MAP_KEY, [context.getHandler(), context.getClass()]);
+    const instanceType = this.reflector.getAllAndOverride(ResourceMap, [
+      context.getHandler(),
+      context.getClass(),
+    ]);
 
     return next.handle().pipe(
       map((content) => {
@@ -24,7 +25,7 @@ export class ResourceConversionInterceptor implements NestInterceptor {
           return content;
         }
 
-        if (content instanceof Array) {
+        if (Array.isArray(content)) {
           return content.map((mappedContent) =>
             plainToInstance(instanceType, mappedContent, {
               excludeExtraneousValues: true,
