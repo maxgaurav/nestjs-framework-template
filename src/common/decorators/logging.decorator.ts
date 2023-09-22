@@ -28,7 +28,7 @@ export const LoggingDecorator = (message: {
   LogTypeBefore?: 'debug' | 'log' | 'error' | 'warn';
   messageAfter?: string | ((args: any[]) => string) | undefined;
   LogTypeAfter?: 'debug' | 'log' | 'error' | 'warn';
-}) => {
+}): MethodDecorator => {
   return (
     target: any,
     propertyKey: string,

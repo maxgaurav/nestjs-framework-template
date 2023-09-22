@@ -16,7 +16,9 @@ import { ProcessMessagingService } from '../../../common/services/process-messag
 import { CommunicationCommands } from '../../../cluster/communication-commands';
 import { SystemConfig } from '../../../environment/environment-types.interface';
 import { HealthIndicatorFunction } from '@nestjs/terminus/dist/health-indicator';
+import { ApiExcludeController } from '@nestjs/swagger';
 
+@ApiExcludeController()
 @Controller('health')
 export class HealthController {
   constructor(

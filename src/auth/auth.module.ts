@@ -22,6 +22,7 @@ import { ImplicitPasswordGrantType } from './grant-types/implicit-password/impli
 import { ClientIdExistsValidator } from './validators/client-id-exists/client-id-exists.validator';
 import { ProofKeyExchangeGrantType } from './grant-types/proof-key-exchage/proof-key-exchange.grant-type';
 import { AuthorizationCodeGrantType } from './grant-types/authorization-code/authorization-code.grant-type';
+import { AuthorizationController } from './controllers/authorization/authorization.controller';
 
 @Global()
 @Module({
@@ -52,7 +53,7 @@ import { AuthorizationCodeGrantType } from './grant-types/authorization-code/aut
     ProofKeyExchangeGrantType,
     AuthorizationCodeGrantType,
   ],
-  controllers: [LoginController, OauthController],
+  controllers: [LoginController, OauthController, AuthorizationController],
   exports: [
     AuthService,
     HashEncryptService,

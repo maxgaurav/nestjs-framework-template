@@ -1,12 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Query,
-  Render,
-  UseGuards,
-  UseInterceptors,
-} from '@nestjs/common';
+import { Controller, Post, UseGuards, UseInterceptors } from '@nestjs/common';
 import { LoginAccessTokenGuard } from '../../guards/login-access-token/login-access-token.guard';
 import { AccessTokenRepoService } from '../../services/oauth/access-token-repo/access-token-repo.service';
 import { RefreshTokenRepoService } from '../../services/oauth/refresh-token-repo/refresh-token-repo.service';
@@ -31,16 +23,8 @@ import {
 import { RefreshTokenDto } from '../../dtos/refresh-token.dto';
 import { AccessTokenDto } from '../../dtos/access-token.dto';
 import { LoggingDecorator } from '../../../common/decorators/logging.decorator';
-import { SessionErrorValidationInterceptor } from '../../../session-manager/interceptors/session-error-validation/session-error-validation.interceptor';
-import { OldInputsInterceptor } from '../../../session-manager/interceptors/old-inputs/old-inputs.interceptor';
-import { AuthorizationDto } from '../../dtos/authorization.dto';
 import { HashEncryptService } from '../../services/hash-encrypt/hash-encrypt.service';
-import { AuthorizationGuard } from '../../guards/authorization/authorization.guard';
-import { AuthorizationRedirector } from '../../redirections/authorization/authorization.redirector';
-import { RedirectGenerator } from '../../../common/decorators/redirect-generator.decorator';
-import { RedirectRouteInterceptor } from '../../../common/interceptors/redirect-route/redirect-route.interceptor';
 import { AuthorizationChallengeRepoService } from '../../services/authorization-challenge-repo/authorization-challenge-repo.service';
-import { GrantTypes } from '../../grant-types/grant-type-implementation';
 
 export interface BearerTokenResult {
   expires_at: Date | string | null;
@@ -212,67 +196,5 @@ export class OauthController {
     return moment()
       .add(config.expirationTimeRefreshToken, 'milliseconds')
       .toDate();
-  }
-
-  @UseInterceptors(SessionErrorValidationInterceptor, OldInputsInterceptor)
-  @Render('login')
-  @Get('authorization')
-  @LoggingDecorator({
-    messageBefore: 'Starting Authorization server login flow',
-  })
-  public async authorization(@Query() grantContent: AuthorizationDto) {
-    return {
-      token: await this.hashEncrypt.encrypt(JSON.stringify(grantContent)),
-    };
-  }
-
-  @RedirectGenerator(AuthorizationRedirector)
-  @UseGuards(AuthorizationGuard)
-  @UseInterceptors(
-    RedirectRouteInterceptor,
-    SessionErrorValidationInterceptor,
-    OldInputsInterceptor,
-    TransactionInterceptor,
-  )
-  @Post('authorization/login')
-  @LoggingDecorator({
-    messageBefore:
-      'Oauth2: Starting to generate the authorization challenge against the grant type',
-    messageAfter:
-      'Oauth2: Authorization successful for credentials and grant type. Redirecting back with redirect url',
-  })
-  public async login(
-    @AuthUser()
-    {
-      user,
-      authorization,
-    }: {
-      user: UserModel;
-      authorization: AuthorizationDto;
-    },
-    @ReqTransaction() transaction?: Transaction,
-  ) {
-    switch (authorization.grant_type) {
-      case GrantTypes.PKCE:
-        return this.authorizationChallengeRepo.createWithCodeChallenge(
-          user,
-          authorization.client_id,
-          {
-            challenge: authorization.code_challenge,
-            algorithm: authorization.algorithm,
-          },
-          transaction,
-        );
-      case GrantTypes.AuthorizationCode:
-        return this.authorizationChallengeRepo.createForAuthorizationCode(
-          user,
-          authorization.client_id,
-          transaction,
-        );
-      default:
-        throw new Error(
-          `Grant type ${authorization.grant_type} is not allowed in authorization flow`,
-        );
-    }
   }
 }
