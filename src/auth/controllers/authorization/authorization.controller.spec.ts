@@ -98,10 +98,10 @@ describe('AuthorizationController', () => {
     } as UserModel;
     const authorizationDto = new AuthorizationDto();
     authorizationDto.grant_type = GrantTypes.AuthorizationCode;
-    authorizationDto.code_challenge = crypto.randomUUID();
+    authorizationDto.code_challenge = Math.random().toString(32).substring(7);
 
     const authorization = {} as AuthorizationChallengeModel;
-    authorization.id = crypto.randomUUID();
+    authorization.id = Math.random().toString(32).substring(7);
     const transaction = null;
 
     const repo = module.get(AuthorizationChallengeRepoService);
