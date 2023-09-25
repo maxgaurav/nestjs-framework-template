@@ -25,11 +25,8 @@ export class UrlBuilderService {
     options.pathParameters = options.pathParameters || {};
     options.queryParameters = options.queryParameters || {};
 
-    const replacedPathParameters = Object.entries(
+    const replacedPathParameters = this.getReplacedPathParameters(
       options.pathParameters,
-    ).reduce<string>(
-      (replacedString, [key, value]) =>
-        replacedString.replace(key, value.toString()),
       baseUrl,
     );
 
@@ -38,7 +35,21 @@ export class UrlBuilderService {
       this.configService.get<SystemConfig>('system').url,
     );
 
-    Object.entries(options.queryParameters)
+    this.appendQueryParams(options.queryParameters, url);
+
+    return url.toString();
+  }
+
+  /**
+   * Appends query params to url
+   * @param queryParams
+   * @param url
+   */
+  public appendQueryParams(
+    queryParams: { [p: string]: string | number | string[] | number[] },
+    url: URL,
+  ) {
+    Object.entries(queryParams)
       .reduce<[string, string | number][]>(
         (queryValues, [queryKey, queryValue]) => {
           Array.isArray(queryValue)
@@ -55,7 +66,21 @@ export class UrlBuilderService {
       .forEach(([queryKey, queryValue]) =>
         url.searchParams.append(queryKey, queryValue.toString()),
       );
+  }
 
-    return url.toString();
+  /**
+   * Returns replaced url value with path parameters
+   * @param pathParams
+   * @param baseUrl
+   */
+  public getReplacedPathParameters(
+    pathParams: { [p: string]: string | number },
+    baseUrl: string,
+  ) {
+    return Object.entries(pathParams).reduce<string>(
+      (replacedString, [key, value]) =>
+        replacedString.replace(`:${key}`, value.toString()),
+      baseUrl,
+    );
   }
 }

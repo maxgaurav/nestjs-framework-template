@@ -8,7 +8,7 @@ import { from, Observable, of, switchMap } from 'rxjs';
 import { Request, Response } from 'express';
 import { ModuleRef, Reflector } from '@nestjs/core';
 import { RedirectRouteExecutorInterface } from '../../../interfaces/redirect-route-executor.interface';
-import { REDIRECT_SERVICE_METADATA } from '../../decorators/redirect-generator.decorator';
+import { RedirectGenerator } from '../../decorators/redirect-generator.decorator';
 import { map } from 'rxjs/operators';
 
 @Injectable()
@@ -26,10 +26,10 @@ export class RedirectRouteInterceptor implements NestInterceptor {
           switchMap(() =>
             from(
               this.moduleRef.resolve<RedirectRouteExecutorInterface>(
-                this.reflector.get(
-                  REDIRECT_SERVICE_METADATA,
+                this.reflector.getAllAndOverride(RedirectGenerator, [
                   context.getHandler(),
-                ),
+                  context.getClass(),
+                ]),
               ),
             ).pipe(
               switchMap((redirectHandler) => {

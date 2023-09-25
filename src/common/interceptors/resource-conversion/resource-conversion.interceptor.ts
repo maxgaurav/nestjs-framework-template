@@ -14,16 +14,16 @@ export class ResourceConversionInterceptor implements NestInterceptor {
   constructor(private reflector: Reflector) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    const instanceType = this.reflector.getAllAndOverride(ResourceMap, [
-      context.getHandler(),
-      context.getClass(),
-    ]);
-
     return next.handle().pipe(
       map((content) => {
         if (!content) {
           return content;
         }
+
+        const instanceType = this.reflector.getAllAndOverride(ResourceMap, [
+          context.getHandler(),
+          context.getClass(),
+        ]);
 
         if (Array.isArray(content)) {
           return content.map((mappedContent) =>

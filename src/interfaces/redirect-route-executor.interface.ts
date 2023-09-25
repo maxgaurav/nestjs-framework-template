@@ -1,3 +1,7 @@
 export interface RedirectRouteExecutorInterface {
-  generateUrl(request: any, response: any): Promise<string> | string;
+  generateUrl(request: any, result: any): Promise<string> | string;
+}
+
+export interface RedirectRouteExecutorInterfaceInst {
+  new (...args: any[]): RedirectRouteExecutorInterface;
 }

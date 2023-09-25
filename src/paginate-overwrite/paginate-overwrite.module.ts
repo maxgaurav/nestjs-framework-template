@@ -1,5 +1,5 @@
 import { Global, Module } from '@nestjs/common';
-import { OverwritePaginateService } from './services/overwrite-paginate/overwrite-paginate.service';
+import { OverwritePaginateService } from './services/overwrite-paginate.service';
 import { PAGINATE_OPTIONS } from 'nestjs-sequelize-paginate/dist/lib/paginate.constans';
 import { PaginateService } from 'nestjs-sequelize-paginate';
 

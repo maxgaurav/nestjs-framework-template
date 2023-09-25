@@ -73,7 +73,7 @@ export class AuthorizationController {
   ) {
     switch (authorization.grant_type) {
       case GrantTypes.PKCE:
-        return this.authorizationChallengeRepo.createWithCodeChallenge(
+        return this.authorizationChallengeRepo.createWithPkceCodeChallenge(
           user,
           authorization.client_id,
           {

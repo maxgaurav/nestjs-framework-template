@@ -27,7 +27,7 @@ export class AuthorizationChallengeRepoService {
   @LoggingDecorator({
     messageBefore: 'Creating authorization challenge record',
   })
-  public createWithCodeChallenge(
+  public createWithPkceCodeChallenge(
     user: UserModel | number,
     client: ClientModel | string,
     data: Pick<AuthorizationChallengeModel, 'challenge' | 'algorithm'>,

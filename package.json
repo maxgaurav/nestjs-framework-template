@@ -119,6 +119,7 @@
       "!documentation-helper/**/*.(t|j)s",
       "!environment/configs/*.(t|j)s",
       "!main.(t|j)s",
+      "!tinker.(t|j)s",
       "!cli.(t|j)s",
       "!migration.(t|j)s",
       "!cli-commands/**/*.(t|j)s",
@@ -135,7 +136,8 @@
       "!transaction-manager/services/transaction-provider/**/*.(t|j)s",
       "!view-engine/services/view-engine-config/**/*.(t|j)s",
       "!session-manager/services/session-config/**/*.(t|j)s",
-      "!**/decorators/**/*.(t|j)s"
+      "!**/*.decorator.(t|j)s",
+      "!paginate-overwrite/services/overwrite-paginate.(t|j)s"
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
