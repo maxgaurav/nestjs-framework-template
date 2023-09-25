@@ -2,7 +2,6 @@ import { MailConfig } from '../environment-types.interface';
 import { join } from 'path';
 
 export const mailConfig = () => {
-  console.log(join(process.cwd(), 'emails'));
   const config: MailConfig = {
     driver: process.env.MAIL_DRIVER,
     template: {

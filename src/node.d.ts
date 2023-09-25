@@ -30,6 +30,7 @@ declare global {
       DB_USE_READ_WRITE_CLUSTER?: 'true' | 'false';
       ALLOWED_ORIGINS?: string;
       VIEW_TEMPLATE_CACHING?: 'true' | 'false';
+      SESSION_SECURE_COOKIE?: 'true' | 'false';
     }
   }
 }

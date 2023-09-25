@@ -52,8 +52,6 @@ export class AccessTokenService extends PassportStrategy(
       throw new NotFoundException();
     }
 
-    console.log(request.body);
-
     const payload = await this.validateContent(request.body, AccessTokenDto);
 
     if (!GrantTypeMappings[payload.grant_type]) {

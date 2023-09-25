@@ -40,6 +40,7 @@ export interface MailConfig extends MailerOptions {
 
 export interface SessionConfig extends Partial<SessionOptions> {
   driver: 'memory' | 'file';
+  secureCookie: boolean;
 }
 
 export interface JwtConfig {

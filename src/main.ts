@@ -40,7 +40,7 @@ async function bootstrap() {
 
   const config = app.get(ConfigService);
   app.enableCors({
-    exposedHeaders: ['request-id', 'date', 'content-type'],
+    exposedHeaders: ['request-id', 'date', 'content-type', 'content-length'],
     origin: config.get<CorsConfig>('cors').origins,
   });
   app.use(
