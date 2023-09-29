@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Get,
   Post,
@@ -6,6 +7,8 @@ import {
   Render,
   UseGuards,
   UseInterceptors,
+  Session as SessionDecorator,
+  Header,
 } from '@nestjs/common';
 import { SessionErrorValidationInterceptor } from '../../../session-manager/interceptors/session-error-validation/session-error-validation.interceptor';
 import { OldInputsInterceptor } from '../../../session-manager/interceptors/old-inputs/old-inputs.interceptor';
@@ -24,6 +27,15 @@ import { GrantTypes } from '../../grant-types/grant-type-implementation';
 import { HashEncryptService } from '../../services/hash-encrypt/hash-encrypt.service';
 import { AuthorizationChallengeRepoService } from '../../services/authorization-challenge-repo/authorization-challenge-repo.service';
 import { ApiExcludeController } from '@nestjs/swagger';
+import { PasswordDto } from '../../dtos/password.dto';
+import { randomUUID } from 'node:crypto';
+import { PasswordRedirector } from '../../redirections/password/password.redirector';
+import { Session } from 'express-session';
+import { CheckShowPasswordGuard } from '../../guards/check-show-password/check-show-password.guard';
+import { CanRestartLoginGuard } from '../../guards/can-restart-login/can-restart-login.guard';
+import { RestartLoginRedirector } from '../../redirectors/restart-login/restart-login.redirector';
+import { AppendFormActionHeaderInterceptor } from '../../interceptors/append-form-action-header/append-form-action-header.interceptor';
+import { ClearAuthorizationTrackingStatesInterceptor } from '../../interceptors/clear-authorization-tracking-states/clear-authorization-tracking-states.interceptor';
 
 @ApiExcludeController()
 @Controller('oauth/authorization')
@@ -34,15 +46,71 @@ export class AuthorizationController {
   ) {}
 
   @UseInterceptors(SessionErrorValidationInterceptor, OldInputsInterceptor)
-  @Render('login')
+  @Render('authorization/login')
   @Get()
   @LoggingDecorator({
-    messageBefore: 'Starting Authorization server login flow',
+    messageBefore: 'Starting Authorization server with entry login flow',
   })
   public async showLogin(@Query() grantContent: AuthorizationDto) {
     return {
       token: await this.hashEncrypt.encrypt(JSON.stringify(grantContent)),
     };
+  }
+
+  @RedirectGenerator(PasswordRedirector)
+  @UseInterceptors(
+    RedirectRouteInterceptor,
+    SessionErrorValidationInterceptor,
+    OldInputsInterceptor,
+  )
+  @Post('password')
+  @LoggingDecorator({
+    messageBefore:
+      'Starting Authorization flow for email password login flow and registering token for get page',
+  })
+  public async registerEmailForPasswordFlow(
+    @Body() passwordDto: PasswordDto,
+    @SessionDecorator() session: Session,
+  ) {
+    const passwordId = randomUUID();
+    (session as any).passwordContent = { ...passwordDto, passwordId };
+    await new Promise((res) => session.save(() => res(true)));
+    return (session as any).passwordContent;
+  }
+
+  @Header('Cache-Control', 'no-cache, no-store, must-revalidate')
+  @UseGuards(CheckShowPasswordGuard)
+  @UseInterceptors(
+    SessionErrorValidationInterceptor,
+    OldInputsInterceptor,
+    AppendFormActionHeaderInterceptor,
+  )
+  @Get('password')
+  @Render('authorization/password')
+  @LoggingDecorator({
+    messageBefore: 'Rendering password screen for login flow',
+  })
+  public showPassword() {
+    return {};
+  }
+
+  @RedirectGenerator(RestartLoginRedirector)
+  @UseGuards(CanRestartLoginGuard)
+  @UseInterceptors(
+    RedirectRouteInterceptor,
+    SessionErrorValidationInterceptor,
+    OldInputsInterceptor,
+  )
+  @Get('restart-login')
+  @LoggingDecorator({
+    messageBefore:
+      'Oauth2: Clearing password form state and redirecting back to login for restart process',
+  })
+  public restartLoginFlow(@SessionDecorator() session: Session) {
+    const passwordContent = (session as any).passwordContent;
+    (session as any).passwordContent = undefined;
+
+    return passwordContent;
   }
 
   @RedirectGenerator(AuthorizationRedirector)
@@ -51,6 +119,7 @@ export class AuthorizationController {
     RedirectRouteInterceptor,
     SessionErrorValidationInterceptor,
     OldInputsInterceptor,
+    ClearAuthorizationTrackingStatesInterceptor,
     TransactionInterceptor,
   )
   @Post('login')

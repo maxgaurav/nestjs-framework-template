@@ -23,6 +23,8 @@ import { ClientIdExistsValidator } from './validators/client-id-exists/client-id
 import { ProofKeyExchangeGrantType } from './grant-types/proof-key-exchage/proof-key-exchange.grant-type';
 import { AuthorizationCodeGrantType } from './grant-types/authorization-code/authorization-code.grant-type';
 import { AuthorizationController } from './controllers/authorization/authorization.controller';
+import { PasswordRedirector } from './redirections/password/password.redirector';
+import { RestartLoginRedirector } from './redirectors/restart-login/restart-login.redirector';
 
 @Global()
 @Module({
@@ -52,6 +54,8 @@ import { AuthorizationController } from './controllers/authorization/authorizati
     ClientIdExistsValidator,
     ProofKeyExchangeGrantType,
     AuthorizationCodeGrantType,
+    PasswordRedirector,
+    RestartLoginRedirector,
   ],
   controllers: [LoginController, OauthController, AuthorizationController],
   exports: [

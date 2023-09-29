@@ -46,7 +46,9 @@ export class UrlBuilderService {
    * @param url
    */
   public appendQueryParams(
-    queryParams: { [p: string]: string | number | string[] | number[] },
+    queryParams: {
+      [p: string]: string | number | string[] | number[] | null | undefined;
+    },
     url: URL,
   ) {
     Object.entries(queryParams)
@@ -64,7 +66,7 @@ export class UrlBuilderService {
         [],
       )
       .forEach(([queryKey, queryValue]) =>
-        url.searchParams.append(queryKey, queryValue.toString()),
+        url.searchParams.append(queryKey, queryValue?.toString() ?? ''),
       );
   }
 

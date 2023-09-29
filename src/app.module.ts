@@ -37,6 +37,7 @@ import { Request, Response } from 'express';
       global: true,
       middleware: {
         mount: true,
+        saveReq: true,
         setup: (cls, req: Request, res: Response) => {
           const requestId = cls.getId();
           res.setHeader('Request-Id', requestId);

@@ -1,4 +1,5 @@
 import {
+  Allow,
   IsEnum,
   IsIn,
   IsNotEmpty,
@@ -38,4 +39,7 @@ export class AuthorizationDto {
     require_tld: false,
   })
   public redirect_url: string;
+
+  @Allow()
+  public state?: any;
 }

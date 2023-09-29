@@ -3,8 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  {% block extraHeaders %} {% endblock %}
   <title>
-    {% if appTitle %} {{ appTitle }} {% else %} App {% endif %}
+    {% block appTitle %}{% endblock %} | {AppName}
   </title>
   {% block extraStyles %} {% endblock %}
 </head>

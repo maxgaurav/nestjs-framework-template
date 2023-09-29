@@ -58,6 +58,11 @@ export const LoggingDecorator = (message: {
         });
       }
 
+      getLogger()[message.LogTypeAfter || 'debug'](
+        parseMessage(message.messageAfter, args),
+        target.constructor.name,
+      );
+
       return result;
     };
   };

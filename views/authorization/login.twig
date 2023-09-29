@@ -1,0 +1,64 @@
+{% extends './authorization-layout.twig' %}
+{% block appTitle %}
+  Log in
+{% endblock %}
+{% block headerMessage %}
+  Login to continue using {Application Name}
+{% endblock %}
+{% block authorizationContent %}
+  <div class="login-form">
+    <form action="{{ url('oauth/authorization/password') }}" method="POST">
+      <input type="hidden" name="token" value="{{ token }}">
+      <div class="form-group">
+        <label for="email" class="form-label">Email Address</label>
+        <input type="email" inputmode="email" name="email" autocomplete="on" class="form-control" id="email"
+               required
+               value="{{ query('email') }}">
+      </div>
+      <div class="form-group mt-3">
+        <button class="btn btn-primary btn-lg w-100" type="submit">Continue</button>
+      </div>
+    </form>
+  </div>
+  <div class="social-accounts">
+    <div class="separation text-center text-capitalize my-3">OR</div>
+    <a href="#" class="d-block btn btn-outline-dark btn-lg w-100 my-2">Login with LinkedIn</a>
+    <a href="#" class="d-block btn btn-outline-dark btn-lg w-100 my-2">Login with Microsoft</a>
+    <a href="#" class="d-block btn btn-outline-dark btn-lg w-100 my-2">Login with GitHub</a>
+    <a href="#" class="d-block btn btn-outline-dark btn-lg w-100 my-2">Login with Google</a>
+  </div>
+{% endblock %}
+{# {% block mainContent %} #}
+{#  <main> #}
+{#    <div class="card p-3 shadow"> #}
+{#      <div class="card-body"> #}
+{#        <div class="header"> #}
+{#          <div class="logo"></div> #}
+{#          <h1 class="heading text-center">Welcome</h1> #}
+{#          <p class="message text-center">Login to continue using {Application Name}</p> #}
+{#        </div> #}
+{#        <div class="login-form"> #}
+{#          <form action="{{ url('oauth/authorization/login/password') }}" method="POST"> #}
+{#            <input type="hidden" name="token" value="{{ token }}"> #}
+{#            <div class="form-group"> #}
+{#              <label for="email" class="form-label">Email Address</label> #}
+{#              <input type="email" inputmode="email" autocomplete="on" class="form-control" id="email" #}
+{#                     required #}
+{#                     value="{{ _oldInputs.email }}"> #}
+{#            </div> #}
+{#            <div class="form-group mt-3"> #}
+{#              <button class="btn btn-primary btn-lg w-100" type="submit">Continue</button> #}
+{#            </div> #}
+{#          </form> #}
+{#        </div> #}
+{#        <div class="social-accounts"> #}
+{#          <div class="separation text-center text-capitalize my-3">OR</div> #}
+{#          <a href="#" class="d-block btn btn-outline-dark btn-lg w-100 my-2">Login with LinkedIn</a> #}
+{#          <a href="#" class="d-block btn btn-outline-dark btn-lg w-100 my-2">Login with Microsoft</a> #}
+{#          <a href="#" class="d-block btn btn-outline-dark btn-lg w-100 my-2">Login with GitHub</a> #}
+{#          <a href="#" class="d-block btn btn-outline-dark btn-lg w-100 my-2">Login with Google</a> #}
+{#        </div> #}
+{#      </div> #}
+{#    </div> #}
+{#  </main> #}
+{# {% endblock %} #}
