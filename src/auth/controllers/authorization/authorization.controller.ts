@@ -35,7 +35,8 @@ import { CheckShowPasswordGuard } from '../../guards/check-show-password/check-s
 import { CanRestartLoginGuard } from '../../guards/can-restart-login/can-restart-login.guard';
 import { RestartLoginRedirector } from '../../redirectors/restart-login/restart-login.redirector';
 import { AppendFormActionHeaderInterceptor } from '../../interceptors/append-form-action-header/append-form-action-header.interceptor';
-import { ClearAuthorizationTrackingStatesInterceptor } from '../../interceptors/clear-authorization-tracking-states/clear-authorization-tracking-states.interceptor';
+import { AuthorizationChallengeModel } from '../../../databases/models/oauth/authorization-challenge.model';
+import { MapUserToSessionInterceptor } from '../../interceptors/map-user-to-session/map-user-to-session.interceptor';
 
 @ApiExcludeController()
 @Controller('oauth/authorization')
@@ -119,7 +120,7 @@ export class AuthorizationController {
     RedirectRouteInterceptor,
     SessionErrorValidationInterceptor,
     OldInputsInterceptor,
-    ClearAuthorizationTrackingStatesInterceptor,
+    MapUserToSessionInterceptor,
     TransactionInterceptor,
   )
   @Post('login')
@@ -139,7 +140,7 @@ export class AuthorizationController {
       authorization: AuthorizationDto;
     },
     @ReqTransaction() transaction?: Transaction,
-  ) {
+  ): Promise<AuthorizationChallengeModel> {
     switch (authorization.grant_type) {
       case GrantTypes.PKCE:
         return this.authorizationChallengeRepo.createWithPkceCodeChallenge(

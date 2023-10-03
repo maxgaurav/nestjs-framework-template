@@ -135,7 +135,16 @@ describe('AuthService', () => {
   });
 
   it('should map user to session', async () => {
-    const session = { save: (value) => value } as any;
+    const session = {
+      save: (value) => value,
+      regenerate: (value) => value,
+    } as any;
+
+    const regenerateSpy = jest
+      .spyOn(session, 'regenerate')
+      .mockImplementation((callback: () => void) => {
+        callback();
+      });
 
     const saveSpy = jest
       .spyOn(session, 'save')
@@ -150,16 +159,26 @@ describe('AuthService', () => {
         auth: { isAuth: true, userId: user.id },
       }),
     );
+    expect(regenerateSpy).toHaveBeenCalled();
     expect(saveSpy).toHaveBeenCalled();
   });
 
   it('should throw error when mapping of user to session fails to be saved', async () => {
-    const session = { save: (value) => value } as any;
+    const session = {
+      save: (value) => value,
+      regenerate: (value) => value,
+    } as any;
 
     const saveSpy = jest
       .spyOn(session, 'save')
       .mockImplementation((callback: (err: string) => void) => {
         callback('errorPassed');
+      });
+
+    const regenerateSpy = jest
+      .spyOn(session, 'regenerate')
+      .mockImplementation((callback: () => void) => {
+        callback();
       });
 
     const user: UserModel = { id: 1 } as any;
@@ -173,6 +192,7 @@ describe('AuthService', () => {
     }
     expect(saveSpy).toHaveBeenCalled();
     expect(errorThrown).toEqual(true);
+    expect(regenerateSpy).toHaveBeenCalled();
   });
 
   it('should return user when searching for user by token', async () => {

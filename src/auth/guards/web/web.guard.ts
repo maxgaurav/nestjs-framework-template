@@ -34,7 +34,7 @@ export class WebGuard extends AuthGuard('local') {
     try {
       userId = this.getUserFromSession(session);
     } catch (err) {
-      return throwError(err);
+      return throwError(() => err);
     }
 
     return this.getUser(request, userId).pipe(
@@ -60,7 +60,7 @@ export class WebGuard extends AuthGuard('local') {
             this.resetSession(request.session);
             return of(false);
           }
-          return throwError(err);
+          return throwError(() => err);
         }),
       );
   }

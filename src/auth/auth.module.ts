@@ -1,11 +1,8 @@
 import { Global, Module } from '@nestjs/common';
 import { AuthService } from './services/auth/auth.service';
 import { HashEncryptService } from './services/hash-encrypt/hash-encrypt.service';
-import { SessionStrategyService } from './strategies/session-strategy/session-strategy.service';
-import { LoginController } from './controllers/login/login.controller';
 import { UserRepoService } from '../user/services/user-repo/user-repo.service';
 import { WebGuard } from './guards/web/web.guard';
-import { LoginWebGuard } from './guards/login-web/login-web.guard';
 import { IntendManagerService } from '../session-manager/services/intend-manager/intend-manager.service';
 import { JwtTokenManagerService } from './services/jwt-token-manager/jwt-token-manager.service';
 import { JwtModule } from '@nestjs/jwt';
@@ -36,10 +33,8 @@ import { RestartLoginRedirector } from './redirectors/restart-login/restart-logi
   providers: [
     AuthService,
     HashEncryptService,
-    SessionStrategyService,
     UserRepoService,
     WebGuard,
-    LoginWebGuard,
     IntendManagerService,
     JwtTokenManagerService,
     AccessTokenService,
@@ -57,7 +52,7 @@ import { RestartLoginRedirector } from './redirectors/restart-login/restart-logi
     PasswordRedirector,
     RestartLoginRedirector,
   ],
-  controllers: [LoginController, OauthController, AuthorizationController],
+  controllers: [OauthController, AuthorizationController],
   exports: [
     AuthService,
     HashEncryptService,

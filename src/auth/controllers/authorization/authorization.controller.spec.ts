@@ -9,6 +9,7 @@ import { AuthorizationDto } from '../../dtos/authorization.dto';
 import { UserModel } from '../../../databases/models/user.model';
 import { GrantTypes } from '../../grant-types/grant-type-implementation';
 import { AuthorizationChallengeModel } from '../../../databases/models/oauth/authorization-challenge.model';
+import { AuthService } from '../../services/auth/auth.service';
 
 describe('AuthorizationController', () => {
   let controller: AuthorizationController;
@@ -25,6 +26,10 @@ describe('AuthorizationController', () => {
         HashEncryptService,
         {
           provide: ConfigService,
+          useValue: {},
+        },
+        {
+          provide: AuthService,
           useValue: {},
         },
         {

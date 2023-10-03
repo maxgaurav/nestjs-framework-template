@@ -67,12 +67,19 @@ export class AuthService {
       userId: user.id,
     };
     return new Promise((res, rej) => {
-      session.save((err) => {
+      session.regenerate((err) => {
         if (!!err) {
           rej(err);
           return;
         }
-        res(true);
+
+        session.save((err) => {
+          if (!!err) {
+            rej(err);
+            return;
+          }
+          res(true);
+        });
       });
     });
   }
