@@ -16,7 +16,7 @@ export class AuthorizationChallengeModel extends DatesMapping<AuthorizationChall
   @PrimaryKey
   @Default(DataType.UUIDV4)
   @Column
-  public id: string;
+  public declare id: string;
 
   @ForeignKey(() => UserModel)
   @Column

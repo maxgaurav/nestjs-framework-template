@@ -13,7 +13,7 @@ import { useContainer } from 'class-validator';
 import { NotFoundConverterInterceptor } from '../src/helpers/interceptors/not-found-converter/not-found-converter.interceptor';
 import { ContextInterceptor } from '../src/helpers/interceptors/context/context.interceptor';
 import { ErrorValidationFormatFilter } from '../src/helpers/filters/error-validation-format/error-validation-format.filter';
-import * as request from 'supertest';
+import request from 'supertest';
 import { LoggingService } from '../src/services/logging/logging.service';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { SessionConfigService } from '../src/session-manager/services/session-config/session-config.service';
@@ -21,10 +21,10 @@ import { TransactionProviderService } from '../src/transaction-manager/services/
 import { RedirectFromLoginFilter } from '../src/session-manager/filters/redirect-to-login/redirect-to-login.filter';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import * as flash from 'connect-flash';
+import flash from 'connect-flash';
 import { SessionMapPreviousUrlInterceptor } from '../src/session-manager/interceptors/session-map-previous-url/session-map-previous-url-interceptor.service';
 import { SetupIntendInterceptor } from '../src/session-manager/interceptors/setup-intend/setup-intend.interceptor';
-import * as helmet from 'helmet';
+import helmet from 'helmet';
 import { ViewConfig } from '../src/environment/environment-types.interface';
 import { ConfigService } from '@nestjs/config';
 

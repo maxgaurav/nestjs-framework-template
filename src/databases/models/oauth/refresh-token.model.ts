@@ -13,7 +13,7 @@ import { AccessTokenModel } from './access-token.model';
 export class RefreshTokenModel extends DatesMapping<RefreshTokenModel> {
   @PrimaryKey
   @Column
-  public id: string;
+  public declare id: string;
 
   @ForeignKey(() => AccessTokenModel)
   @Column

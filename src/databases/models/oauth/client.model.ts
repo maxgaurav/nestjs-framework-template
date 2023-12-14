@@ -15,7 +15,7 @@ export class ClientModel extends DatesMapping<ClientModel> {
   @Column({
     type: DataType.UUID,
   })
-  public id: string;
+  public declare id: string;
 
   @Column
   public name: string;

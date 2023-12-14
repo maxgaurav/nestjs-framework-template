@@ -14,7 +14,7 @@ import { UserModel } from '../user.model';
 export class AccessTokenModel extends DatesMapping<AccessTokenModel> {
   @PrimaryKey
   @Column
-  public id: string;
+  public declare id: string;
 
   @ForeignKey(() => ClientModel)
   @Column

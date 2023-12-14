@@ -23,8 +23,6 @@ export class RestartLoginRedirector implements RedirectRouteExecutorInterface {
       await this.hashEncrypt.decrypt(result.token),
     );
 
-    console.log(authorizationDto);
-
     return this.urlBuilder.url('oauth/authorization', {
       queryParameters: { ...authorizationDto, email: result.email },
     });

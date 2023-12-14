@@ -15,5 +15,5 @@ export class BaseModel<T> extends DatesMapping<T> {
   @PrimaryKey
   @AutoIncrement
   @Column
-  public id: number;
+  public declare id: number;
 }

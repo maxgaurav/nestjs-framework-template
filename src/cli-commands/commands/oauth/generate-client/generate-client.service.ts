@@ -31,7 +31,7 @@ export class GenerateClientService {
     @Positional({
       name: 'grantType',
       type: 'string',
-      description: 'Name of the client',
+      description: 'Type of the client',
       choices: Array.from($enum(GrantTypes).values()),
     })
     grantType: GrantTypes,
