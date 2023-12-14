@@ -1,11 +1,12 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import * as session from 'express-session';
+import session from 'express-session';
 import { RequestHandler } from 'express';
 import { SessionConfig } from '../../../environment/environment-types.interface';
 import { MemoryStore, Store } from 'express-session';
 import { FileStore } from '../../session-stores/file-store/file-store';
-import { join } from 'path';
+import { join } from 'node:path';
+import { cwd } from 'node:process';
 
 @Injectable()
 export class SessionConfigService {
@@ -21,7 +22,7 @@ export class SessionConfigService {
     switch (sessionConfig.driver) {
       case 'file':
         sessionStore = await new FileStore(session, {
-          path: join(process.cwd(), 'storage', 'session'),
+          path: join(cwd(), 'storage', 'session'),
           logFn: (...args) =>
             args.forEach((arg) => this.logger.debug(arg, 'session-file-store')),
         }).store();

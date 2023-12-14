@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { JwtModuleOptions, JwtOptionsFactory } from '@nestjs/jwt';
 import { promises as fsPromises, constants as fsConstants } from 'fs';
-import { join } from 'path';
+import { join } from 'node:path';
 import { Buffer } from 'buffer';
+import { cwd } from 'node:process';
 
 @Injectable()
 export class JwtTokenManagerService implements JwtOptionsFactory {
@@ -21,7 +22,7 @@ export class JwtTokenManagerService implements JwtOptionsFactory {
    * @param fileName
    */
   public keyPath(fileName: string): string {
-    return join(process.cwd(), 'storage', fileName);
+    return join(cwd(), 'storage', fileName);
   }
 
   /**

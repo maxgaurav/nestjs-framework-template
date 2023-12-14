@@ -12,5 +12,9 @@
     "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true
+  },
+  "ts-node": {
+    "swc": true
   }
 }

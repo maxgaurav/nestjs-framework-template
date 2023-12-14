@@ -24,9 +24,7 @@ import { LoggingService } from './services/logging/logging.service';
 import helmet from 'helmet';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { SessionConfigService } from './session-manager/services/session-config/session-config.service';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import * as flash from 'connect-flash';
+import flash from 'connect-flash';
 import { SessionMapPreviousUrlInterceptor } from './session-manager/interceptors/session-map-previous-url/session-map-previous-url-interceptor.service';
 import { RedirectFromLoginFilter } from './session-manager/filters/redirect-to-login/redirect-to-login.filter';
 import { SetupIntendInterceptor } from './session-manager/interceptors/setup-intend/setup-intend.interceptor';

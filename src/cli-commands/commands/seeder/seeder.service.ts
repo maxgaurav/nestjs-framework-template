@@ -31,6 +31,7 @@ export class SeederService {
       name: 'all',
       type: 'boolean',
       default: false,
+      description: 'Seeds everything',
     })
     value: any,
     @Argv()
