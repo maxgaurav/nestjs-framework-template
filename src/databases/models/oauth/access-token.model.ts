@@ -1,6 +1,7 @@
 import {
   BelongsTo,
   Column,
+  DataType,
   ForeignKey,
   PrimaryKey,
   Table,
@@ -20,10 +21,10 @@ export class AccessTokenModel extends DatesMapping<AccessTokenModel> {
   public client_id: string;
 
   @ForeignKey(() => UserModel)
-  @Column
+  @Column(DataType.INTEGER.UNSIGNED)
   public user_id: number | null;
 
-  @Column
+  @Column(DataType.DATE)
   public expires_at: Date | null;
 
   @BelongsTo(() => ClientModel)

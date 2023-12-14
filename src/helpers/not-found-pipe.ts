@@ -10,7 +10,7 @@ export const notFoundPipe = <T>() => {
         if (err instanceof EmptyResultError) {
           return throwError(() => new NotFoundException('Record not found'));
         }
-        return throwError(err);
+        return throwError(() => err);
       }),
     );
 };

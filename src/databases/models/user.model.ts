@@ -1,4 +1,4 @@
-import { Column, Table, Unique } from 'sequelize-typescript';
+import { Column, DataType, Table, Unique } from 'sequelize-typescript';
 import { BaseModel } from './base.model';
 
 @Table({ tableName: 'users' })
@@ -7,7 +7,7 @@ export class UserModel extends BaseModel<UserModel> {
   @Column
   public email: string;
 
-  @Column
+  @Column(DataType.STRING)
   public password: string | null;
 
   public toJSON(): any {
