@@ -10,8 +10,8 @@ import { Request } from 'express';
 import { RefreshTokenDto } from '../../../dtos/refresh-token.dto';
 import { RefreshTokenModel } from '../../../../databases/models/oauth/refresh-token.model';
 import { IsNotEmpty } from 'class-validator';
-import * as mockdate from 'mockdate';
-import * as moment from 'moment';
+import mockdate from 'mockdate';
+import moment from 'moment';
 import { ClientRepoService } from '../../../services/oauth/client-repo/client-repo.service';
 import { ClientModel } from '../../../../databases/models/oauth/client.model';
 

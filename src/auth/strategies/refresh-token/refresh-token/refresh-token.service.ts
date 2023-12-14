@@ -12,7 +12,7 @@ import { RefreshTokenModel } from '../../../../databases/models/oauth/refresh-to
 import { RefreshTokenDto } from '../../../dtos/refresh-token.dto';
 import { validateOrReject } from 'class-validator';
 import { AuthService } from '../../../services/auth/auth.service';
-import * as moment from 'moment';
+import moment from 'moment';
 import { ClientRepoService } from '../../../services/oauth/client-repo/client-repo.service';
 
 @Injectable()
