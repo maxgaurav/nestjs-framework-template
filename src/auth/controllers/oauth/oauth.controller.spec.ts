@@ -8,8 +8,8 @@ import { ClientModel } from '../../../databases/models/oauth/client.model';
 import { AccessTokenModel } from '../../../databases/models/oauth/access-token.model';
 import { RefreshTokenModel } from '../../../databases/models/oauth/refresh-token.model';
 import { ConfigService } from '@nestjs/config';
-import * as mockdate from 'mockdate';
-import * as moment from 'moment';
+import mockdate from 'mockdate';
+import moment from 'moment';
 import { HashEncryptService } from '../../services/hash-encrypt/hash-encrypt.service';
 import { AuthorizationChallengeRepoService } from '../../services/authorization-challenge-repo/authorization-challenge-repo.service';
 

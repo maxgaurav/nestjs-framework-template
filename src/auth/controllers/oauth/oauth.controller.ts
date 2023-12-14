@@ -12,7 +12,7 @@ import { RefreshAccessTokenGuard } from '../../guards/refresh-access-token/refre
 import { RefreshTokenModel } from '../../../databases/models/oauth/refresh-token.model';
 import { ConfigService } from '@nestjs/config';
 import { JwtConfig } from '../../../environment/environment-types.interface';
-import * as moment from 'moment';
+import moment from 'moment';
 import {
   ApiBody,
   ApiHeader,
