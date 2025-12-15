@@ -13,7 +13,7 @@ module.exports = {
      */
     await queryInterface.createTable('users', {
       id: {
-        type: DataType.BIGINT.UNSIGNED,
+        type: DataType.BIGINT,
         primaryKey: true,
         allowNull: false,
         autoIncrement: true,
@@ -31,12 +31,12 @@ module.exports = {
       created_at: {
         type: DataType.DATE,
         allowNull: false,
-        defaultValue: Sequelize.Sequelize.literal('CURRENT_TIMESTAMP()'),
+        defaultValue: Sequelize.Sequelize.literal('now()'),
       },
       updated_at: {
         type: DataType.DATE,
         allowNull: false,
-        defaultValue: Sequelize.Sequelize.literal('CURRENT_TIMESTAMP()'),
+        defaultValue: Sequelize.Sequelize.literal('now()'),
       },
     });
   },

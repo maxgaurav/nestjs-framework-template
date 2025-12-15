@@ -17,6 +17,7 @@ export class RefreshMigrationService {
   })
   public async refreshMigrations() {
     await this.connection.getQueryInterface().dropAllTables();
+    await this.connection.getQueryInterface().dropAllEnums();
     await this.runMigrationCommand.runMigration();
   }
 }

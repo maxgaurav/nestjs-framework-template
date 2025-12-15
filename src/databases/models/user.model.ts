@@ -1,6 +1,8 @@
 import { Column, DataType, Table, Unique } from 'sequelize-typescript';
 import { BaseModel } from './base.model';
+import { RegisterModel } from '../model-bootstrap/default-connection-models';
 
+@RegisterModel()
 @Table({ tableName: 'users' })
 export class UserModel extends BaseModel<UserModel> {
   @Unique

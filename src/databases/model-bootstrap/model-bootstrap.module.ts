@@ -39,7 +39,7 @@ const providers: Provider[] = DefaultConnectionModels.map((model: any) => ({
 
 EntitiesMetadataStorage.addEntitiesByConnection(
   DEFAULT_CONNECTION_NAME,
-  DefaultConnectionModels,
+  DefaultConnectionModels as never,
 );
 
 const CustomModelInjectionModule: DynamicModule = {

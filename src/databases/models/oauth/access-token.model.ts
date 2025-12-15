@@ -9,7 +9,9 @@ import {
 import { DatesMapping } from '../dates-mapping';
 import { ClientModel } from './client.model';
 import { UserModel } from '../user.model';
+import { RegisterModel } from '../../model-bootstrap/default-connection-models';
 
+@RegisterModel()
 @Table({ tableName: 'oauth_access_tokens' })
 export class AccessTokenModel extends DatesMapping<AccessTokenModel> {
   @PrimaryKey

@@ -10,7 +10,9 @@ import {
 } from 'sequelize-typescript';
 import { UserModel } from '../user.model';
 import { ClientModel } from './client.model';
+import { RegisterModel } from '../../model-bootstrap/default-connection-models';
 
+@RegisterModel()
 @Table({ tableName: 'oauth_authorization_challenges' })
 export class AuthorizationChallengeModel extends DatesMapping<AuthorizationChallengeModel> {
   @PrimaryKey

@@ -8,7 +8,9 @@ import {
   Table,
 } from 'sequelize-typescript';
 import { AccessTokenModel } from './access-token.model';
+import { RegisterModel } from '../../model-bootstrap/default-connection-models';
 
+@RegisterModel()
 @Table({ tableName: 'oauth_refresh_tokens' })
 export class RefreshTokenModel extends DatesMapping<RefreshTokenModel> {
   @PrimaryKey

@@ -7,7 +7,9 @@ import {
 } from 'sequelize-typescript';
 import { DatesMapping } from '../dates-mapping';
 import { GrantTypes } from '../../../auth/grant-types/grant-type-implementation';
+import { RegisterModel } from '../../model-bootstrap/default-connection-models';
 
+@RegisterModel()
 @Table({ tableName: 'oauth_clients' })
 export class ClientModel extends DatesMapping<ClientModel> {
   @PrimaryKey

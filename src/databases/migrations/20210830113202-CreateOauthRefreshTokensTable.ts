@@ -30,12 +30,12 @@ module.exports = {
       created_at: {
         type: DataType.DATE,
         allowNull: false,
-        defaultValue: Sequelize.Sequelize.literal('CURRENT_TIMESTAMP()'),
+        defaultValue: Sequelize.Sequelize.literal('now()'),
       },
       updated_at: {
         type: DataType.DATE,
         allowNull: false,
-        defaultValue: Sequelize.Sequelize.literal('CURRENT_TIMESTAMP()'),
+        defaultValue: Sequelize.Sequelize.literal('now()'),
       },
     });
 
@@ -49,6 +49,8 @@ module.exports = {
       onDelete: 'CASCADE',
       onUpdate: 'NO ACTION',
     });
+
+    await queryInterface.addIndex('oauth_refresh_tokens', ['access_token_id']);
   },
 
   down: async (queryInterface: QueryInterface) => {

@@ -11,13 +11,13 @@ export const databaseConfig = () => {
   };
 
   config.databases[ConnectionNames.DefaultConnection] = {
-    dialect: 'mysql',
+    dialect: 'postgres',
     name: ConnectionNames.DefaultConnection,
     host: process.env.DB_HOST,
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
-    port: !!process.env.DB_PORT ? parseFloat(process.env.DB_PORT) : 3306,
+    port: !!process.env.DB_PORT ? parseFloat(process.env.DB_PORT) : 5432,
     pool: {
       max: !!process.env.DB_POOL_CONNECTION_LIMIT
         ? parseFloat(process.env.DB_POOL_CONNECTION_LIMIT)

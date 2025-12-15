@@ -14,12 +14,12 @@ module.exports = {
     await queryInterface.createTable('oauth_authorization_challenges', {
       id: {
         type: DataType.UUID,
-        defaultValue: DataType.UUIDV4,
+        defaultValue: Sequelize.literal(`uuid_generate_v4()`),
         allowNull: false,
         primaryKey: true,
       },
       user_id: {
-        type: DataType.BIGINT.UNSIGNED,
+        type: DataType.BIGINT,
         allowNull: false,
       },
       client_id: {
@@ -37,12 +37,12 @@ module.exports = {
       created_at: {
         type: DataType.DATE,
         allowNull: false,
-        defaultValue: Sequelize.Sequelize.literal('CURRENT_TIMESTAMP()'),
+        defaultValue: Sequelize.Sequelize.literal('now()'),
       },
       updated_at: {
         type: DataType.DATE,
         allowNull: false,
-        defaultValue: Sequelize.Sequelize.literal('CURRENT_TIMESTAMP()'),
+        defaultValue: Sequelize.Sequelize.literal('now()'),
       },
     });
 
@@ -58,6 +58,10 @@ module.exports = {
       onUpdate: 'NO ACTION',
     });
 
+    await queryInterface.addIndex('oauth_authorization_challenges', [
+      'user_id',
+    ]);
+
     await queryInterface.addConstraint('oauth_authorization_challenges', {
       type: 'foreign key',
       references: {
@@ -69,6 +73,10 @@ module.exports = {
       onDelete: 'CASCADE',
       onUpdate: 'NO ACTION',
     });
+
+    await queryInterface.addIndex('oauth_authorization_challenges', [
+      'client_id',
+    ]);
   },
 
   down: async (queryInterface: QueryInterface) => {

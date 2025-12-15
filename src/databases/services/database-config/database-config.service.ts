@@ -27,7 +27,7 @@ export class DatabaseConfigService implements SequelizeOptionsFactory {
 
     // @todo find way to auto detect models
     // add all the model classes here
-    config.models = DefaultConnectionModels;
+    config.models = DefaultConnectionModels as never;
 
     return config;
   }

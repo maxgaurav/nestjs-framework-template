@@ -27,19 +27,19 @@ module.exports = {
         allowNull: false,
       },
       user_id: {
-        type: DataType.BIGINT.UNSIGNED,
+        type: DataType.BIGINT,
         allowNull: true,
         defaultValue: null,
       },
       created_at: {
         type: DataType.DATE,
         allowNull: false,
-        defaultValue: Sequelize.Sequelize.literal('CURRENT_TIMESTAMP()'),
+        defaultValue: Sequelize.Sequelize.literal('now()'),
       },
       updated_at: {
         type: DataType.DATE,
         allowNull: false,
-        defaultValue: Sequelize.Sequelize.literal('CURRENT_TIMESTAMP()'),
+        defaultValue: Sequelize.Sequelize.literal('now()'),
       },
     });
 
@@ -54,6 +54,8 @@ module.exports = {
       onUpdate: 'NO ACTION',
     });
 
+    await queryInterface.addIndex('oauth_access_tokens', ['client_id']);
+
     await queryInterface.addConstraint('oauth_access_tokens', {
       type: 'foreign key',
       references: {
@@ -64,6 +66,8 @@ module.exports = {
       onDelete: 'CASCADE',
       onUpdate: 'NO ACTION',
     });
+
+    await queryInterface.addIndex('oauth_access_tokens', ['user_id']);
   },
 
   down: async (queryInterface: QueryInterface) => {

@@ -1,6 +1,6 @@
 'use strict';
 
-import { DataTypes, QueryInterface, Sequelize } from 'sequelize';
+import { QueryInterface, Sequelize } from 'sequelize';
 import { DataType } from 'sequelize-typescript';
 
 module.exports = {
@@ -16,7 +16,7 @@ module.exports = {
         type: DataType.UUID,
         primaryKey: true,
         allowNull: false,
-        defaultValue: DataTypes.UUIDV4,
+        defaultValue: Sequelize.literal(`uuid_generate_v4()`),
       },
       name: {
         type: DataType.STRING,
@@ -38,12 +38,12 @@ module.exports = {
       created_at: {
         type: DataType.DATE,
         allowNull: false,
-        defaultValue: Sequelize.Sequelize.literal('CURRENT_TIMESTAMP()'),
+        defaultValue: Sequelize.Sequelize.literal('now()'),
       },
       updated_at: {
         type: DataType.DATE,
         allowNull: false,
-        defaultValue: Sequelize.Sequelize.literal('CURRENT_TIMESTAMP()'),
+        defaultValue: Sequelize.Sequelize.literal('now()'),
       },
     });
   },
