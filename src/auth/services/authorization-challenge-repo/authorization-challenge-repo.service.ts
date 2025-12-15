@@ -58,12 +58,32 @@ export class AuthorizationChallengeRepoService {
   ): Promise<AuthorizationChallengeModel | false> {
     const result = await this.consumeCode(code);
 
-    return Buffer.compare(
-      Buffer.from(result.challenge, 'base64'),
-      createHash(result.algorithm).update(codeVerifier, 'base64').digest(),
-    ) === 0
+    return this.compareChallengeAndVerifier(
+      result.challenge,
+      codeVerifier,
+      result.algorithm,
+    )
       ? result
       : false;
+  }
+
+  public compareChallengeAndVerifier(
+    challenge: string,
+    verifier: string,
+    algorithm: string,
+  ): boolean {
+    const challengeBuf = Buffer.from(
+      challenge.replace(/-/g, '+').replace(/_/g, '/') +
+        '=='.slice((challenge.length + 2) % 4),
+      'base64',
+    );
+
+    // 2. Hash *raw* UTF-8 verifier; do NOT decode
+    const hash = createHash(algorithm)
+      .update(verifier) // no encoding! raw UTF-8
+      .digest();
+
+    return Buffer.compare(challengeBuf, hash) === 0;
   }
 
   @LoggingDecorator({
