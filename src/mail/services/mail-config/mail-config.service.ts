@@ -36,6 +36,9 @@ export class MailConfigService implements MailerOptionsFactory {
         mailConfig.transport = {
           name: 'log',
           version: '1.0.0',
+          verify: () => {
+            return Promise.resolve(true);
+          },
           send(
             mail: MailMessage<any>,
             callback: (err: Error | null, info: any) => void,

@@ -8,7 +8,7 @@ import { Strategy } from 'passport-custom';
 import { UserModel } from '../../../databases/models/user.model';
 import { HashEncryptService } from '../../services/hash-encrypt/hash-encrypt.service';
 import { AuthorizationDto } from '../../dtos/authorization.dto';
-import { Request } from 'express';
+import type { Request } from 'express';
 import { LoginDto } from '../../dtos/login.dto';
 import { plainToInstance } from 'class-transformer';
 import { validateOrReject } from 'class-validator';

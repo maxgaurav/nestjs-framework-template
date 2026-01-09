@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-custom';
-import { Request } from 'express';
+import type { Request } from 'express';
 import { AccessTokenDto } from '../../dtos/access-token.dto';
 import { validateOrReject } from 'class-validator';
 import { UserModel } from '../../../databases/models/user.model';
