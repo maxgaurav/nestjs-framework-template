@@ -5,6 +5,7 @@ import {
   PaginateOptions,
 } from 'nestjs-sequelize-paginate';
 import { Sequelize } from 'sequelize-typescript';
+import { Model, ModelCtor } from 'sequelize';
 
 class FindAndCountOptions {}
 
@@ -59,7 +60,9 @@ export class OverwritePaginateService {
     let payload: { [key: string]: any } = {};
     let items: any[] = [];
 
-    const data = await options.model.findAndCountAll({
+    const data = await (
+      options.model as ModelCtor<Model<any, any>>
+    ).findAndCountAll({
       ...optionsSequelize,
       limit: offset,
       offset: start,

@@ -28,8 +28,8 @@ export class AuthorizationCodeGrantType implements GrantTypeImplementation {
     payload: Required<AccessTokenDto>,
   ): Promise<{ client: ClientModel; user: UserModel }> {
     const result = await this.challengeRepo.verifyWithClientId(
-      payload.code,
-      payload.client_id,
+      payload.code as string,
+      payload.client_id as string,
     );
     if (!result) {
       const errors: ValidationError[] = [

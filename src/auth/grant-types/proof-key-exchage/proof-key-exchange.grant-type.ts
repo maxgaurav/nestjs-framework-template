@@ -26,8 +26,8 @@ export class ProofKeyExchangeGrantType implements GrantTypeImplementation {
     payload: Required<AccessTokenDto>,
   ): Promise<{ client: ClientModel; user: UserModel }> {
     const result = await this.authorizationChallengeRepo.verifyChallenge(
-      payload.code,
-      payload.code_verifier,
+      payload.code as string,
+      payload.code_verifier as string,
     );
 
     if (!result) {

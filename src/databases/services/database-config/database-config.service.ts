@@ -17,7 +17,7 @@ export class DatabaseConfigService implements SequelizeOptionsFactory {
     connectionName?: string,
   ): Promise<SequelizeModuleOptions> | SequelizeModuleOptions {
     connectionName = connectionName || ConnectionNames.DefaultConnection;
-    const config = this.configService.get<SequelizeModuleOptions>(
+    const config = this.configService.getOrThrow<SequelizeModuleOptions>(
       `databases.${connectionName}`,
     );
 

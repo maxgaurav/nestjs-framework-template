@@ -82,7 +82,10 @@ export class ProcessMessagingService implements OnApplicationBootstrap {
       this.convertCommandsToSystemEvents(message);
       return;
     }
-    process.send(message);
+
+    if (process.send) {
+      process.send(message);
+    }
   }
 
   /**
@@ -140,12 +143,12 @@ export class ProcessMessagingService implements OnApplicationBootstrap {
     worker: Worker,
   ): Observable<InterProcessCommunication<T>> {
     const emitter = new Subject<InterProcessCommunication<T>>();
-    const handler = (event) => {
+    const handler = (event: undefined | object) => {
       if (!event) {
         return;
       }
       if (event.hasOwnProperty('command') && event.hasOwnProperty('message')) {
-        emitter.next(event);
+        emitter.next(event as InterProcessCommunication);
       }
     };
     worker.addListener('message', handler);

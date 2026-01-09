@@ -85,15 +85,15 @@ function readWriteClusterSettings(): ReplicationOptions | false {
     }
 
     const index = Number(key.split('_SERVER_')[1]);
-    const readServerConfig: ReadServerSetting = readServerMappings.has(index)
-      ? readServerMappings.get(index)
-      : {
-          host: undefined,
-          database: undefined,
-          username: undefined,
-          password: undefined,
-          port: 3306,
-        };
+    const readServerConfig: ReadServerSetting = readServerMappings.get(
+      index,
+    ) || {
+      host: undefined,
+      database: undefined,
+      username: undefined,
+      password: undefined,
+      port: 3306,
+    };
 
     setReadServerConfigValues(key, readServerConfig);
     readServerMappings.set(index, readServerConfig);

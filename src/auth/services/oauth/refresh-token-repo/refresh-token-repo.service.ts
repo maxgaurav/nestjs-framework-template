@@ -8,6 +8,8 @@ import { AccessTokenModel } from '../../../../databases/models/oauth/access-toke
 import { AccessTokenRepoService } from '../access-token-repo/access-token-repo.service';
 import { Buffer } from 'buffer';
 import { LoggingDecorator } from '../../../../common/decorators/logging.decorator';
+import { ClientModel } from '../../../../databases/models/oauth/client.model';
+import { UserModel } from '../../../../databases/models/user.model';
 
 @Injectable()
 export class RefreshTokenRepoService {
@@ -92,8 +94,17 @@ export class RefreshTokenRepoService {
     const currentAccessToken = await refreshToken.$get('accessToken', {
       transaction,
     });
-    const client = await currentAccessToken.$get('client', { transaction });
-    const user = await currentAccessToken.$get('user', { transaction });
+
+    if (!currentAccessToken) {
+      throw new Error('Access token not found');
+    }
+
+    const client = (await currentAccessToken.$get('client', {
+      transaction,
+    })) as ClientModel;
+    const user = (await currentAccessToken.$get('user', {
+      transaction,
+    })) as UserModel;
 
     return this.accessTokenRepo
       .create(client, user, refreshTokenExpiresAt, transaction)

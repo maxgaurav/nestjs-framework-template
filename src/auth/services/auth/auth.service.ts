@@ -36,6 +36,10 @@ export class AuthService {
       return null;
     }
 
+    if (!user.password) {
+      return null;
+    }
+
     if (!(await this.hashEncryptService.checkHash(password, user.password))) {
       return null;
     }

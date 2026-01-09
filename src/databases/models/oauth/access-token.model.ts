@@ -20,14 +20,14 @@ export class AccessTokenModel extends DatesMapping<AccessTokenModel> {
 
   @ForeignKey(() => ClientModel)
   @Column
-  public client_id: string;
+  public declare client_id: string;
 
   @ForeignKey(() => UserModel)
   @Column(DataType.INTEGER.UNSIGNED)
-  public user_id: number | null;
+  public declare user_id: number | null;
 
   @Column(DataType.DATE)
-  public expires_at: Date | null;
+  public declare expires_at: Date | null;
 
   @BelongsTo(() => ClientModel)
   public client: ClientModel | null;

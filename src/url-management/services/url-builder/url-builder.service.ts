@@ -32,7 +32,7 @@ export class UrlBuilderService {
 
     const url = new URL(
       replacedPathParameters,
-      this.configService.get<SystemConfig>('system').url,
+      this.configService.getOrThrow<SystemConfig>('system').url,
     );
 
     this.appendQueryParams(options.queryParameters, url);
@@ -60,7 +60,7 @@ export class UrlBuilderService {
                   return [queryKey, value];
                 }) as [string, string | number][]),
               )
-            : queryValues.push([queryKey, queryValue]);
+            : queryValues.push([queryKey, queryValue as never]);
           return queryValues;
         },
         [],

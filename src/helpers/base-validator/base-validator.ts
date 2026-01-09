@@ -42,8 +42,10 @@ export abstract class BaseValidator<T = any>
    * @inheritDoc
    * @param validationArguments
    */
-  public defaultMessage(validationArguments?: ValidationArguments): string {
-    const result = this.valueMap.get(this.getContextId(validationArguments));
+  public defaultMessage(validationArguments: ValidationArguments): string {
+    const result = this.valueMap.get(
+      this.getContextId(validationArguments) as never,
+    );
 
     if (!result || !this.isForArray(validationArguments)) {
       return this.message(validationArguments.value, validationArguments);
@@ -62,7 +64,7 @@ export abstract class BaseValidator<T = any>
       );
     });
 
-    this.valueMap.delete(this.getContextId(validationArguments));
+    this.valueMap.delete(this.getContextId(validationArguments) as never);
 
     return JSON.stringify(mappedErrors);
   }
@@ -93,7 +95,11 @@ export abstract class BaseValidator<T = any>
     validationArguments?: ValidationArguments,
   ): Promise<boolean> {
     const result = await this.check(value, validationArguments);
-    this.addValueState(value, result, this.getContextId(validationArguments));
+    this.addValueState(
+      value,
+      result,
+      this.getContextId(validationArguments) as never,
+    );
 
     return result;
   }

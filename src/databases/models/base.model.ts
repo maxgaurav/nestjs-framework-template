@@ -5,7 +5,7 @@ import { EventRegisterCallbackService } from '../../common/services/event-regist
 import { UrlBuilderService } from '../../url-management/services/url-builder/url-builder.service';
 
 @Table({})
-export class BaseModel<T> extends DatesMapping<T> {
+export class BaseModel<T extends object> extends DatesMapping<T> {
   public declare static EventEmitter: EventEmitter2;
 
   public declare static EventCallBackService: EventRegisterCallbackService;

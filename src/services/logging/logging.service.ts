@@ -13,7 +13,7 @@ export class LoggingService extends ConsoleLogger {
   }
 
   public debug(message: any, context?: string) {
-    if (this.configService.get<SystemConfig>('system').debug) {
+    if (this.configService.getOrThrow<SystemConfig>('system').debug) {
       super.debug(this.generateMessage(message), context);
     }
   }

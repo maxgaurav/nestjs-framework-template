@@ -19,11 +19,11 @@ export class RefreshTokenModel extends DatesMapping<RefreshTokenModel> {
 
   @ForeignKey(() => AccessTokenModel)
   @Column
-  public access_token_id: string;
+  public declare access_token_id: string;
 
   @Column(DataType.DATE)
-  public expires_at: Date | null;
+  public declare expires_at: Date | null;
 
   @BelongsTo(() => AccessTokenModel)
-  public accessToken: AccessTokenModel;
+  public declare accessToken: AccessTokenModel;
 }

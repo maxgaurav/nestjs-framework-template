@@ -20,14 +20,14 @@ export class ClientModel extends DatesMapping<ClientModel> {
   public declare id: string;
 
   @Column
-  public name: string;
+  public declare name: string;
 
   @Column
-  public secret: string;
+  public declare secret: string;
 
   @Column
-  public is_revoked: boolean;
+  public declare is_revoked: boolean;
 
   @Column(DataType.STRING)
-  public grant_type: GrantTypes;
+  public declare grant_type: GrantTypes;
 }

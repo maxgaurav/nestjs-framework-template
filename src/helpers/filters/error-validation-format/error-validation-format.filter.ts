@@ -61,14 +61,16 @@ export class ErrorValidationFormatFilter implements ExceptionFilter {
       formattedErrors[`${propertyPrefix}${error.property}`] = [];
       for (const constraintKey of Object.keys(error.constraints || [])) {
         formattedErrors[`${propertyPrefix}${error.property}`].push(
-          error.constraints[constraintKey],
+          (error.constraints as never as { [key: string]: unknown })[
+            constraintKey
+          ] as never,
         );
       }
 
       if ((error?.children || []).length > 0) {
         formattedErrors = {
           ...this.formattedErrors(
-            error.children,
+            error.children as never,
             `${propertyPrefix}${error.property}.`,
           ),
           ...formattedErrors,

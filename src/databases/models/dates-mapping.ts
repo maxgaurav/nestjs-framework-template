@@ -1,9 +1,9 @@
 import { CreatedAt, Model, UpdatedAt } from 'sequelize-typescript';
 
-export abstract class DatesMapping<T> extends Model<T> {
+export abstract class DatesMapping<T extends object> extends Model<T> {
   @CreatedAt
-  public created_at: Date;
+  public declare created_at: Date;
 
   @UpdatedAt
-  public updated_at: Date;
+  public declare updated_at: Date;
 }

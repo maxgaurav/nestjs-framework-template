@@ -16,7 +16,8 @@ export class SessionConfigService {
   ) {}
 
   public async session(): Promise<RequestHandler> {
-    const sessionConfig = this.configService.get<SessionConfig>('session');
+    const sessionConfig =
+      this.configService.getOrThrow<SessionConfig>('session');
     let sessionStore: Store;
 
     switch (sessionConfig.driver) {
@@ -34,7 +35,7 @@ export class SessionConfigService {
 
     return session({
       store: sessionStore,
-      secret: sessionConfig.secret,
+      secret: sessionConfig.secret || '',
       name: sessionConfig.name,
       resave: sessionConfig.resave,
       cookie: {

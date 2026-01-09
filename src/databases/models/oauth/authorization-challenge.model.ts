@@ -22,21 +22,21 @@ export class AuthorizationChallengeModel extends DatesMapping<AuthorizationChall
 
   @ForeignKey(() => UserModel)
   @Column
-  public user_id: number;
+  public declare user_id: number;
 
   @Column
-  public challenge: string;
+  public declare challenge: string;
 
   @Column
-  public algorithm: string;
+  public declare algorithm: string;
 
   @ForeignKey(() => ClientModel)
   @Column
-  public client_id: string;
+  public declare client_id: string;
 
   @BelongsTo(() => UserModel)
-  public user: UserModel;
+  public user!: UserModel;
 
   @BelongsTo(() => ClientModel)
-  public client: ClientModel;
+  public client!: ClientModel;
 }

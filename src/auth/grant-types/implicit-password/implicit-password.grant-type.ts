@@ -30,8 +30,8 @@ export class ImplicitPasswordGrantType implements GrantTypeImplementation {
     payload: Required<AccessTokenDto>,
   ): Promise<{ client: ClientModel; user: UserModel }> {
     const client = await this.clientRepo.findForIdAndSecret(
-      payload.client_id,
-      payload.client_secret,
+      payload.client_id as string,
+      payload.client_secret as string,
     );
 
     if (!client) {
@@ -48,8 +48,8 @@ export class ImplicitPasswordGrantType implements GrantTypeImplementation {
     }
 
     const user = await this.authService.validateForPassword(
-      payload.email,
-      payload.password,
+      payload.email as string,
+      payload.password as string,
     );
 
     if (!user) {

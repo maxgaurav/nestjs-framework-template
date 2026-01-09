@@ -26,9 +26,9 @@ export class SessionErrorValidationInterceptor implements NestInterceptor {
     if (flashMessage.length > 0) {
       errorBag = flashMessage[0];
       const validationErrors: ValidationErrorsFormat = JSON.parse(errorBag);
-      const allErrors = Object.keys(validationErrors).reduce(
+      const allErrors = Object.keys(validationErrors).reduce<string[]>(
         (errors, errorKey) => {
-          let errorValuesForKey = [];
+          let errorValuesForKey: string[] = [];
 
           /* istanbul ignore else */
           if (validationErrors.hasOwnProperty(errorKey)) {
@@ -43,14 +43,27 @@ export class SessionErrorValidationInterceptor implements NestInterceptor {
       errorBag = { all: allErrors, errors: validationErrors };
     }
     return next.handle().pipe(
-      map((templateContext: { [key: string]: any } | undefined | null) => {
-        if (typeof templateContext !== 'object') {
-          return templateContext;
-        }
+      map(
+        (
+          templateContext:
+            | {
+                [key: string]: unknown;
+                _errorBag:
+                  | { all: string[]; errors: ValidationErrorsFormat }
+                  | undefined
+                  | string;
+              }
+            | undefined
+            | null,
+        ) => {
+          if (typeof templateContext !== 'object' || !templateContext) {
+            return templateContext;
+          }
 
-        templateContext._errorBag = errorBag;
-        return templateContext;
-      }),
+          templateContext._errorBag = errorBag;
+          return templateContext;
+        },
+      ),
     );
   }
 }

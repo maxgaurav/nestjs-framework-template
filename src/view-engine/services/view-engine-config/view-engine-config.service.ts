@@ -18,7 +18,7 @@ export class ViewEngineConfigService implements OnModuleInit {
   ) {}
 
   public async onModuleInit(): Promise<any> {
-    const viewConfig = this.configService.get<ViewConfig>('view');
+    const viewConfig = this.configService.getOrThrow<ViewConfig>('view');
     this.viewEngine.cache(viewConfig.templateCaching);
     await this.registerFunctions();
   }

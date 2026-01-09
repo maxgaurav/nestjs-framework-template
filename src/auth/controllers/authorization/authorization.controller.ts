@@ -147,8 +147,8 @@ export class AuthorizationController {
           user,
           authorization.client_id,
           {
-            challenge: authorization.code_challenge,
-            algorithm: authorization.algorithm,
+            challenge: authorization.code_challenge as string,
+            algorithm: authorization.algorithm as string,
           },
           transaction,
         );

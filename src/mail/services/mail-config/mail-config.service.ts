@@ -12,7 +12,7 @@ export class MailConfigService implements MailerOptionsFactory {
    * @inheritDoc
    */
   createMailerOptions(): Promise<MailerOptions> | MailerOptions {
-    const mailConfig = this.configService.get<MailConfig>('mail');
+    const mailConfig = this.configService.getOrThrow<MailConfig>('mail');
 
     switch (mailConfig.driver) {
       case 'smtp':

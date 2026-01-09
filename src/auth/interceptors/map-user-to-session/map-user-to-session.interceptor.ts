@@ -9,6 +9,7 @@ import { AuthorizationChallengeModel } from '../../../databases/models/oauth/aut
 import { Request } from 'express';
 import { AuthService } from '../../services/auth/auth.service';
 import { map } from 'rxjs/operators';
+import { UserModel } from '../../../databases/models/user.model';
 
 @Injectable()
 export class MapUserToSessionInterceptor implements NestInterceptor {
@@ -16,7 +17,7 @@ export class MapUserToSessionInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(
       switchMap((result: AuthorizationChallengeModel) =>
-        from(result.$get('user'))
+        from(result.$get('user') as Promise<UserModel>)
           .pipe(
             switchMap((user) =>
               this.auth.mapSessionWithUser(

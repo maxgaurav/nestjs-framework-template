@@ -14,6 +14,7 @@ import { validateOrReject } from 'class-validator';
 import { AuthService } from '../../../services/auth/auth.service';
 import moment from 'moment';
 import { ClientRepoService } from '../../../services/oauth/client-repo/client-repo.service';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class RefreshTokenService extends PassportStrategy(
@@ -29,7 +30,7 @@ export class RefreshTokenService extends PassportStrategy(
 
   public async validate(request: Request): Promise<RefreshTokenModel> {
     // aborting with 404 as accept content is not correct
-    if (!request.headers.accept.toLowerCase().includes('application/json')) {
+    if (!request.headers.accept?.toLowerCase().includes('application/json')) {
       throw new NotFoundException();
     }
 
@@ -79,7 +80,10 @@ export class RefreshTokenService extends PassportStrategy(
     body: { [key: string]: any },
     dtoInstance: { new (content: any): RefreshTokenDto },
   ): Promise<RefreshTokenDto> {
-    const payload = new dtoInstance(body);
+    const payload = plainToInstance(dtoInstance, body, {
+      exposeDefaultValues: true,
+      exposeUnsetFields: true,
+    });
     try {
       await validateOrReject(payload);
     } catch (err) {

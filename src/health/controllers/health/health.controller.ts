@@ -37,7 +37,7 @@ export class HealthController {
   @Get()
   @HealthCheck()
   public check() {
-    const systemConfig = this.configService.get<SystemConfig>('system');
+    const systemConfig = this.configService.getOrThrow<SystemConfig>('system');
     const checks: HealthIndicatorFunction[] = [
       () =>
         this.sequelizeHealthCheck.pingCheck(

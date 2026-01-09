@@ -20,12 +20,15 @@ export class MailService {
    * Sends mail by compiling the template and sending it as body
    * @param sendMailOptions
    */
-  public async sendMail(sendMailOptions: ISendMailOptions) {
+  public async sendMail(
+    sendMailOptions: Omit<ISendMailOptions, 'template' | 'context'> &
+      Required<Pick<ISendMailOptions, 'template' | 'context'>>,
+  ) {
     sendMailOptions.html = await this.fileContent(
       sendMailOptions.template,
       sendMailOptions.context,
     );
-    sendMailOptions.template = undefined;
+    sendMailOptions.template = undefined as never;
     return this.mailer.sendMail(sendMailOptions);
   }
 
@@ -38,7 +41,7 @@ export class MailService {
     fileName: string,
     contexts: RenderOptions,
   ): Promise<string> {
-    const viewPath = this.configService.get<ViewConfig>('view');
+    const viewPath = this.configService.getOrThrow<ViewConfig>('view');
     return new Promise<string>((res, rej) => {
       this.twig.renderFile(
         join(viewPath.viewPath, `${fileName}.twig`),

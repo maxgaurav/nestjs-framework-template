@@ -37,7 +37,7 @@ export class MakeMigrationService {
       ),
     ).toString('utf-8');
     const connectionConfig =
-      this.config.get<Record<ConnectionNames, DatabaseConnectionConfig>>(
+      this.config.getOrThrow<Record<ConnectionNames, DatabaseConnectionConfig>>(
         'databases',
       )[ConnectionNames.DefaultConnection];
     const umzug = new Umzug({

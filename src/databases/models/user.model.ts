@@ -7,13 +7,13 @@ import { RegisterModel } from '../model-bootstrap/default-connection-models';
 export class UserModel extends BaseModel<UserModel> {
   @Unique
   @Column
-  public email: string;
+  public declare email: string;
 
   @Column(DataType.STRING)
-  public password: string | null;
+  public declare password: string | null;
 
   public toJSON(): any {
-    const content = super.toJSON();
+    const content = super.toJSON() as Partial<UserModel>;
     delete content.password;
     return content;
   }

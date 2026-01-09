@@ -20,7 +20,7 @@ function getLogger(): Logger | Console {
   }
 
   logger = applicationContext.get(Logger);
-  return logger;
+  return logger as never;
 }
 
 export const LoggingDecorator = (message: {
@@ -28,7 +28,7 @@ export const LoggingDecorator = (message: {
   LogTypeBefore?: 'debug' | 'log' | 'error' | 'warn';
   messageAfter?: string | ((args: any[]) => string) | undefined;
   LogTypeAfter?: 'debug' | 'log' | 'error' | 'warn';
-}): MethodDecorator => {
+}) => {
   return (
     target: any,
     propertyKey: string,
@@ -51,7 +51,7 @@ export const LoggingDecorator = (message: {
       if (result instanceof Promise) {
         return result.then((mainResult) => {
           getLogger()[message.LogTypeAfter || 'debug'](
-            parseMessage(message.messageAfter, args),
+            parseMessage(message.messageAfter as never, args),
             target.constructor.name,
           );
           return mainResult;

@@ -16,13 +16,4 @@ export class RefreshTokenDto {
   @IsNotEmpty()
   @IsString()
   public client_secret: string;
-
-  constructor(content: { [key: string]: any } = {}) {
-    for (const key in content) {
-      /* istanbul ignore next */
-      if (content.hasOwnProperty(key)) {
-        this[key] = content[key];
-      }
-    }
-  }
 }

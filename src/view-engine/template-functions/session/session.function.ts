@@ -12,14 +12,18 @@ export class SessionFunction implements ExtendFunction {
     return 'session';
   }
 
-  handler<T = any>(): T;
-  handler<T = any>(sessionKey: string, defaultValue: string): T;
-  handler<T = any>(sessionKey?: string, defaultValue = undefined): T {
+  handler<T = unknown>(): T;
+  handler<T = unknown>(sessionKey: string, defaultValue: unknown): T;
+  handler<T = unknown>(sessionKey?: string, defaultValue = undefined): T {
     const request = this.clsService.get(CLS_REQ) as Request;
     if (!sessionKey) {
-      return request.session as any;
+      return request.session as never;
     }
 
-    return request.session[sessionKey] ?? defaultValue;
+    return (
+      ((request.session as never as { [key: string]: unknown })[
+        sessionKey
+      ] as never) ?? defaultValue
+    );
   }
 }

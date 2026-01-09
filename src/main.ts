@@ -39,7 +39,7 @@ async function bootstrap() {
   const config = app.get(ConfigService);
   app.enableCors({
     exposedHeaders: ['request-id', 'date', 'content-type', 'content-length'],
-    origin: config.get<CorsConfig>('cors').origins,
+    origin: config.getOrThrow<CorsConfig>('cors').origins,
   });
   app.use(
     helmet({
@@ -82,12 +82,12 @@ async function bootstrap() {
     new ContextInterceptor(),
   );
 
-  const viewConfig = config.get<ViewConfig>('view');
+  const viewConfig = config.getOrThrow<ViewConfig>('view');
   app.useStaticAssets(viewConfig.publicPath);
   app.setBaseViewsDir(viewConfig.viewPath);
   app.setViewEngine('twig');
 
-  await app.listen(config.get<SystemConfig>('system').port);
+  await app.listen(config.getOrThrow<SystemConfig>('system').port);
 }
 
 /**

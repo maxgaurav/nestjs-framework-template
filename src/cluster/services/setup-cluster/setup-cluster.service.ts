@@ -55,7 +55,7 @@ export class SetupClusterService {
   public start(bootstrap: () => void): void {
     this.bootstrapFunc = bootstrap;
     if (
-      this.configService.get<ClusterConfig>('cluster').enable &&
+      this.configService.getOrThrow<ClusterConfig>('cluster').enable &&
       clusterManager.isPrimary
     ) {
       this.startInWorker();
@@ -87,7 +87,8 @@ export class SetupClusterService {
         workerCpuId,
         currentWorkerPid: -1,
         attemptsRemaining:
-          this.configService.get<ClusterConfig>('cluster').maxWorkerAttempts,
+          this.configService.getOrThrow<ClusterConfig>('cluster')
+            .maxWorkerAttempts,
         allWorkerPid: [],
         worker: null,
         isOnline: false,
@@ -100,7 +101,7 @@ export class SetupClusterService {
       console.log('Checking attempts left to restart worker on cpu');
       const workerConfig = this.workerAttemptCheck.find(
         (worker) => worker.workerCpuId === workerCpuId,
-      );
+      ) as WorkerConfig;
       console.log(
         `Retry attempts left on worker for cpu ${workerCpuId} are ${workerConfig.attemptsRemaining}`,
       );
@@ -120,10 +121,10 @@ export class SetupClusterService {
 
     const workerConfig = this.workerAttemptCheck.find(
       (worker) => worker.workerCpuId === workerCpuId,
-    );
+    ) as WorkerConfig;
     const worker = clusterManager.fork();
-    workerConfig.allWorkerPid.push(worker.process.pid);
-    workerConfig.currentWorkerPid = worker.process.pid;
+    workerConfig.allWorkerPid.push(worker.process.pid as number);
+    workerConfig.currentWorkerPid = worker.process.pid as number;
     workerConfig.worker = worker;
 
     this.setupSubscriptions(workerConfig, worker);
@@ -164,7 +165,7 @@ export class SetupClusterService {
     );
 
     const healthCheckTimerConfig =
-      this.configService.get<ClusterConfig>('cluster').healthCheckConfig;
+      this.configService.getOrThrow<ClusterConfig>('cluster').healthCheckConfig;
 
     const auditState = {
       isAuditing: false,
@@ -272,7 +273,8 @@ export class SetupClusterService {
    */
   private numberOfCpus(): number {
     const numberOfCpus = os.cpus().length;
-    const maxCpu = this.configService.get<ClusterConfig>('cluster').cpuMax;
+    const maxCpu =
+      this.configService.getOrThrow<ClusterConfig>('cluster').cpuMax;
 
     if (maxCpu === 0) {
       return numberOfCpus;
@@ -342,7 +344,7 @@ export class SetupClusterService {
       .filter((worker) => worker.isOnline)
       .forEach((worker) =>
         this.processMessaging.sendCommandToWorker(
-          worker.worker,
+          worker.worker as never,
           command,
           message,
         ),

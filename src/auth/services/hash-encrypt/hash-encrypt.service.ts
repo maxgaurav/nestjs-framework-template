@@ -62,7 +62,7 @@ export class HashEncryptService implements OnApplicationBootstrap {
    * Configure various buffer keys
    */
   public async configureConfig(): Promise<void> {
-    const secret = this.configService.get<string>('APP_SECRET');
+    const secret = this.configService.getOrThrow<string>('APP_SECRET');
     this.ivBuffer = Buffer.from(
       this.configService.get<string>('APP_ENCRYPT_HEX_KEY', '1bce5155bf46c13c'),
     );

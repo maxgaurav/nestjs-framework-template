@@ -23,7 +23,7 @@ export class RunMigrationService {
     connectionName: ConnectionNames = ConnectionNames.DefaultConnection,
   ) {
     const connectionConfig =
-      this.config.get<Record<ConnectionNames, DatabaseConnectionConfig>>(
+      this.config.getOrThrow<Record<ConnectionNames, DatabaseConnectionConfig>>(
         'databases',
       )[connectionName];
 
@@ -35,11 +35,11 @@ export class RunMigrationService {
           return {
             name,
             up: async () =>
-              import(path).then((migration) =>
+              import(path as string).then((migration) =>
                 migration.up(context, this.connection.Sequelize),
               ),
             down: async () =>
-              import(path).then((migration) =>
+              import(path as string).then((migration) =>
                 migration.down(context, this.connection.Sequelize),
               ),
           };

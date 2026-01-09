@@ -174,7 +174,7 @@ export class OauthController {
    * Returns access token expiration time
    */
   public accessTokenExpiration(): Date | null {
-    const config: JwtConfig = this.configService.get<JwtConfig>('jwt');
+    const config: JwtConfig = this.configService.getOrThrow<JwtConfig>('jwt');
     if (!config.expirationTimeAccessToken) {
       return null;
     }
@@ -188,7 +188,7 @@ export class OauthController {
    * Returns refresh token expiration time
    */
   public refreshTokenExpiration(): Date | null {
-    const config: JwtConfig = this.configService.get<JwtConfig>('jwt');
+    const config: JwtConfig = this.configService.getOrThrow<JwtConfig>('jwt');
     if (!config.expirationTimeRefreshToken) {
       return null;
     }

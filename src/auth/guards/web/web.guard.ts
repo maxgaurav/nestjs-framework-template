@@ -52,7 +52,11 @@ export class WebGuard extends AuthGuard('local') {
     request: Request,
     userId: number | null,
   ): Observable<UserModel | null | boolean> {
-    return from(this.authService.getLoggedInUser(userId))
+    return from(
+      userId
+        ? this.authService.getLoggedInUser(userId)
+        : Promise.reject(new NotFoundException('Record not found')),
+    )
       .pipe(notFoundPipe())
       .pipe(
         catchError((err) => {
@@ -105,6 +109,7 @@ export class WebGuard extends AuthGuard('local') {
   protected resetSession(
     session: Session & { auth?: { isAuth: boolean; userId: number | null } },
   ): void {
+    session.auth = session.auth || { isAuth: false, userId: null };
     session.auth.isAuth = false;
     session.auth.userId = null;
   }
