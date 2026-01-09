@@ -1,10 +1,11 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import { Transaction as SequelizeTransaction } from 'sequelize';
+import { Transaction } from 'sequelize';
+import type { Request } from 'express';
 
 export const ReqTransaction = createParamDecorator(
-  (_data, ctx: ExecutionContext) => {
-    const req = ctx.switchToHttp().getRequest();
-    if (req.scopeTransaction instanceof SequelizeTransaction) {
+  (_, ctx: ExecutionContext) => {
+    const req = ctx.switchToHttp().getRequest<Request>();
+    if (req.scopeTransaction instanceof Transaction) {
       return req.scopeTransaction;
     }
 

@@ -1,19 +1,18 @@
 import { Injectable } from '@nestjs/common';
-import { type ValidationArguments, ValidatorConstraint } from 'class-validator';
 import {
-  BaseValidator,
-  ValidatorDecorator,
-} from '../../../helpers/base-validator/base-validator';
+  type ValidationArguments,
+  ValidatorConstraint,
+  ValidatorConstraintInterface,
+} from 'class-validator';
+import { ValidatorDecorator } from '../../../helpers/base-validator/base-validator';
 import { ClientRepoService } from '../../services/oauth/client-repo/client-repo.service';
 import { LoggingDecorator } from '../../../common/decorators/logging.decorator';
 import { GrantTypes } from '../../grant-types/grant-type-implementation';
 
 @ValidatorConstraint({ async: true, name: 'ClientIdExists' })
 @Injectable()
-export class ClientIdExistsValidator extends BaseValidator {
-  constructor(protected clientRepo: ClientRepoService) {
-    super();
-  }
+export class ClientIdExistsValidator implements ValidatorConstraintInterface {
+  constructor(protected clientRepo: ClientRepoService) {}
 
   /**
    * @inheritDoc
@@ -23,7 +22,7 @@ export class ClientIdExistsValidator extends BaseValidator {
   @LoggingDecorator({
     messageBefore: 'Checking if client id is valid',
   })
-  public async check(
+  public async validate(
     value: string | null | undefined,
     validationArguments: ValidationArguments,
   ): Promise<boolean> {
@@ -32,7 +31,9 @@ export class ClientIdExistsValidator extends BaseValidator {
     }
 
     const grantType: GrantTypes | undefined | null = (
-      validationArguments.object as any
+      validationArguments.object as never as {
+        grant_type: GrantTypes | undefined | null;
+      }
     ).grant_type;
 
     if (!grantType) {
@@ -47,7 +48,7 @@ export class ClientIdExistsValidator extends BaseValidator {
       );
   }
 
-  message(): string {
+  defaultMessage(): string {
     return 'The client id is not valid';
   }
 }

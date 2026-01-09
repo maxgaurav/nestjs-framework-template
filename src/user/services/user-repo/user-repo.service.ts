@@ -18,7 +18,7 @@ export class UserRepoService {
   ): Promise<UserModel | null> {
     return this.userModel
       .findOne({ where: { email }, transaction })
-      .then((result) => (!!result ? result : null));
+      .then((result) => (result ? result : null));
   }
 
   /**

@@ -18,7 +18,10 @@ export class OldInputsInterceptor implements NestInterceptor {
 
     if (flashMessage.length > 0) {
       oldInputs = flashMessage[0];
-      oldInputs = JSON.parse(oldInputs);
+      oldInputs = JSON.parse(oldInputs) as
+        | string
+        | undefined
+        | { [key: string]: any };
       if (typeof oldInputs !== 'object') {
         oldInputs = {};
       }
@@ -26,16 +29,17 @@ export class OldInputsInterceptor implements NestInterceptor {
 
     return next.handle().pipe(
       map(
-        (templateContext: { [key: string]: any } | undefined | null | any) => {
-          if (typeof templateContext !== 'object') {
-            return templateContext;
+        (
+          templateContext:
+            | { [key: string]: unknown }
+            | undefined
+            | null
+            | string,
+        ) => {
+          if (typeof templateContext === 'object' && templateContext !== null) {
+            templateContext._oldInputs = oldInputs;
           }
 
-          if (templateContext === undefined || templateContext === null) {
-            return templateContext;
-          }
-
-          templateContext._oldInputs = oldInputs;
           return templateContext;
         },
       ),

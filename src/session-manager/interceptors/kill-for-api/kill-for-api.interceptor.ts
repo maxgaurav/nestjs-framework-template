@@ -19,16 +19,16 @@ export class KillForApiInterceptor implements NestInterceptor {
       request.url.includes('oauth/refresh')
     ) {
       return next.handle().pipe(
-        switchMap((result) =>
+        switchMap((result: unknown) =>
           from(
-            new Promise<void>(async (resolve) => {
+            new Promise<void>((resolve) => {
               request.session.destroy(() => resolve());
             }),
           ).pipe(map(() => result)),
         ),
-        catchError((err) =>
+        catchError((err: unknown) =>
           from(
-            new Promise<void>(async (resolve) => {
+            new Promise<void>((resolve) => {
               request.session.destroy(() => resolve());
             }),
           ).pipe(switchMap(() => throwError(() => err))),

@@ -15,7 +15,7 @@ export class SessionFunction implements ExtendFunction {
   handler<T = unknown>(): T;
   handler<T = unknown>(sessionKey: string, defaultValue: unknown): T;
   handler<T = unknown>(sessionKey?: string, defaultValue = undefined): T {
-    const request = this.clsService.get(CLS_REQ) as Request;
+    const request = this.clsService.get<Request>(CLS_REQ);
     if (!sessionKey) {
       return request.session as never;
     }

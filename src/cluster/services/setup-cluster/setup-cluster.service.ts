@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import * as cluster from 'cluster';
+import cluster from 'cluster';
 import { Cluster, Worker } from 'cluster';
-import * as os from 'os';
+import os from 'os';
 import { ClusterConfig } from '../../../environment/environment-types.interface';
 import {
   auditTime,
@@ -23,7 +23,7 @@ import {
 import { map } from 'rxjs/operators';
 import { HealthCheckResult } from '@nestjs/terminus';
 
-const clusterManager: Cluster = cluster as any;
+const clusterManager: Cluster = cluster;
 
 interface WorkerConfig {
   currentWorkerPid: number;
@@ -43,7 +43,7 @@ export class SetupClusterService {
    */
   private workerAttemptCheck: WorkerConfig[] = [];
 
-  private bootstrapFunc: () => void;
+  private bootstrapFunc: () => Promise<void>;
 
   constructor(
     private configService: ConfigService,
@@ -52,7 +52,7 @@ export class SetupClusterService {
 
   public closeEvent: Subject<true> = new Subject<true>();
 
-  public start(bootstrap: () => void): void {
+  public start(bootstrap: () => Promise<void>): void {
     this.bootstrapFunc = bootstrap;
     if (
       this.configService.getOrThrow<ClusterConfig>('cluster').enable &&
@@ -97,7 +97,7 @@ export class SetupClusterService {
     }
 
     // worker being restarted as previous worker instance found. Updating the attempt count and other information
-    if (!!previousWorker) {
+    if (previousWorker) {
       console.log('Checking attempts left to restart worker on cpu');
       const workerConfig = this.workerAttemptCheck.find(
         (worker) => worker.workerCpuId === workerCpuId,
@@ -222,7 +222,7 @@ export class SetupClusterService {
             );
           }
           auditState.isAuditing = true;
-          if (!!result) {
+          if (result) {
             auditState.passedChecks++;
           }
           auditState.checks++;
@@ -311,7 +311,7 @@ export class SetupClusterService {
     workerConfig: WorkerConfig,
     worker: Worker,
   ): void {
-    if (!!workerConfig.broadcastSubscription) {
+    if (workerConfig.broadcastSubscription) {
       workerConfig.broadcastSubscription.unsubscribe();
     }
 

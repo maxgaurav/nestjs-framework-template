@@ -6,20 +6,17 @@ export class MethodChangeMiddleware implements NestMiddleware {
   protected allowedMethods = ['put', 'get', 'delete', 'post', 'patch', 'head'];
 
   use(req: Request, res: any, next: () => void) {
-    let overrideMethod: string | any = req.method;
+    let overrideMethod = req.method;
     if (typeof req.body === 'object') {
-      overrideMethod = req.body._method || req.method;
-      if (typeof overrideMethod !== 'string') {
-        overrideMethod = req.method;
-      }
+      overrideMethod =
+        (req.body as never as { _method?: string | undefined })._method ||
+        req.method;
 
-      if (
-        !this.allowedMethods.includes((overrideMethod as string).toLowerCase())
-      ) {
+      if (!this.allowedMethods.includes(overrideMethod.toLowerCase())) {
         overrideMethod = req.method;
       }
     }
-    req.method = (overrideMethod as string).toUpperCase();
+    req.method = overrideMethod.toUpperCase();
     next();
   }
 }

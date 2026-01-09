@@ -46,7 +46,7 @@ export class HealthController {
         ),
     ];
 
-    if (!!systemConfig.checkMemory) {
+    if (systemConfig.checkMemory) {
       checks.push(
         () =>
           this.memoryHealth.checkRSS(
@@ -68,18 +68,18 @@ export class HealthController {
    * Triggers health check and sends information to master process
    */
   @OnEvent(SystemEvents.SelfHealthStatus)
-  public async checkOnCommand() {
-    let result: HealthCheckResult;
+  public checkOnCommand() {
+    let result: HealthCheckResult | Error;
 
     this.check()
       .then((status) => {
         result = status;
       })
-      .catch((err) => {
+      .catch((err: Error) => {
         result = err;
       })
       .finally(() =>
-        this.processMessaging.sendCommand<HealthCheckResult>(
+        this.processMessaging.sendCommand<HealthCheckResult | Error>(
           CommunicationCommands.HealthCheckStatus,
           result,
         ),

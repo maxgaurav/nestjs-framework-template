@@ -4,4 +4,6 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   await repl(AppModule);
 }
-bootstrap();
+bootstrap().catch((err) => {
+  console.error(err);
+});

@@ -54,13 +54,17 @@ export class UrlBuilderService {
     Object.entries(queryParams)
       .reduce<[string, string | number][]>(
         (queryValues, [queryKey, queryValue]) => {
-          Array.isArray(queryValue)
-            ? queryValues.push(
-                ...(queryValue.map((value) => {
-                  return [queryKey, value];
-                }) as [string, string | number][]),
-              )
-            : queryValues.push([queryKey, queryValue as never]);
+          if (Array.isArray(queryValue)) {
+            queryValues.push(
+              ...queryValue.map((value) => {
+                return [queryKey, value] as never;
+              }),
+            );
+
+            return queryValues;
+          }
+
+          queryValues.push([queryKey, queryValue as never]);
           return queryValues;
         },
         [],

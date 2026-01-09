@@ -122,7 +122,9 @@ function setupApiDocumentation(app: INestApplication) {
   SwaggerModule.setup('api-documentation/v1', app, document);
 }
 
-clusterStart().then((app) => {
-  const clusterService = app.get(SetupClusterService);
-  clusterService.closeEvent.asObservable().subscribe(() => process.exit());
-});
+clusterStart()
+  .then((app) => {
+    const clusterService = app.get(SetupClusterService);
+    clusterService.closeEvent.asObservable().subscribe(() => process.exit());
+  })
+  .catch((err) => console.error(err));

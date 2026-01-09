@@ -24,7 +24,7 @@ export class ErrorValidationFormatFilter implements ExceptionFilter {
     const response = host.switchToHttp().getResponse<Response>();
     const request = host.switchToHttp().getRequest<Request>();
     const errorResponse: DefaultValidationError =
-      exception.getResponse() as any;
+      exception.getResponse() as DefaultValidationError;
 
     const errors = this.formattedErrors(errorResponse.message);
 
@@ -39,7 +39,9 @@ export class ErrorValidationFormatFilter implements ExceptionFilter {
     request.flash(SESSION_VALIDATION_INPUTS);
     request.flash(SESSION_VALIDATION_ERROR_KEY, JSON.stringify(errors));
     request.flash(SESSION_VALIDATION_INPUTS, JSON.stringify(request.body));
-    const sessionPreviousUrl = (request.session as any)._previous?.url || '/';
+    const sessionPreviousUrl =
+      (request.session as never as { _previous?: { url?: string } })._previous
+        ?.url || '/';
     const previousUrl = request.header('referrer') || sessionPreviousUrl;
     request.session.save(() => {
       response.redirect(previousUrl);
@@ -80,7 +82,7 @@ export class ErrorValidationFormatFilter implements ExceptionFilter {
 
     const finalFormattedErrors: { [key: string]: string[] } = {};
     for (const errorKey of Object.keys(formattedErrors)) {
-      if (!formattedErrors.hasOwnProperty(errorKey)) {
+      if (!Object.prototype.hasOwnProperty.call(formattedErrors, errorKey)) {
         continue;
       }
 

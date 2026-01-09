@@ -18,7 +18,7 @@ export class QueryFunction implements ExtendFunction {
     queryKey?: string,
     defaultValue = '',
   ): string | string[] | { [key: string]: string | string[] } {
-    const request = this.clsService.get(CLS_REQ) as Request;
+    const request = this.clsService.get<Request>(CLS_REQ);
     if (!queryKey) {
       return request.query as { [key: string]: string | string[] };
     }

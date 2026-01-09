@@ -18,7 +18,7 @@ export class PathParamFunction implements ExtendFunction {
     paramKey?: string,
     defaultValue = '',
   ): string | { [key: string]: string } {
-    const request = this.clsService.get(CLS_REQ) as Request;
+    const request = this.clsService.get<Request>(CLS_REQ);
     if (!paramKey) {
       return request.params;
     }

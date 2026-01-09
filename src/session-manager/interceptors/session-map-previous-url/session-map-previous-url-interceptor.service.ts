@@ -20,7 +20,8 @@ export class SessionMapPreviousUrlInterceptor implements NestInterceptor {
       return next.handle();
     }
 
-    const session: Session & { [key: string]: any } = request.session;
+    const session: Session & { _previous?: { url: string | null } } =
+      request.session;
     session._previous = session._previous || { url: null };
     if (
       request.method.toUpperCase() === 'GET' &&

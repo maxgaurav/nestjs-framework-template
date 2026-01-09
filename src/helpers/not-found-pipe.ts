@@ -6,7 +6,7 @@ import { NotFoundException } from '@nestjs/common';
 export const notFoundPipe = <T>() => {
   return (source: Observable<T>) =>
     source.pipe(
-      catchError((err) => {
+      catchError((err: unknown) => {
         if (err instanceof EmptyResultError) {
           return throwError(() => new NotFoundException('Record not found'));
         }

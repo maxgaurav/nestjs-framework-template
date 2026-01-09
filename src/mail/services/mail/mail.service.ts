@@ -7,6 +7,7 @@ import { join } from 'path';
 import { ViewConfig } from '../../../environment/environment-types.interface';
 import * as Twig from 'twig';
 import { RenderOptions } from 'twig';
+import { SentMessageInfo } from 'nodemailer';
 
 @Injectable()
 export class MailService {
@@ -23,7 +24,7 @@ export class MailService {
   public async sendMail(
     sendMailOptions: Omit<ISendMailOptions, 'template' | 'context'> &
       Required<Pick<ISendMailOptions, 'template' | 'context'>>,
-  ) {
+  ): Promise<SentMessageInfo> {
     sendMailOptions.html = await this.fileContent(
       sendMailOptions.template,
       sendMailOptions.context,
@@ -52,7 +53,7 @@ export class MailService {
             return;
           }
 
-          res(result);
+          res(result as string);
         },
       );
     });

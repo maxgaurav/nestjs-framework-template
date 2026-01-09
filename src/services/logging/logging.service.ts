@@ -12,21 +12,21 @@ export class LoggingService extends ConsoleLogger {
     super();
   }
 
-  public debug(message: any, context?: string) {
+  public debug(message: unknown, context?: string) {
     if (this.configService.getOrThrow<SystemConfig>('system').debug) {
       super.debug(this.generateMessage(message), context);
     }
   }
 
-  public info(message: any, context?: string): void {
+  public info(message: unknown, context?: string): void {
     return this.log(message, context);
   }
 
-  public log(message: any, context?: string) {
+  public log(message: unknown, context?: string) {
     super.log(this.generateMessage(message), context);
   }
 
-  public error(message: any, stackOrContext?: string) {
+  public error(message: unknown, stackOrContext?: string) {
     super.error(
       this.generateMessage(message),
       stackOrContext,
@@ -34,11 +34,11 @@ export class LoggingService extends ConsoleLogger {
     );
   }
 
-  public warn(message: any, context?: string) {
+  public warn(message: unknown, context?: string) {
     super.warn(this.generateMessage(message), context);
   }
 
-  public generateMessage(message: string): string {
+  public generateMessage(message: unknown): unknown {
     if (!this.clsService.isActive()) {
       return message;
     }
@@ -46,7 +46,7 @@ export class LoggingService extends ConsoleLogger {
     return `[${
       this.clsService.get('type') || 'Default'
     }-${this.clsService.getId()}] ${
-      typeof message === 'object' ? JSON.stringify(message) : message
+      typeof message === 'string' ? message : JSON.stringify(message)
     }`;
   }
 }

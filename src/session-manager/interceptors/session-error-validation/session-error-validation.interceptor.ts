@@ -25,13 +25,15 @@ export class SessionErrorValidationInterceptor implements NestInterceptor {
 
     if (flashMessage.length > 0) {
       errorBag = flashMessage[0];
-      const validationErrors: ValidationErrorsFormat = JSON.parse(errorBag);
+      const validationErrors = JSON.parse(errorBag) as ValidationErrorsFormat;
       const allErrors = Object.keys(validationErrors).reduce<string[]>(
         (errors, errorKey) => {
           let errorValuesForKey: string[] = [];
 
           /* istanbul ignore else */
-          if (validationErrors.hasOwnProperty(errorKey)) {
+          if (
+            Object.prototype.hasOwnProperty.call(validationErrors, errorKey)
+          ) {
             errorValuesForKey = validationErrors[errorKey];
           }
 
