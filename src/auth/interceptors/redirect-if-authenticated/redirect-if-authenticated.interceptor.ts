@@ -34,7 +34,7 @@ export class RedirectIfAuthenticatedInterceptor implements NestInterceptor {
       )
       .pipe(
         switchMap((result) => {
-          if (!!result) {
+          if (result) {
             response.redirect(this.getRedirectUrl());
             return NEVER;
           }

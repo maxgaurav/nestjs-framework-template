@@ -57,8 +57,8 @@ export class RedirectRouteInterceptor implements NestInterceptor {
    */
   public saveSession(request: Request): Promise<boolean> {
     return new Promise<boolean>((res, rej) => {
-      request.session.save((err) => {
-        if (!!err) {
+      request.session.save((err: Error) => {
+        if (err) {
           rej(err);
           return;
         }

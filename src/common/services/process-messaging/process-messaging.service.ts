@@ -7,7 +7,7 @@ import {
 import { InterProcessCommunication } from '../../../interfaces/inter-process-communication';
 import { finalize, Observable, Subject } from 'rxjs';
 import { Worker } from 'cluster';
-import * as cluster from 'cluster';
+import cluster from 'cluster';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Injectable()
@@ -33,12 +33,12 @@ export class ProcessMessagingService implements OnApplicationBootstrap {
   /**
    * Hook on application bootstrap to start process message listening
    */
-  public async onApplicationBootstrap(): Promise<void> {
+  public onApplicationBootstrap(): void {
     this.logger.log(
       `Starting to listen process messages for process with pid ${process.pid}`,
       'CommonModule',
     );
-    process.on('message', (event: any | InterProcessCommunication) => {
+    process.on('message', (event: InterProcessCommunication) => {
       this.logger.debug(event, 'Message received on process');
       this.generalMessageEmitter.next(event);
 
@@ -46,7 +46,7 @@ export class ProcessMessagingService implements OnApplicationBootstrap {
         return;
       }
 
-      if (event.hasOwnProperty('command') && event.hasOwnProperty('message')) {
+      if (Object.hasOwn(event, 'command') && Object.hasOwn(event, 'message')) {
         this.logger.debug(event, 'Command received on process');
         this.commandEmitter.next(event);
       }
@@ -60,8 +60,8 @@ export class ProcessMessagingService implements OnApplicationBootstrap {
   /**
    * Subscribe to unprocessed message content for process
    */
-  public subscribeToMessages<T = any>(): Observable<T> {
-    return this.generalMessageEmitter.asObservable();
+  public subscribeToMessages<T = unknown>(): Observable<T> {
+    return this.generalMessageEmitter.asObservable() as Observable<T>;
   }
 
   /**
@@ -92,7 +92,7 @@ export class ProcessMessagingService implements OnApplicationBootstrap {
    * Returns true if process is primary master process
    */
   public isPrimaryProcess(): boolean {
-    return (cluster as any).isPrimary;
+    return cluster.isPrimary;
   }
 
   /**
@@ -129,10 +129,12 @@ export class ProcessMessagingService implements OnApplicationBootstrap {
   /**
    * Subscribe to command's send to current process
    */
-  public subscribeToCommands<T = any>(): Observable<
+  public subscribeToCommands<T = unknown>(): Observable<
     InterProcessCommunication<T>
   > {
-    return this.commandEmitter.asObservable();
+    return this.commandEmitter.asObservable() as Observable<
+      InterProcessCommunication<T>
+    >;
   }
 
   /**
@@ -147,8 +149,8 @@ export class ProcessMessagingService implements OnApplicationBootstrap {
       if (!event) {
         return;
       }
-      if (event.hasOwnProperty('command') && event.hasOwnProperty('message')) {
-        emitter.next(event as InterProcessCommunication);
+      if (Object.hasOwn(event, 'command') && Object.hasOwn(event, 'message')) {
+        emitter.next(event as never);
       }
     };
     worker.addListener('message', handler);
@@ -166,7 +168,7 @@ export class ProcessMessagingService implements OnApplicationBootstrap {
    * @protected
    */
   public convertCommandsToSystemEvents(
-    commandReceived: InterProcessCommunication,
+    commandReceived: InterProcessCommunication<unknown>,
   ): void {
     switch (commandReceived.command) {
       case CommunicationCommands.HealthCheckRequest:
@@ -175,14 +177,15 @@ export class ProcessMessagingService implements OnApplicationBootstrap {
           commandReceived.message,
         );
         break;
-      case CommunicationCommands.BroadcastCommand:
+      case CommunicationCommands.BroadcastCommand: {
         const broadcastMessageCommand: BroadcastCommandMessage =
-          commandReceived.message;
+          commandReceived.message as never;
         this.convertCommandsToSystemEvents({
-          command: broadcastMessageCommand.command as any,
+          command: broadcastMessageCommand.command as never,
           message: broadcastMessageCommand.message,
         });
         break;
+      }
       default:
         this.logger.warn(
           'System event not mapped for command',

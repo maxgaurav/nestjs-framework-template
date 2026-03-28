@@ -14,7 +14,7 @@ export const systemConfig = () => {
         ? parseFloat(process.env.APP_MAX_RSS_MEMORY)
         : 150, // in MB
       checkMemory: process.env.APP_CHECK_MEMORY === 'true',
-      url: !!process.env.APP_URL
+      url: process.env.APP_URL
         ? process.env.APP_URL
         : `http://localhost:${port}`,
     } as SystemConfig,

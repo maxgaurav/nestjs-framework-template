@@ -71,14 +71,14 @@ export class AuthService {
       userId: user.id,
     };
     return new Promise((res, rej) => {
-      session.regenerate((err) => {
-        if (!!err) {
+      session.regenerate((err: Error) => {
+        if (err) {
           rej(err);
           return;
         }
 
-        session.save((err) => {
-          if (!!err) {
+        session.save((err: Error) => {
+          if (err) {
             rej(err);
             return;
           }
@@ -94,7 +94,7 @@ export class AuthService {
    */
   public async findUserByToken(bearerToken: string): Promise<UserModel | null> {
     const decodedId: string =
-      await this.jwtService.verifyAsync<any>(bearerToken);
+      await this.jwtService.verifyAsync<never>(bearerToken);
 
     const accessToken =
       await this.accessTokenRepo.findForActiveState(decodedId);
@@ -116,7 +116,7 @@ export class AuthService {
   public async findRefreshToken(
     token: string,
   ): Promise<RefreshTokenModel | null> {
-    const decodedId: string = await this.jwtService.verifyAsync<any>(token);
+    const decodedId: string = await this.jwtService.verifyAsync<never>(token);
 
     return this.refreshTokenRepo.find(decodedId);
   }

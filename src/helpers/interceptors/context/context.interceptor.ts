@@ -14,6 +14,10 @@ export class ContextInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const request = context.switchToHttp().getRequest<Request>();
 
+    if (request.method.toUpperCase() === 'GET') {
+      return next.handle();
+    }
+
     (request.body as never as { __CONTEXT: unknown }).__CONTEXT = {
       params: request.params,
       query: request.query,

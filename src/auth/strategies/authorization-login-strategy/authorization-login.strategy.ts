@@ -38,8 +38,14 @@ export class AuthorizationLoginStrategy extends PassportStrategy(
   public async validate(
     request: Request,
   ): Promise<{ user: UserModel; authorization: AuthorizationDto }> {
-    request.body = request.body || {};
-    request.body.token = await this.decryptToken(request.body);
+    request.body = ((request.body as never) || {}) as {
+      token?: string;
+    };
+    (
+      request.body as {
+        token?: string;
+      }
+    ).token = (await this.decryptToken(request.body as never)) as never;
     const loginCredentials = await this.validateContent(request.body);
     const user = await this.findUserForCredentials(loginCredentials);
 
@@ -73,16 +79,14 @@ export class AuthorizationLoginStrategy extends PassportStrategy(
     messageBefore:
       'Oauth2: Attempting to decrypt token information attached to login attempt',
   })
-  public async decryptToken(
-    body: any,
-  ): Promise<NonNullable<unknown> & Partial<AuthorizationDto>> {
+  public async decryptToken(body: { token?: string }): Promise<unknown> {
     if (typeof body.token !== 'string') {
       return {};
     }
 
     return this.hashEncrypt
       .decrypt(body.token)
-      .then((result) => JSON.parse(result))
+      .then((result) => JSON.parse(result) as Partial<AuthorizationDto>)
       .catch(() =>
         Promise.reject(
           new UnprocessableEntityException([

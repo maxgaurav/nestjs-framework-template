@@ -11,7 +11,7 @@ import { viewConfig } from './configs/view';
 import { filesystemConfig } from './configs/filesystemConfig';
 import { corsConfig } from './configs/cors';
 
-const envSuffix = !!process.env.OVERRIDE_ENV
+const envSuffix = process.env.OVERRIDE_ENV
   ? `.${process.env.OVERRIDE_ENV}`
   : '';
 

@@ -31,19 +31,22 @@ export class GenerateOauthKeysService {
             passphrase: '',
           },
         },
-        async (err, publicKey, privateKey) => {
-          if (!!err) {
+        (err, publicKey, privateKey) => {
+          if (err) {
             this.log.error(err, 'CliCommandModule');
             reject(err);
             return;
           }
           this.log.debug('Keys generated.', 'CliCommandModule');
-          await Promise.all([
+          Promise.all([
             this.savePrivateKey(privateKey),
             this.savePublicKey(publicKey),
-          ]);
-
-          resolve(true);
+          ])
+            .then(() => resolve(true))
+            .catch((err: Error) => {
+              this.log.error(err, 'CliCommandModule');
+              reject(err);
+            });
         },
       );
     });

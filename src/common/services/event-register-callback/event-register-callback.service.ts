@@ -9,17 +9,17 @@ export class EventRegisterCallbackService {
    * @param callback
    * @param transaction
    */
-  public registerEventCallBacks(
-    callback: () => Promise<void | any>,
-    transaction?: Transaction | undefined,
-  ): CallbackExecutioner {
-    if (!!transaction) {
+  public registerEventCallBacks<T = unknown>(
+    callback: () => Promise<void | T>,
+    transaction?: Transaction,
+  ): CallbackExecutioner<T> {
+    if (transaction) {
       transaction.afterCommit(async () => {
         await callback();
       });
-      return () => Promise.resolve();
+      return () => Promise.resolve() as unknown as T;
     }
 
-    return () => callback();
+    return () => callback() as unknown as T;
   }
 }

@@ -1,6 +1,5 @@
-import { UserModel } from '../databases/models/user.model';
+import type { UserModel } from './databases/models/user.model';
 import { Transaction } from 'sequelize';
-import { Session, SessionData } from 'express-session';
 
 declare global {
   namespace Express {

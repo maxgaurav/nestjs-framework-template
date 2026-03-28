@@ -64,7 +64,7 @@ export class WebGuard extends AuthGuard('local') {
             this.resetSession(request.session);
             return of(false);
           }
-          return throwError(() => err);
+          return throwError(() => err as never);
         }),
       );
   }

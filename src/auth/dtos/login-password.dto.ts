@@ -10,11 +10,11 @@ export class LoginPasswordDto {
   public password: string;
 
   constructor(content: { email?: string; password?: string } = {}) {
-    if (!!content.email) {
+    if (content.email) {
       this.email = content.email;
     }
 
-    if (!!content.password) {
+    if (content.password) {
       this.password = content.password;
     }
   }

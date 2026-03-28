@@ -14,7 +14,9 @@ export class AccessTokenDto {
     description: `Required with grant_type ${GrantTypes.ImplicitPassword}`,
     required: false,
   })
-  @ValidateIf((obj) => obj.grant_type === GrantTypes.ImplicitPassword)
+  @ValidateIf(
+    (obj: AccessTokenDto) => obj.grant_type === GrantTypes.ImplicitPassword,
+  )
   @IsNotEmpty()
   @IsEmail()
   public email: string | null = null;
@@ -23,7 +25,9 @@ export class AccessTokenDto {
     required: false,
     description: `Required with grant_type ${GrantTypes.ImplicitPassword}`,
   })
-  @ValidateIf((obj) => obj.grant_type === GrantTypes.ImplicitPassword)
+  @ValidateIf(
+    (obj: AccessTokenDto) => obj.grant_type === GrantTypes.ImplicitPassword,
+  )
   @IsNotEmpty()
   @IsString()
   public password: string | null = null;
@@ -33,7 +37,7 @@ export class AccessTokenDto {
     required: false,
   })
   @ValidateIf(
-    (obj) =>
+    (obj: AccessTokenDto) =>
       obj.grant_type === GrantTypes.ImplicitPassword ||
       obj.grant_type === GrantTypes.AuthorizationCode,
   )
@@ -47,7 +51,7 @@ export class AccessTokenDto {
     required: false,
   })
   @ValidateIf(
-    (obj) =>
+    (obj: AccessTokenDto) =>
       obj.grant_type === GrantTypes.ImplicitPassword ||
       obj.grant_type === GrantTypes.AuthorizationCode,
   )
@@ -64,7 +68,7 @@ export class AccessTokenDto {
     required: false,
     description: `Required with grant_type ${GrantTypes.PKCE}`,
   })
-  @ValidateIf((obj) => obj.grant_type === GrantTypes.PKCE)
+  @ValidateIf((obj: AccessTokenDto) => obj.grant_type === GrantTypes.PKCE)
   @IsNotEmpty()
   @IsString()
   public code_verifier: string | null = null;
@@ -74,7 +78,7 @@ export class AccessTokenDto {
     description: `Required with grant_type ${GrantTypes.PKCE}, ${GrantTypes.AuthorizationCode}`,
   })
   @ValidateIf(
-    (obj) =>
+    (obj: AccessTokenDto) =>
       obj.grant_type === GrantTypes.PKCE ||
       obj.grant_type === GrantTypes.AuthorizationCode,
   )

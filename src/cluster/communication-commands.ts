@@ -1,6 +1,6 @@
 import { SystemEvents } from '../system-events/system-events';
 
-export interface BroadcastCommandMessage<T = any> {
+export interface BroadcastCommandMessage<T = unknown> {
   command: Omit<CommunicationCommands, 'BroadcastCommand'>;
   message: T;
 }

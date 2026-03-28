@@ -6,7 +6,7 @@ export const sessionConfig = () => {
       driver: process.env.SESSION_DRIVER || 'memory',
       secret: process.env.APP_SECRET,
       name: process.env.SESSION_NAME || 'nestjs-session',
-      resave: !!process.env.SESSION_RESAVE
+      resave: process.env.SESSION_RESAVE
         ? process.env.SESSION_RESAVE === 'true'
         : true,
       saveUninitialized: process.env.SAVE_UNINITIALIZED === 'true',

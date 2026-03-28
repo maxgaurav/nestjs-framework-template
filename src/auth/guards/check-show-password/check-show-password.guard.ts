@@ -18,7 +18,8 @@ export class CheckShowPasswordGuard implements CanActivate {
 
     return (
       !!sessionId &&
-      (request.session as any).passwordContent?.passwordId === sessionId
+      (request.session as { passwordContent?: { passwordId: string } })
+        .passwordContent?.passwordId === sessionId
     );
   }
 }

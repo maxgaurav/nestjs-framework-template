@@ -29,7 +29,7 @@ export class RollbackMigrationService {
       demandOption: false,
       type: 'string',
     })
-    till?: number | undefined,
+    till?: number,
   ) {
     const connectionConfig =
       this.config.getOrThrow<Record<ConnectionNames, DatabaseConnectionConfig>>(
@@ -43,19 +43,23 @@ export class RollbackMigrationService {
           return {
             name,
             up: async () =>
-              import(path as string).then((migration) =>
-                migration.up(context, this.connection.Sequelize),
+              import(path as string).then(
+                (migration: { up: (...args: unknown[]) => Promise<unknown> }) =>
+                  migration.up(context, this.connection.Sequelize),
               ),
             down: async () =>
-              import(path as string).then((migration) =>
-                migration.down(context, this.connection.Sequelize),
+              import(path as string).then(
+                (migration: {
+                  default: { down: (...args: unknown[]) => Promise<unknown> };
+                }) =>
+                  migration.default.down(context, this.connection.Sequelize),
               ),
           };
         },
       },
       context: this.connection.getQueryInterface(),
       storage: new SequelizeStorage({ sequelize: this.connection }),
-      logger: this.logger as any,
+      logger: this.logger as never,
     });
     return umzug.down({ step: typeof till === 'number' ? till : 1 });
   }

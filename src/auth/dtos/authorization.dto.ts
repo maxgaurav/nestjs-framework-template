@@ -23,12 +23,12 @@ export class AuthorizationDto {
   @ClientIdExists()
   public client_id: string;
 
-  @ValidateIf((obj) => obj?.grant_type === GrantTypes.PKCE)
+  @ValidateIf((obj: AuthorizationDto) => obj?.grant_type === GrantTypes.PKCE)
   @IsNotEmpty()
   @IsString()
   public code_challenge: string | null = null;
 
-  @ValidateIf((obj) => obj?.grant_type === GrantTypes.PKCE)
+  @ValidateIf((obj: AuthorizationDto) => obj?.grant_type === GrantTypes.PKCE)
   @IsNotEmpty()
   @IsString()
   @IsIn(['sha512', 'sha256'])

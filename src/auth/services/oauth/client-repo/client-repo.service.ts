@@ -52,7 +52,7 @@ export class ClientRepoService {
       where: { id, secret },
       transaction,
     });
-    return !!result ? result : null;
+    return result ? result : null;
   }
 
   /**

@@ -1,5 +1,5 @@
 {
-  "$schema": "https://json.schemastore.org/swcrc",
+  "$schema": "https://swc.rs/schema.json",
   "sourceMaps": true,
   "jsc": {
     "parser": {
@@ -13,5 +13,6 @@
     },
     "baseUrl": "./"
   },
-  "minify": false
+  "minify": false,
+  "exclude": [".*\\.spec\\.ts$"]
 }

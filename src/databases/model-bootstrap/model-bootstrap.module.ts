@@ -11,8 +11,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { EventRegisterCallbackService } from '../../common/services/event-register-callback/event-register-callback.service';
 import { EntitiesMetadataStorage } from '@nestjs/sequelize/dist/entities-metadata.storage';
 import { UrlBuilderService } from '../../url-management/services/url-builder/url-builder.service';
-
-const providers: Provider[] = DefaultConnectionModels.map((model: any) => ({
+const providers: Provider[] = DefaultConnectionModels.map((model) => ({
   provide: getModelToken(model, DEFAULT_CONNECTION_NAME),
   useFactory: (
     connection: Sequelize,
@@ -27,7 +26,7 @@ const providers: Provider[] = DefaultConnectionModels.map((model: any) => ({
     if (!connection) {
       return model;
     }
-    return connection.getRepository(model as any);
+    return connection.getRepository(model as never);
   },
   inject: [
     getConnectionToken(DEFAULT_CONNECTION_NAME),
@@ -39,7 +38,7 @@ const providers: Provider[] = DefaultConnectionModels.map((model: any) => ({
 
 EntitiesMetadataStorage.addEntitiesByConnection(
   DEFAULT_CONNECTION_NAME,
-  DefaultConnectionModels as never,
+  DefaultConnectionModels,
 );
 
 const CustomModelInjectionModule: DynamicModule = {

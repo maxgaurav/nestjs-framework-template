@@ -1,12 +1,11 @@
 import { Injectable, Scope } from '@nestjs/common';
 import { RedirectRouteExecutorInterface } from '../../../interfaces/redirect-route-executor.interface';
 import { AuthorizationChallengeModel } from '../../../databases/models/oauth/authorization-challenge.model';
-import { AuthService } from '../../services/auth/auth.service';
 import { Request } from 'express';
 
 @Injectable({ scope: Scope.TRANSIENT })
 export class AuthorizationRedirector implements RedirectRouteExecutorInterface {
-  constructor(public authService: AuthService) {}
+  constructor() {}
 
   /**
    * Generates redirect url for redirection back to the main app
@@ -17,9 +16,15 @@ export class AuthorizationRedirector implements RedirectRouteExecutorInterface {
     request: Request,
     response: AuthorizationChallengeModel,
   ): Promise<string> | string {
-    const url = new URL(request.body.token.redirect_url);
+    const url = new URL(
+      (request.body as never as { token: { redirect_url: string } }).token
+        .redirect_url,
+    );
     url.searchParams.append('code', response.id);
-    url.searchParams.append('state', request.query.state?.toString() || '');
+    url.searchParams.append(
+      'state',
+      (request.query as never as { state?: string }).state?.toString() || '',
+    );
 
     return url.toString();
   }

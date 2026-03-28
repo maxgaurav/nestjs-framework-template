@@ -21,8 +21,9 @@ export class DatabaseConfigService implements SequelizeOptionsFactory {
       `databases.${connectionName}`,
     );
 
-    if (!!config.logging) {
+    if (config.logging) {
       config.logging = this.logger();
+      config.logQueryParameters = true;
     }
 
     // @todo find way to auto detect models

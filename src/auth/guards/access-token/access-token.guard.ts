@@ -32,7 +32,7 @@ export class AccessTokenGuard extends AuthGuard() implements CanActivate {
         request.user = user;
         return true;
       }),
-      catchError((err) =>
+      catchError((err: Error) =>
         throwError(() =>
           err instanceof jwt.JsonWebTokenError
             ? new UnauthorizedException()

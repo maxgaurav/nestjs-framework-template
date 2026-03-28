@@ -15,7 +15,7 @@ function getLogger(): Logger | Console {
     return console;
   }
 
-  if (!!logger) {
+  if (logger) {
     return logger;
   }
 
@@ -30,12 +30,14 @@ export const LoggingDecorator = (message: {
   LogTypeAfter?: 'debug' | 'log' | 'error' | 'warn';
 }) => {
   return (
-    target: any,
+    target: object,
     propertyKey: string,
     propertyDescriptor: PropertyDescriptor,
   ) => {
     // @todo parallelize and allow logging to be on separate thread somehow so that there is no impact in performance
-    const originalMethod = propertyDescriptor.value;
+    const originalMethod = propertyDescriptor.value as (
+      ...args: unknown[]
+    ) => unknown;
 
     propertyDescriptor.value = function (...args: any[]) {
       getLogger()[message.LogTypeBefore || 'debug'](
@@ -54,7 +56,7 @@ export const LoggingDecorator = (message: {
             parseMessage(message.messageAfter as never, args),
             target.constructor.name,
           );
-          return mainResult;
+          return mainResult as never;
         });
       }
 

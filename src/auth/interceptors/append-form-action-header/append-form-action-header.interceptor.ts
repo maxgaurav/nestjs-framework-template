@@ -22,11 +22,18 @@ export class AppendFormActionHeaderInterceptor implements NestInterceptor {
       response.getHeader('content-security-policy') ?? '';
 
     return from(
-      this.hashEncrypt.decrypt((request.session as any).passwordContent.token),
+      this.hashEncrypt.decrypt(
+        (request.session as never as { passwordContent: { token: string } })
+          .passwordContent.token,
+      ),
     )
-      .pipe(map((serializedToken) => JSON.parse(serializedToken)))
       .pipe(
-        map((authorizationDto: AuthorizationDto) => {
+        map(
+          (serializedToken) => JSON.parse(serializedToken) as AuthorizationDto,
+        ),
+      )
+      .pipe(
+        map((authorizationDto) => {
           console.log(authorizationDto);
           response.setHeader(
             'content-security-policy',

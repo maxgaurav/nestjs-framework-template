@@ -7,7 +7,7 @@ import { ReplicationOptions } from 'sequelize';
 
 export const databaseConfig = () => {
   const config: DatabaseConfig = {
-    databases: {} as any,
+    databases: {} as never,
   };
 
   config.databases[ConnectionNames.DefaultConnection] = {
@@ -17,14 +17,14 @@ export const databaseConfig = () => {
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
-    port: !!process.env.DB_PORT ? parseFloat(process.env.DB_PORT) : 5432,
+    port: process.env.DB_PORT ? parseFloat(process.env.DB_PORT) : 5432,
     pool: {
-      max: !!process.env.DB_POOL_CONNECTION_LIMIT
+      max: process.env.DB_POOL_CONNECTION_LIMIT
         ? parseFloat(process.env.DB_POOL_CONNECTION_LIMIT)
         : 2,
       min: 1,
     },
-    timezone: !!process.env.DB_TIMEZONE ? process.env.DB_TIMEZONE : '+00:00',
+    timezone: process.env.DB_TIMEZONE ? process.env.DB_TIMEZONE : '+00:00',
     logging: process.env.DB_DEBUG === 'true',
     benchmark: process.env.DB_DEBUG === 'true',
     replication: readWriteClusterSettings(),
@@ -109,7 +109,7 @@ function readWriteClusterSettings(): ReplicationOptions | false {
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      port: !!process.env.DB_PORT ? parseFloat(process.env.DB_PORT) : 3306,
+      port: process.env.DB_PORT ? parseFloat(process.env.DB_PORT) : 3306,
     },
     read: Array.from(readServerMappings.values()),
   };

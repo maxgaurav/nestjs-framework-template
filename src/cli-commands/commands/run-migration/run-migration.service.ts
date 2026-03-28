@@ -34,20 +34,24 @@ export class RunMigrationService {
           // const migration = (require as any)(path);
           return {
             name,
-            up: async () =>
-              import(path as string).then((migration) =>
-                migration.up(context, this.connection.Sequelize),
+            up: () =>
+              import(path as string).then(
+                (migration: {
+                  default: { up: (...args: unknown[]) => Promise<unknown> };
+                }) => migration.default.up(context, this.connection.Sequelize),
               ),
             down: async () =>
-              import(path as string).then((migration) =>
-                migration.down(context, this.connection.Sequelize),
+              import(path as string).then(
+                (migration: {
+                  down: (...args: unknown[]) => Promise<unknown>;
+                }) => migration.down(context, this.connection.Sequelize),
               ),
           };
         },
       },
       context: this.connection.getQueryInterface(),
       storage: new SequelizeStorage({ sequelize: this.connection }),
-      logger: this.logger as any,
+      logger: this.logger as never,
     });
     return umzug.up();
   }

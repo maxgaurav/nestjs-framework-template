@@ -74,9 +74,12 @@ export class AuthorizationController {
     @SessionDecorator() session: Session,
   ) {
     const passwordId = randomUUID();
-    (session as any).passwordContent = { ...passwordDto, passwordId };
+    (session as never as { passwordContent: unknown }).passwordContent = {
+      ...passwordDto,
+      passwordId,
+    } as never;
     await new Promise((res) => session.save(() => res(true)));
-    return (session as any).passwordContent;
+    return (session as never as { passwordContent: unknown }).passwordContent;
   }
 
   @Header('Cache-Control', 'no-cache, no-store, must-revalidate')
@@ -108,8 +111,10 @@ export class AuthorizationController {
       'Oauth2: Clearing password form state and redirecting back to login for restart process',
   })
   public restartLoginFlow(@SessionDecorator() session: Session) {
-    const passwordContent = (session as any).passwordContent;
-    (session as any).passwordContent = undefined;
+    const passwordContent = (session as never as { passwordContent: unknown })
+      .passwordContent;
+    (session as never as { passwordContent: unknown }).passwordContent =
+      undefined;
 
     return passwordContent;
   }

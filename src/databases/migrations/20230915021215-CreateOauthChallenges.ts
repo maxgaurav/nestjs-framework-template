@@ -3,7 +3,7 @@
 import { QueryInterface, Sequelize } from 'sequelize';
 import { DataType } from 'sequelize-typescript';
 
-module.exports = {
+export default {
   up: async (queryInterface: QueryInterface, Sequelize: Sequelize) => {
     /**
      * Add altering commands here.

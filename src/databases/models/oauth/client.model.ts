@@ -7,9 +7,7 @@ import {
 } from 'sequelize-typescript';
 import { DatesMapping } from '../dates-mapping';
 import { GrantTypes } from '../../../auth/grant-types/grant-type-implementation';
-import { RegisterModel } from '../../model-bootstrap/default-connection-models';
 
-@RegisterModel()
 @Table({ tableName: 'oauth_clients' })
 export class ClientModel extends DatesMapping<ClientModel> {
   @PrimaryKey
@@ -17,17 +15,17 @@ export class ClientModel extends DatesMapping<ClientModel> {
   @Column({
     type: DataType.UUID,
   })
-  public declare id: string;
+  declare public id: string;
 
   @Column
-  public declare name: string;
+  declare public name: string;
 
   @Column
-  public declare secret: string;
+  declare public secret: string;
 
   @Column
-  public declare is_revoked: boolean;
+  declare public is_revoked: boolean;
 
   @Column(DataType.STRING)
-  public declare grant_type: GrantTypes;
+  declare public grant_type: GrantTypes;
 }

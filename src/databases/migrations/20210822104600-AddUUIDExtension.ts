@@ -2,7 +2,7 @@
 
 import { QueryInterface } from 'sequelize';
 
-module.exports = {
+export default {
   up: async (queryInterface: QueryInterface) => {
     /**
      * Add altering commands here.

@@ -6,14 +6,14 @@ import { UrlBuilderService } from '../../url-management/services/url-builder/url
 
 @Table({})
 export class BaseModel<T extends object> extends DatesMapping<T> {
-  public declare static EventEmitter: EventEmitter2;
+  declare public static EventEmitter: EventEmitter2;
 
-  public declare static EventCallBackService: EventRegisterCallbackService;
+  declare public static EventCallBackService: EventRegisterCallbackService;
 
-  public declare static UrlGenerator: UrlBuilderService;
+  declare public static UrlGenerator: UrlBuilderService;
 
   @PrimaryKey
   @AutoIncrement
   @Column
-  public declare id: number;
+  declare public id: number;
 }

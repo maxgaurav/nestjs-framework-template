@@ -38,6 +38,13 @@ export class RefreshAccessTokenGuard
         throw err;
       }
     }
-    return super.handleRequest(err, user, info, context, status);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return super.handleRequest(
+      err as never,
+      user as never,
+      info as never,
+      context as never,
+      status as never,
+    );
   }
 }

@@ -40,22 +40,22 @@ export class HashEncryptService implements OnApplicationBootstrap {
    * Encrypt content
    * @param token
    */
-  public async encrypt(token: string): Promise<string> {
+  public encrypt(token: string): Promise<string> {
     const cipher = createCipheriv('aes-256-ctr', this.key, this.ivBuffer);
     let encryptedData = cipher.update(token, 'utf8', 'hex');
     encryptedData += cipher.final('hex');
-    return encryptedData;
+    return Promise.resolve(encryptedData);
   }
 
   /**
    * Decrypt token
    * @param token
    */
-  public async decrypt(token: string): Promise<string> {
+  public decrypt(token: string): Promise<string> {
     const decipher = createDecipheriv('aes-256-ctr', this.key, this.ivBuffer);
     let decryptData = decipher.update(token, 'hex', 'utf8');
     decryptData += decipher.final('utf8');
-    return decryptData;
+    return Promise.resolve(decryptData);
   }
 
   /**

@@ -1,10 +1,10 @@
 import { Transaction } from 'sequelize';
 
 export interface TransactionCallback {
-  registerEventCallBacks(
-    callback: () => Promise<any>,
+  registerEventCallBacks<T = unknown>(
+    callback: () => Promise<T> | T,
     transaction?: Transaction,
-  ): CallbackExecutioner;
+  ): CallbackExecutioner<T>;
 }
 
-export type CallbackExecutioner = () => Promise<any>;
+export type CallbackExecutioner<T = unknown> = () => Promise<T> | T;

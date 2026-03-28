@@ -60,7 +60,7 @@ export class AccessTokenRepoService {
       },
       include: [
         {
-          model: ClientModel as any,
+          model: ClientModel,
           where: {
             is_revoked: false,
           },
@@ -68,7 +68,7 @@ export class AccessTokenRepoService {
       ],
       transaction,
     });
-    return !!token ? token : null;
+    return token ? token : null;
   }
 
   /**
@@ -91,7 +91,7 @@ export class AccessTokenRepoService {
       .build()
       .setAttributes({
         client_id: client.id,
-        user_id: !!user ? user.id : null,
+        user_id: user ? user.id : null,
         expires_at: expiresAt,
         id: this.randomByteGenerate.generateRandomByte(40).toString('hex'),
       })

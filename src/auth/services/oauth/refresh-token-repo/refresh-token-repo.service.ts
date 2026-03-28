@@ -48,7 +48,7 @@ export class RefreshTokenRepoService {
     const refreshToken = await this.refreshToken.findByPk(id, {
       transaction,
     });
-    return !!refreshToken ? refreshToken : null;
+    return refreshToken ? refreshToken : null;
   }
 
   /**

@@ -14,11 +14,16 @@ export class RouteListService {
     command: 'route:list',
     describe: 'Returns list of routes registered',
   })
-  async listRoutes() {
-    const server = this.adapterHost.httpAdapter.getHttpServer();
-    const router = server._events.request._router as Router;
-    this.logger.log('List Of Routes are');
-    this.logger.log('-------------START OF ROUTE LIST--------------------');
+  listRoutes() {
+    const server = this.adapterHost.httpAdapter.getHttpServer() as {
+      _events: { request: { router: Router } };
+    };
+    const router = server._events.request.router;
+    this.logger.log('RouteListService', 'List Of Routes are');
+    this.logger.log(
+      'RouteListService',
+      '-------------START OF ROUTE LIST--------------------',
+    );
 
     router.stack
       .map((layer) => {
@@ -29,7 +34,10 @@ export class RouteListService {
         }
       })
       .filter((item) => item !== undefined)
-      .forEach((route) => this.logger.log(route));
-    this.logger.log('-------------END OF ROUTE LIST----------------------');
+      .forEach((route) => this.logger.log('RouteListService', route));
+    this.logger.log(
+      'RouteListService',
+      '-------------END OF ROUTE LIST----------------------',
+    );
   }
 }

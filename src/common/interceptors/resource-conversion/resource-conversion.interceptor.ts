@@ -15,7 +15,7 @@ export class ResourceConversionInterceptor implements NestInterceptor {
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(
-      map((content) => {
+      map((content: null | object | object[]) => {
         if (!content) {
           return content;
         }
@@ -26,16 +26,17 @@ export class ResourceConversionInterceptor implements NestInterceptor {
         ]);
 
         if (Array.isArray(content)) {
-          return content.map((mappedContent) =>
-            plainToInstance(instanceType, mappedContent, {
-              excludeExtraneousValues: true,
-            }),
+          return content.map(
+            (mappedContent) =>
+              plainToInstance(instanceType, mappedContent, {
+                excludeExtraneousValues: true,
+              }) as never,
           );
         }
 
         return plainToInstance(instanceType, content, {
           excludeExtraneousValues: true,
-        });
+        }) as never;
       }),
     );
   }
