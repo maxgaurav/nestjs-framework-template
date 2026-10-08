@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UserRepoService } from './user-repo.service';
-import { UserModel } from '../../../databases/models/user.model';
+import { UserRepository } from './user.repository';
+import { UserModel } from '../../databases/models/user.model';
 import { getModelToken } from '@nestjs/sequelize';
 
 const FakedEmail = 'email@email.com';
-describe('UserRepoService', () => {
-  let service: UserRepoService;
+describe('UserRepository', () => {
+  let service: UserRepository;
 
   const model: typeof UserModel = {
     findOne: (value) => value,
@@ -15,7 +15,7 @@ describe('UserRepoService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        UserRepoService,
+        UserRepository,
         {
           provide: getModelToken(UserModel),
           useValue: model,
@@ -23,7 +23,7 @@ describe('UserRepoService', () => {
       ],
     }).compile();
 
-    service = module.get<UserRepoService>(UserRepoService);
+    service = module.get<UserRepository>(UserRepository);
   });
 
   it('should be defined', () => {

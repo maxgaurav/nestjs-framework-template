@@ -1,7 +1,6 @@
 import { Global, Module } from '@nestjs/common';
 import { AuthService } from './services/auth/auth.service';
 import { HashEncryptService } from './services/hash-encrypt/hash-encrypt.service';
-import { UserRepoService } from '../user/services/user-repo/user-repo.service';
 import { WebGuard } from './guards/web/web.guard';
 import { IntendManagerService } from '../session-manager/services/intend-manager/intend-manager.service';
 import { JwtTokenManagerService } from './services/jwt-token-manager/jwt-token-manager.service';
@@ -33,7 +32,6 @@ import { RestartLoginRedirector } from './redirectors/restart-login/restart-logi
   providers: [
     AuthService,
     HashEncryptService,
-    UserRepoService,
     WebGuard,
     IntendManagerService,
     JwtTokenManagerService,

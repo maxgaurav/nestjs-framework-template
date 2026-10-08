@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { UserModel } from '../../../databases/models/user.model';
+import { UserModel } from '../../databases/models/user.model';
 import { Transaction } from 'sequelize';
 import { InjectModel } from '@nestjs/sequelize';
 
 @Injectable()
-export class UserRepoService {
+export class UserRepository {
   constructor(@InjectModel(UserModel) public userModel: typeof UserModel) {}
 
   /**

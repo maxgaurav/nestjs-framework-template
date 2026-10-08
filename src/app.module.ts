@@ -27,6 +27,7 @@ import { PaginateOverwriteModule } from './paginate-overwrite/paginate-overwrite
 import { UrlManagementModule } from './url-management/url-management.module';
 import { ClsModule } from 'nestjs-cls';
 import { Request, Response } from 'express';
+import { RepositoriesModule } from './repositories/repositories.module';
 
 @Module({
   imports: [
@@ -63,6 +64,7 @@ import { Request, Response } from 'express';
     UserModule,
     FileManagementModule,
     UrlManagementModule,
+    RepositoriesModule,
   ],
   controllers: [AppController],
   providers: [

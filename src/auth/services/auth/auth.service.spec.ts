@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
-import { UserRepoService } from '../../../user/services/user-repo/user-repo.service';
+import { UserRepository } from '../../../repositories/user/user.repository';
 import { HashEncryptService } from '../hash-encrypt/hash-encrypt.service';
 import { UserModel } from '../../../databases/models/user.model';
 import { ConfigService } from '@nestjs/config';
@@ -24,7 +24,7 @@ describe('AuthService', () => {
     verifyAsync: (value) => value,
   } as any;
 
-  const userRepo: UserRepoService = {
+  const userRepo: UserRepository = {
     findByEmail: (value) => value,
     findOrFail: (value) => value,
   } as any;
@@ -38,7 +38,7 @@ describe('AuthService', () => {
       providers: [
         AuthService,
         {
-          provide: UserRepoService,
+          provide: UserRepository,
           useValue: userRepo,
         },
         {

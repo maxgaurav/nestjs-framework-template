@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { UserRepoService } from '../../../user/services/user-repo/user-repo.service';
+import { UserRepository } from '../../../repositories/user/user.repository';
 import { UserModel } from '../../../databases/models/user.model';
 import { HashEncryptService } from '../hash-encrypt/hash-encrypt.service';
 import { Session } from 'express-session';
@@ -12,7 +12,7 @@ import { LoggingDecorator } from '../../../common/decorators/logging.decorator';
 @Injectable()
 export class AuthService {
   constructor(
-    private userRepo: UserRepoService,
+    private userRepo: UserRepository,
     private hashEncryptService: HashEncryptService,
     private accessTokenRepo: AccessTokenRepoService,
     private jwtService: JwtService,

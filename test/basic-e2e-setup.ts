@@ -1,14 +1,16 @@
 import {
+  CallHandler,
+  ExecutionContext,
   HttpStatus,
   INestApplication,
+  NestInterceptor,
   UnprocessableEntityException,
   ValidationError,
   ValidationPipe,
 } from '@nestjs/common';
 import { Test, TestingModule, TestingModuleBuilder } from '@nestjs/testing';
 import { AppModule } from '../src/app.module';
-import { Sequelize, Transaction } from 'sequelize';
-import { getConnectionToken } from '@nestjs/sequelize';
+import { Transaction } from 'sequelize';
 import { useContainer } from 'class-validator';
 import { NotFoundConverterInterceptor } from '../src/helpers/interceptors/not-found-converter/not-found-converter.interceptor';
 import { ContextInterceptor } from '../src/helpers/interceptors/context/context.interceptor';
@@ -27,6 +29,46 @@ import { SetupIntendInterceptor } from '../src/session-manager/interceptors/setu
 import helmet from 'helmet';
 import { ViewConfig } from '../src/environment/environment-types.interface';
 import { ConfigService } from '@nestjs/config';
+import { Observable } from 'rxjs';
+
+/**
+ * Marker error used to force a managed Sequelize transaction to roll back
+ * after a successful test callback.
+ */
+class TestingTransactionRollbackError extends Error {
+  constructor() {
+    super('Intentional rollback of e2e test transaction');
+    this.name = 'TestingTransactionRollbackError';
+  }
+}
+
+/**
+ * Active parent transaction for the current {@link managedTransaction} scope.
+ * Read by {@link TestingTransactionInterceptor} on each HTTP request.
+ */
+let activeTestingTransaction: Transaction | null = null;
+
+/**
+ * Sets the active test parent transaction on {@link TransactionProviderService}
+ * for each request, so route-level {@link TransactionInterceptor} creates a
+ * nested child transaction while the rest of the app flow stays unchanged.
+ */
+export class TestingTransactionInterceptor implements NestInterceptor {
+  constructor(
+    private readonly transactionProvider: TransactionProviderService,
+  ) {}
+
+  intercept(
+    _context: ExecutionContext,
+    next: CallHandler,
+  ): Observable<unknown> {
+    if (activeTestingTransaction) {
+      this.transactionProvider.setParentTransaction(activeTestingTransaction);
+    }
+
+    return next.handle();
+  }
+}
 
 /**
  * Hook for overriding the testing module
@@ -85,6 +127,9 @@ export async function basicE2eSetup(
   app.use(await app.get<SessionConfigService>(SessionConfigService).session());
   app.use(flash());
   app.useGlobalInterceptors(
+    new TestingTransactionInterceptor(
+      app.get(TransactionProviderService),
+    ),
     app.get(NotFoundConverterInterceptor),
     app.get(SessionMapPreviousUrlInterceptor),
     app.get(SetupIntendInterceptor),
@@ -110,36 +155,43 @@ export async function basicE2eSetup(
 }
 
 /**
- * Creates a transaction and sets it in global application level
- * @param app
+ * Runs `callback` inside a managed Sequelize transaction that always rolls
+ * back (success or failure), for transactional e2e tests.
+ *
+ * While the callback runs, HTTP requests via supertest pick up the parent
+ * transaction through {@link TestingTransactionInterceptor}, so
+ * {@link TransactionInterceptor} opens a nested child transaction.
+ *
+ * @param app Nest application (or testing module holder of TransactionProviderService)
+ * @param callback Test body; receives the parent transaction for direct DB work
  */
-export const createTransaction = async (
+export const managedTransaction = async <T>(
   app: INestApplication,
-): Promise<Transaction> => {
-  const connection: Sequelize = app.get<Sequelize>(getConnectionToken());
-  const transaction = await connection.transaction();
+  callback: (transaction: Transaction) => Promise<T>,
+): Promise<T> => {
+  const transactionProvider = app.get(TransactionProviderService);
+  let result!: T;
 
-  app
-    .get<TransactionProviderService>(TransactionProviderService)
-    .setParentTransaction(transaction);
+  try {
+    await transactionProvider.createManaged(async (transaction) => {
+      activeTestingTransaction = transaction;
+      try {
+        result = await callback(transaction);
+        // Force rollback after a successful test body.
+        throw new TestingTransactionRollbackError();
+      } finally {
+        activeTestingTransaction = null;
+        transactionProvider.setParentTransaction(null);
+      }
+    });
+  } catch (error) {
+    if (error instanceof TestingTransactionRollbackError) {
+      return result;
+    }
+    throw error;
+  }
 
-  connection.beforeFind((options) => {
-    options.transaction = options.transaction || transaction;
-  });
-
-  connection.beforeCreate((model, options) => {
-    options.transaction = options.transaction || transaction;
-  });
-
-  connection.beforeUpdate((model, options) => {
-    options.transaction = options.transaction || transaction;
-  });
-
-  connection.beforeDestroy((model, options) => {
-    options.transaction = options.transaction || transaction;
-  });
-
-  return transaction;
+  return result;
 };
 
 /**
