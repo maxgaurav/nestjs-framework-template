@@ -1,9 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Argv, Command, Option } from 'nestjs-command';
 import { ModuleRef } from '@nestjs/core';
 import { Seeder, SeederConstruct } from '../../seeders/seeder';
 
-interface ToSeedActions {
+export interface ToSeedActions {
   all: boolean;
 }
 
@@ -22,22 +21,8 @@ export class SeederService {
 
   static SeedMaps: SeederConstruct[] = [];
 
-  @Command({
-    command: 'seeder:seed',
-    describe: 'Seed database',
-  })
-  public async seed(
-    @Option({
-      name: 'all',
-      type: 'boolean',
-      default: false,
-      description: 'Seeds everything',
-    })
-    value: any,
-    @Argv()
-    argv: ToSeedActions,
-  ) {
-    this.attachSeedersAsPerInputs(argv);
+  public async seed(inputs: ToSeedActions) {
+    this.attachSeedersAsPerInputs(inputs);
     for (const seeder of SeederService.SeedMaps) {
       this.log.log(`Seeding for ${seeder.name}`, 'Seeder');
       const seederInstance = this.moduleRef.get<Seeder>(seeder);

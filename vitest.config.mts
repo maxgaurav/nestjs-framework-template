@@ -1,16 +1,6 @@
-import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
-  resolve: {
-    alias: {
-      // TEMPORARY until phase 03 replaces nestjs-command with nest-commander: its exports map
-      // only has a "require" condition, which Vite's resolver refuses.
-      'nestjs-command': fileURLToPath(
-        new URL('./node_modules/nestjs-command/dist/index.js', import.meta.url),
-      ),
-    },
-  },
   // Vite 8 transforms TypeScript with oxc. Nest DI and Swagger need legacy decorators with
   // design:* metadata, which oxc emits when asked to (no SWC plugin required).
   oxc: {

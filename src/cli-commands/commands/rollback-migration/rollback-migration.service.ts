@@ -1,5 +1,4 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Command, Option } from 'nestjs-command';
 import { ConnectionNames } from '../../../databases/connection-names';
 import { DatabaseConnectionConfig } from '../../../environment/environment-types.interface';
 import { SequelizeStorage, Umzug } from 'umzug';
@@ -14,21 +13,8 @@ export class RollbackMigrationService {
     private config: ConfigService,
     @InjectConnection() private connection: Sequelize,
   ) {}
-
-  @Command({
-    command: 'migration:rollback',
-    describe:
-      'Roll back last migration or till the migration point provided as till',
-  })
   public async rollbackMigration(
     connectionName: ConnectionNames = ConnectionNames.DefaultConnection,
-    @Option({
-      name: 'till',
-      describe: 'Number of migrations to rollback',
-      default: '',
-      demandOption: false,
-      type: 'string',
-    })
     till?: number,
   ) {
     const connectionConfig =

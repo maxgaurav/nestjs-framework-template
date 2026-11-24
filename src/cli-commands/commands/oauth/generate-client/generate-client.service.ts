@@ -1,7 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Command, Positional } from 'nestjs-command';
 import { ClientRepoService } from '../../../../auth/services/oauth/client-repo/client-repo.service';
-import { $enum } from 'ts-enum-util';
 import { GrantTypes } from '../../../../auth/grant-types/grant-type-implementation';
 import { UseCls } from 'nestjs-cls';
 
@@ -17,25 +15,7 @@ export class GenerateClientService {
     idGenerator: () => crypto.randomUUID(),
     setup: (cls) => cls.set('type', 'COMMAND'),
   })
-  @Command({
-    command: 'oauth:generate-client <name> <grantType>',
-    describe: 'Generate a new client id and secret',
-  })
-  public async generateClient(
-    @Positional({
-      name: 'name',
-      type: 'string',
-      description: 'Name of the client',
-    })
-    name: string,
-    @Positional({
-      name: 'grantType',
-      type: 'string',
-      description: 'Type of the client',
-      choices: Array.from($enum(GrantTypes).values()),
-    })
-    grantType: GrantTypes,
-  ) {
+  public async generateClient(name: string, grantType: GrantTypes) {
     this.logger.debug('Generating client', 'CliCommandModule');
     this.logger.debug(`Name provided: ${name}`, 'CliCommandModule');
     this.logger.debug(`Grant Type provided: ${grantType}`, 'CliCommandModule');

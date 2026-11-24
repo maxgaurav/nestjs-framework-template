@@ -24,7 +24,7 @@ import { LoggingService } from './services/logging/logging.service';
 import helmet from 'helmet';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { SessionConfigService } from './session-manager/services/session-config/session-config.service';
-import flash from 'connect-flash';
+import { flashMiddleware } from './session-manager/middlewares/flash/flash.middleware';
 import { SessionMapPreviousUrlInterceptor } from './session-manager/interceptors/session-map-previous-url/session-map-previous-url-interceptor.service';
 import { RedirectFromLoginFilter } from './session-manager/filters/redirect-to-login/redirect-to-login.filter';
 import { SetupIntendInterceptor } from './session-manager/interceptors/setup-intend/setup-intend.interceptor';
@@ -37,7 +37,10 @@ registerPgTypeParsers();
 registerSequelizeCls();
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule, {});
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    // Hold boot logs until LoggingService is attached so every line has one format
+    bufferLogs: true,
+  });
   app.useLogger(app.get<LoggingService>(LoggingService));
   registerApplicationContext(app);
 
@@ -78,7 +81,7 @@ async function bootstrap() {
   setupApiDocumentation(app);
 
   app.use(await app.get<SessionConfigService>(SessionConfigService).session());
-  app.use(flash());
+  app.use(flashMiddleware());
   app.useGlobalInterceptors(
     app.get(NotFoundConverterInterceptor),
     app.get(SessionMapPreviousUrlInterceptor),
@@ -99,7 +102,8 @@ async function bootstrap() {
  * Start cluster to handle main application
  */
 async function clusterStart() {
-  const app = await NestFactory.create(ClusterModule);
+  const app = await NestFactory.create(ClusterModule, { bufferLogs: true });
+  app.useLogger(app.get(LoggingService));
   const clusterService = app.get(SetupClusterService);
   clusterService.start(bootstrap);
   return app;
@@ -123,7 +127,11 @@ function setupApiDocumentation(app: INestApplication) {
     })
     .build();
 
-  const document = SwaggerModule.createDocument(app, options);
+  const document = SwaggerModule.createDocument(app, options, {
+    // Swagger 12 appends the API version to operation ids; keep the published ids stable
+    operationIdFactory: (controllerKey: string, methodKey: string) =>
+      `${controllerKey}_${methodKey}`,
+  });
   SwaggerModule.setup('api-documentation/v1', app, document);
 }
 

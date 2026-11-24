@@ -1,5 +1,4 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Command } from 'nestjs-command';
 import { HttpAdapterHost } from '@nestjs/core';
 import { IRoute, Router } from 'express';
 
@@ -9,11 +8,6 @@ export class RouteListService {
     private logger: Logger,
     private adapterHost: HttpAdapterHost,
   ) {}
-
-  @Command({
-    command: 'route:list',
-    describe: 'Returns list of routes registered',
-  })
   listRoutes() {
     const server = this.adapterHost.httpAdapter.getHttpServer() as {
       _events: { request: { router: Router } };

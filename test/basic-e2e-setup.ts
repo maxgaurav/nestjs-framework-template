@@ -19,10 +19,8 @@ import helmet from 'helmet';
 import request from 'supertest';
 import { Observable } from 'rxjs';
 import type { NextFunction, Request, Response } from 'express';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore connect-flash ships no types; replaced by an in-house middleware in phase 03
-import flash from 'connect-flash';
 import { AppModule } from '../src/app.module';
+import { flashMiddleware } from '../src/session-manager/middlewares/flash/flash.middleware';
 import { NotFoundConverterInterceptor } from '../src/helpers/interceptors/not-found-converter/not-found-converter.interceptor';
 import { ContextInterceptor } from '../src/helpers/interceptors/context/context.interceptor';
 import { ErrorValidationFormatFilter } from '../src/helpers/filters/error-validation-format/error-validation-format.filter';
@@ -171,7 +169,7 @@ export async function basicE2eSetup(
   app.enableVersioning({ type: VersioningType.URI, prefix: 'api/v' });
 
   app.use(await app.get<SessionConfigService>(SessionConfigService).session());
-  app.use(flash());
+  app.use(flashMiddleware());
   app.useGlobalInterceptors(
     new TestingTransactionInterceptor(app.get(TransactionProviderService)),
     app.get(NotFoundConverterInterceptor),

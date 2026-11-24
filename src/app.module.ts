@@ -75,6 +75,7 @@ import { RepositoriesModule } from './repositories/repositories.module';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): any {
-    consumer.apply(MethodChangeMiddleware).forRoutes('*');
+    // Express 5 / path-to-regexp v8: a bare '*' is no longer a valid wildcard
+    consumer.apply(MethodChangeMiddleware).forRoutes('{*splat}');
   }
 }

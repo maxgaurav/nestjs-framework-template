@@ -1,5 +1,4 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Command } from 'nestjs-command';
 import { ConnectionNames } from '../../../databases/connection-names';
 import { DatabaseConnectionConfig } from '../../../environment/environment-types.interface';
 import { SequelizeStorage, Umzug } from 'umzug';
@@ -14,11 +13,6 @@ export class RunMigrationService {
     private config: ConfigService,
     @InjectConnection() private connection: Sequelize,
   ) {}
-
-  @Command({
-    command: 'migration:run',
-    describe: 'Runs all pending migrations',
-  })
   public async runMigration(
     connectionName: ConnectionNames = ConnectionNames.DefaultConnection,
   ) {

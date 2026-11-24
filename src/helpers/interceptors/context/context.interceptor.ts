@@ -18,7 +18,9 @@ export class ContextInterceptor implements NestInterceptor {
       return next.handle();
     }
 
-    (request.body as never as { __CONTEXT: unknown }).__CONTEXT = {
+    // Express 5 leaves req.body undefined when no body was sent
+    request.body ??= {};
+    (request.body as { __CONTEXT: unknown }).__CONTEXT = {
       params: request.params,
       query: request.query,
       user: request.user ? (request.user as UserModel).id : null,

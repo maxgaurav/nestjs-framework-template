@@ -5,14 +5,14 @@ import {
   SequelizeModule,
 } from '@nestjs/sequelize';
 import { DefaultConnectionModels } from './default-connection-models';
-import { DEFAULT_CONNECTION_NAME } from '@nestjs/sequelize/dist/sequelize.constants';
 import { Sequelize } from 'sequelize-typescript';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { EventRegisterCallbackService } from '../../common/services/event-register-callback/event-register-callback.service';
-import { EntitiesMetadataStorage } from '@nestjs/sequelize/dist/entities-metadata.storage';
 import { UrlBuilderService } from '../../url-management/services/url-builder/url-builder.service';
+// getModelToken/getConnectionToken default to the default connection; the
+// constant is internal to @nestjs/sequelize (not in its exports map)
 const providers: Provider[] = DefaultConnectionModels.map((model) => ({
-  provide: getModelToken(model, DEFAULT_CONNECTION_NAME),
+  provide: getModelToken(model),
   useFactory: (
     connection: Sequelize,
     eventEmitter: EventEmitter2,
@@ -29,17 +29,12 @@ const providers: Provider[] = DefaultConnectionModels.map((model) => ({
     return connection.getRepository(model as never);
   },
   inject: [
-    getConnectionToken(DEFAULT_CONNECTION_NAME),
+    getConnectionToken(),
     EventEmitter2,
     EventRegisterCallbackService,
     UrlBuilderService,
   ],
 }));
-
-EntitiesMetadataStorage.addEntitiesByConnection(
-  DEFAULT_CONNECTION_NAME,
-  DefaultConnectionModels,
-);
 
 const CustomModelInjectionModule: DynamicModule = {
   module: SequelizeModule,

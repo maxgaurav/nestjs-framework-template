@@ -1,4 +1,4 @@
-import { SchemaObject } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface';
+import type { SchemaObject } from '@nestjs/swagger';
 
 export const paginationSample = (
   entity: string,

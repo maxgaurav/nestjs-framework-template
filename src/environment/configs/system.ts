@@ -6,6 +6,8 @@ export const systemConfig = () => {
     system: {
       port,
       secret: process.env.APP_SECRET,
+      // IV for HashEncryptService (aes-256-ctr needs 16 bytes)
+      encryptHexKey: process.env.APP_ENCRYPT_HEX_KEY || '1bce5155bf46c13c',
       debug: process.env.APP_DEBUG === 'true',
       maxHeapMemory: process.env.APP_MAX_HEAP_MEMORY
         ? parseFloat(process.env.APP_MAX_HEAP_MEMORY)
