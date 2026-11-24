@@ -35,16 +35,16 @@ export interface BearerTokenResult {
 
 class BearerTokenResponse implements BearerTokenResult {
   @ApiProperty()
-  public access_token: string;
+  public access_token!: string;
 
   @ApiProperty({ nullable: true })
-  expires_at: Date;
+  expires_at!: Date;
 
   @ApiProperty()
-  public refresh_token: string;
+  public refresh_token!: string;
 
   @ApiProperty()
-  public type: 'Bearer';
+  public type!: 'Bearer';
 }
 
 @Controller('oauth')

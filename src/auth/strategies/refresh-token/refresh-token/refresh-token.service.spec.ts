@@ -17,7 +17,7 @@ import { ClientModel } from '../../../../databases/models/oauth/client.model.js'
 
 class PassValidation {
   @IsNotEmpty()
-  public refresh_token: string;
+  public refresh_token!: string;
 }
 
 class FailValidation {

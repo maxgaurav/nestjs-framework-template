@@ -25,7 +25,7 @@ export class TransactionProbeState {
 
 class CreateProbeUserDto {
   @IsEmail()
-  email: string;
+  email!: string;
 
   @IsOptional()
   @IsBoolean()

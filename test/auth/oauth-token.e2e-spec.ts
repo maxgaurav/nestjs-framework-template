@@ -8,6 +8,9 @@ import { ClientModel } from '../../src/databases/models/oauth/client.model.js';
 import { UserModel } from '../../src/databases/models/user.model.js';
 import { ClientRepoService } from '../../src/auth/services/oauth/client-repo/client-repo.service.js';
 import { GrantTypes } from '../../src/auth/grant-types/grant-type-implementation.js';
+import { getModelToken } from '@nestjs/sequelize';
+import { AccessTokenModel } from '../../src/databases/models/oauth/access-token.model.js';
+import { AccessTokenRepoService } from '../../src/auth/services/oauth/access-token-repo/access-token-repo.service.js';
 
 describe('OAuth token endpoints (e2e)', () => {
   let app: NestExpressApplication;
@@ -85,6 +88,25 @@ describe('OAuth token endpoints (e2e)', () => {
         );
       }));
   });
+
+  // Regression: a class-field association (instead of `declare`) is re-initialised after
+  // Sequelize's constructor and wipes the eager-loaded association
+  it('loads an active access token with its client association', () =>
+    managedTransaction(app, async () => {
+      const client = await clientFactory(app, GrantTypes.ImplicitPassword);
+      const user = await userFactory(app, { password });
+      await passwordGrant(client, user).expect(HttpStatus.CREATED);
+
+      const issued = await app
+        .get<typeof AccessTokenModel>(getModelToken(AccessTokenModel))
+        .findOne({ where: { user_id: user.id } });
+      expect(issued).not.toBeNull();
+
+      const active = await app
+        .get(AccessTokenRepoService)
+        .findForActiveState(issued!.id);
+      expect(active?.client?.id).toEqual(client.id);
+    }));
 
   describe('POST /oauth/refresh', () => {
     const refresh = (client: ClientModel, refreshToken: string) =>

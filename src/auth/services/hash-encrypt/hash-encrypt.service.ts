@@ -10,9 +10,10 @@ import { SystemConfig } from '../../../environment/environment-types.interface.j
 export class HashEncryptService implements OnApplicationBootstrap {
   protected saltRounds = 10;
 
-  private ivBuffer: Buffer;
+  // Both assigned in onApplicationBootstrap (configureConfig), before any request is served
+  private ivBuffer!: Buffer;
 
-  private key: Buffer;
+  private key!: Buffer;
 
   constructor(private configService: ConfigService) {}
 

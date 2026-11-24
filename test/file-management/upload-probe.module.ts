@@ -21,7 +21,7 @@ class UploadProbeDto {
   @MaxFileSize(PROBE_MAX_FILE_SIZE)
   // Checked against the file's magic bytes, not the client's Content-Type
   @HasMimeType(['image/png'], MetaSource.bufferMagicNumber)
-  file: FileSystemStoredFile;
+  file!: FileSystemStoredFile;
 }
 
 /**

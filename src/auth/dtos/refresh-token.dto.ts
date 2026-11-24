@@ -5,15 +5,15 @@ export class RefreshTokenDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  public refresh_token: string;
+  public refresh_token!: string;
 
   @ApiProperty()
   @IsNotEmpty()
   @IsUUID()
-  public client_id: string;
+  public client_id!: string;
 
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  public client_secret: string;
+  public client_secret!: string;
 }

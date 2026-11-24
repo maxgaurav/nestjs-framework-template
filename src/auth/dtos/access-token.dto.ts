@@ -62,7 +62,7 @@ export class AccessTokenDto {
   @ApiProperty({ enum: GrantTypes })
   @IsNotEmpty()
   @IsEnum(GrantTypes)
-  public grant_type: GrantTypes;
+  public grant_type!: GrantTypes;
 
   @ApiProperty({
     required: false,

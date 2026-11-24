@@ -3,11 +3,11 @@ import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 export class LoginPasswordDto {
   @IsNotEmpty()
   @IsEmail()
-  public email: string;
+  public email!: string;
 
   @IsNotEmpty()
   @IsString()
-  public password: string;
+  public password!: string;
 
   constructor(content: { email?: string; password?: string } = {}) {
     if (content.email) {
