@@ -64,6 +64,12 @@
       registration in `DefaultConnectionModels` is required (there is no glob any more).
 - [ ] **Migrations**: ESM migration shape.
 
+## Project README
+
+- [ ] Replace the stock Nest README with template docs: setup, `npm run` scripts (build is tsgo,
+      `app:command`, `tinker`, `test`, `test:e2e`), and an editor note: the IDE uses TS 6 from
+      `node_modules` (same tsconfig); the VS Code "TypeScript (Native Preview)" extension gives TS 7.
+
 ## Final checklist
 
 - [ ] Clean clone: `npm ci && npm run build && npm run start:prod` boots (cluster), and `/health`
