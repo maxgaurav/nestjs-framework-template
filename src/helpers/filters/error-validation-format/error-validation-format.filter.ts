@@ -39,6 +39,15 @@ export class ErrorValidationFormatFilter implements ExceptionFilter {
       });
       return;
     }
+    // A GET has no form to go back to: its "previous url" is itself (recorded before the pipe
+    // ran), so redirecting would loop in the browser. Show the problems instead.
+    if (request.method.toUpperCase() === 'GET') {
+      response.status(exception.getStatus()).render('errors/invalid-request', {
+        errors: Object.values(errors).flat(),
+      });
+      return;
+    }
+
     request.flash(SESSION_VALIDATION_ERROR_KEY);
     request.flash(SESSION_VALIDATION_INPUTS);
     request.flash(SESSION_VALIDATION_ERROR_KEY, JSON.stringify(errors));

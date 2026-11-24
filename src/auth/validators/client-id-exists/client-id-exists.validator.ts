@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import {
+  isUUID,
   type ValidationArguments,
   ValidatorConstraint,
   ValidatorConstraintInterface,
@@ -26,7 +27,8 @@ export class ClientIdExistsValidator implements ValidatorConstraintInterface {
     value: string | null | undefined,
     validationArguments: ValidationArguments,
   ): Promise<boolean> {
-    if (!value) {
+    // Not a UUID: @IsUUID reports it, and the lookup would fail in the database (500)
+    if (!value || !isUUID(value)) {
       return true;
     }
 

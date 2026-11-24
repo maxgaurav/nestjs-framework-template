@@ -1,0 +1,20 @@
+{% extends './authorization-layout.twig' %}
+{% block appTitle %}
+  Invalid sign-in request
+{% endblock %}
+{% block headerMessage %}
+  This sign-in link is not valid.
+{% endblock %}
+{% block authorizationContent %}
+  <div class="alert alert-danger" role="alert" data-testid="invalid-authorization-request">
+    <h2 class="h5 alert-heading">We could not start the sign-in</h2>
+    <ul class="mb-0">
+      {% for error in errors %}
+        <li>{{ error }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+  <p class="text-body-secondary mb-0">
+    Go back to the app and start signing in again. If this keeps happening, update the app or contact support.
+  </p>
+{% endblock %}
