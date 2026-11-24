@@ -15,7 +15,19 @@ export class SessionConfigService {
     protected logger: Logger,
   ) {}
 
-  public async session(): Promise<RequestHandler> {
+  private handler?: Promise<RequestHandler>;
+
+  /**
+   * The app's one session handler. Memoised so every route that mounts the session (web routes
+   * and @UseSession controllers) shares the same store: two MemoryStores would mean a session
+   * started on a web page is invisible to a cookie-authenticated API route.
+   */
+  public session(): Promise<RequestHandler> {
+    this.handler ??= this.createSession();
+    return this.handler;
+  }
+
+  protected async createSession(): Promise<RequestHandler> {
     const sessionConfig =
       this.configService.getOrThrow<SessionConfig>('session');
     let sessionStore: Store;

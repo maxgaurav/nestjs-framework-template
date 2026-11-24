@@ -72,9 +72,7 @@ describe('AccessTokenRepoService', () => {
     const accessToken: AccessTokenModel = { id: 'test' } as any;
 
     expect(await service.createBearerToken(accessToken)).toEqual(testContent);
-    expect(signSpy).toHaveBeenCalledWith(Buffer.from(accessToken.id), {
-      algorithm: 'HS256',
-    });
+    expect(signSpy).toHaveBeenCalledWith(Buffer.from(accessToken.id));
   });
 
   it('should create new access token with user', async () => {

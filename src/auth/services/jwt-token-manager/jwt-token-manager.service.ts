@@ -1,19 +1,30 @@
 import { Injectable } from '@nestjs/common';
 import { JwtModuleOptions, JwtOptionsFactory } from '@nestjs/jwt';
-import { promises as fsPromises, constants as fsConstants } from 'fs';
+import { promises as fsPromises } from 'fs';
 import { join } from 'node:path';
-import { Buffer } from 'buffer';
 import { cwd } from 'node:process';
 
+export class JwtKeysMissingError extends Error {
+  constructor(file: string) {
+    super(
+      `JWT key ${file} is missing or empty. Generate the key pair with: npm run app:command -- oauth:generate-keys`,
+    );
+  }
+}
+
+/**
+ * Bearer tokens are RS256: signed with storage/private-key.pem, verified with
+ * storage/public-key.pem, and only RS256 is accepted on verification (no algorithm confusion,
+ * no unsigned tokens). Missing or empty keys stop the app at boot.
+ */
 @Injectable()
 export class JwtTokenManagerService implements JwtOptionsFactory {
-  /**
-   * Create jwt root sync settings for JwtModule
-   */
   async createJwtOptions(): Promise<JwtModuleOptions> {
     return {
       publicKey: await this.publicKey(),
       privateKey: await this.privateKey(),
+      signOptions: { algorithm: 'RS256' },
+      verifyOptions: { algorithms: ['RS256'] },
     };
   }
 
@@ -26,36 +37,27 @@ export class JwtTokenManagerService implements JwtOptionsFactory {
   }
 
   /**
-   * Creates empty content file if not exists
-   * @param file
+   * Reads a key file; fails with a clear message when it is missing or empty
    */
-  public async createFileIfNotExists(file: string): Promise<boolean> {
-    let result = false;
+  public async readKey(fileName: string): Promise<Buffer> {
+    const filePath = this.keyPath(fileName);
+    let content: Buffer;
     try {
-      await fsPromises.access(file, fsConstants.F_OK);
-      result = true;
+      content = await fsPromises.readFile(filePath);
     } catch {
-      await fsPromises.writeFile(file, '');
+      throw new JwtKeysMissingError(filePath);
     }
-
-    return result;
+    if (content.toString('utf8').trim().length === 0) {
+      throw new JwtKeysMissingError(filePath);
+    }
+    return content;
   }
 
-  /**
-   * Returns public key content as buffer
-   */
-  public async publicKey(): Promise<Buffer> {
-    const filePath = this.keyPath('public-key.pem');
-    await this.createFileIfNotExists(filePath);
-    return fsPromises.readFile(filePath);
+  public publicKey(): Promise<Buffer> {
+    return this.readKey('public-key.pem');
   }
 
-  /**
-   * Returns private key content as buffer
-   */
-  public async privateKey(): Promise<Buffer> {
-    const filePath = this.keyPath('private-key.pem');
-    await this.createFileIfNotExists(filePath);
-    return fsPromises.readFile(filePath);
+  public privateKey(): Promise<Buffer> {
+    return this.readKey('private-key.pem');
   }
 }

@@ -9,7 +9,6 @@ import { ClientModel } from '../../../databases/models/oauth/client.model.js';
 import { AccessTokenModel } from '../../../databases/models/oauth/access-token.model.js';
 import { RefreshTokenModel } from '../../../databases/models/oauth/refresh-token.model.js';
 import { ConfigService } from '@nestjs/config';
-import moment from 'moment';
 import { HashEncryptService } from '../../services/hash-encrypt/hash-encrypt.service.js';
 import { AuthorizationChallengeRepoService } from '../../services/authorization-challenge-repo/authorization-challenge-repo.service.js';
 
@@ -191,10 +190,10 @@ describe('OauthController', () => {
       .spyOn(configService, 'getOrThrow')
       .mockReturnValue({ expirationTimeAccessToken: 30000 });
 
-    const expectedDate = moment().add(30000, 'milliseconds');
+    const expectedDate = new Date(Date.now() + 30000);
 
     const expirationDate = controller.accessTokenExpiration();
-    expect(moment(expirationDate).isSame(expectedDate)).toEqual(true);
+    expect(expirationDate?.getTime()).toEqual(expectedDate.getTime());
     expect(getSpy).toHaveBeenCalledWith('jwt');
   });
 
@@ -213,10 +212,10 @@ describe('OauthController', () => {
       .spyOn(configService, 'getOrThrow')
       .mockReturnValue({ expirationTimeRefreshToken: 30000 });
 
-    const expectedDate = moment().add(30000, 'milliseconds');
+    const expectedDate = new Date(Date.now() + 30000);
 
     const expirationDate = controller.refreshTokenExpiration();
-    expect(moment(expirationDate).isSame(expectedDate)).toEqual(true);
+    expect(expirationDate?.getTime()).toEqual(expectedDate.getTime());
     expect(getSpy).toHaveBeenCalledWith('jwt');
   });
 });
