@@ -1,80 +1,66 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { generateKeyPair } from 'crypto';
-import { promises as fsPromises } from 'fs';
-import { join } from 'path';
-import { Buffer } from 'buffer';
+import { Injectable } from '@nestjs/common';
+import { generateKeyPair } from 'node:crypto';
+import { promises as fsPromises } from 'node:fs';
+import { join } from 'node:path';
+import { promisify } from 'node:util';
 
+const generateRsaKeyPair = promisify(generateKeyPair);
+
+export class OauthKeysExistError extends Error {
+  constructor() {
+    super(
+      'JWT keys already exist in storage/. Use --force to replace them: every issued access and refresh token becomes invalid.',
+    );
+  }
+}
+
+export interface GenerateOauthKeysResult {
+  privateKeyPath: string;
+  publicKeyPath: string;
+  replaced: boolean;
+}
+
+/**
+ * Generates the RS256 key pair for bearer tokens. Pure file work (no app config, no database),
+ * so it can run before the keys the app requires at boot exist.
+ */
 @Injectable()
 export class GenerateOauthKeysService {
-  constructor(public log: Logger) {}
-  public async generateKeys() {
-    this.log.debug('Starting generation of keys');
-    await new Promise((resolve, reject) => {
-      generateKeyPair(
-        'rsa',
-        {
-          modulusLength: 2048,
-          publicKeyEncoding: {
-            type: 'spki',
-            format: 'pem',
-          },
-          privateKeyEncoding: {
-            type: 'pkcs8',
-            format: 'pem',
-            cipher: 'aes-256-cbc',
-            passphrase: '',
-          },
-        },
-        (err, publicKey, privateKey) => {
-          if (err) {
-            this.log.error(err, 'CliCommandModule');
-            reject(err);
-            return;
-          }
-          this.log.debug('Keys generated.', 'CliCommandModule');
-          Promise.all([
-            this.savePrivateKey(privateKey),
-            this.savePublicKey(publicKey),
-          ])
-            .then(() => resolve(true))
-            .catch((err: Error) => {
-              this.log.error(err, 'CliCommandModule');
-              reject(err);
-            });
-        },
-      );
+  public async generateKeys(force = false): Promise<GenerateOauthKeysResult> {
+    const privateKeyPath = this.filePath('private-key.pem');
+    const publicKeyPath = this.filePath('public-key.pem');
+    const replaced =
+      (await this.hasContent(privateKeyPath)) ||
+      (await this.hasContent(publicKeyPath));
+
+    if (replaced && !force) {
+      throw new OauthKeysExistError();
+    }
+
+    const { publicKey, privateKey } = await generateRsaKeyPair('rsa', {
+      modulusLength: 2048,
+      publicKeyEncoding: { type: 'spki', format: 'pem' },
+      // Unencrypted PKCS#8: protected by file permissions (an empty passphrase adds nothing)
+      privateKeyEncoding: { type: 'pkcs8', format: 'pem' },
     });
-  }
 
-  /**
-   * Saves file to disk
-   * @param privateKey
-   */
-  public async savePrivateKey(privateKey: string): Promise<boolean> {
-    this.log.debug('Private key generated', 'CliCommandModule');
-    this.log.debug(privateKey, 'CliCommandModule');
-    this.log.debug('Starting to write private key in file', 'CliCommandModule');
-    const filePath = this.filePath('private-key.pem');
-    await fsPromises.writeFile(filePath, Buffer.from(privateKey));
-    this.log.debug(`Private key saved to file ${filePath}`, 'CliCommandModule');
-    return true;
-  }
+    // Keys are never logged; the private key is readable by the owner only
+    await fsPromises.writeFile(privateKeyPath, privateKey, { mode: 0o600 });
+    await fsPromises.chmod(privateKeyPath, 0o600);
+    await fsPromises.writeFile(publicKeyPath, publicKey, { mode: 0o644 });
 
-  /**
-   * Saves file to disk
-   * @param publicKey
-   */
-  public async savePublicKey(publicKey: string): Promise<boolean> {
-    this.log.debug('Public key generated', 'CliCommandModule');
-    this.log.debug(publicKey, 'CliCommandModule');
-    this.log.debug('Starting to write public key in file', 'CliCommandModule');
-    const filePath = this.filePath('public-key.pem');
-    await fsPromises.writeFile(filePath, Buffer.from(publicKey));
-    this.log.debug(`Public key saved to file ${filePath}`, 'CliCommandModule');
-    return true;
+    return { privateKeyPath, publicKeyPath, replaced };
   }
 
   public filePath(fileName: string): string {
     return join(process.cwd(), 'storage', fileName);
+  }
+
+  private async hasContent(filePath: string): Promise<boolean> {
+    try {
+      return (await fsPromises.readFile(filePath, 'utf8')).trim().length > 0;
+    } catch {
+      return false;
+    }
   }
 }

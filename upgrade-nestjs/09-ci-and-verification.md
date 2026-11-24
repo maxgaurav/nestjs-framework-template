@@ -98,6 +98,31 @@
         `HttpOnly; SameSite=Lax`. Found on the way: `SetupIntendInterceptor` skipped a route that
         does not exist (`oauth/login`); URL matching is gone from all session code.
 
+- [ ] **Refresh tokens as a grant type on the token endpoint (RFC 6749 §6).** Today refresh is a
+      separate `POST /oauth/refresh` with its own DTO, guard (`RefreshAccessTokenGuard`) and
+      strategy. Standard OAuth 2 clients send `grant_type=refresh_token` to the token endpoint.
+  - [ ] Add `RefreshTokenGrantType` next to the password / authorization-code / PKCE grant types
+        and register it in `GrantTypeMappings` for `GrantTypes.RefreshToken = 'refresh_token'`.
+        It validates `refresh_token`, `client_id`, `client_secret` (active client only, as fixed
+        for the other grants), checks that the refresh token belongs to that client and is not
+        expired, and **rotates** it (`consumeToken`: old refresh + access token revoked, new pair
+        issued) inside the request transaction.
+  - [ ] `AccessTokenDto` gets `refresh_token` (required only for that grant, `@ValidateIf`), with
+        accurate `@ApiProperty` docs; Swagger documents the grant on `POST /oauth/token`.
+  - [ ] Response: the same `BearerTokenResponse` as the other grants (and `201`, matching today's
+        token endpoint). Errors follow RFC 6749 §5.2 where the project's 422 format allows
+        (`invalid_grant` for an unknown, expired or foreign refresh token).
+  - [ ] **API compatibility:** `POST /oauth/refresh` is an existing contract. Keep it as a thin,
+        `@ApiOperation({ deprecated: true })` alias that delegates to the same grant for one
+        release, or remove it outright if no client depends on it (the project owner decides;
+        template default: deprecate first). Then delete `RefreshAccessTokenGuard`,
+        `RefreshTokenService` (strategy) and `RefreshTokenDto` when the alias goes.
+  - [ ] `oauth/refresh` stays in `STATELESS_ROUTES` while the alias exists.
+  - [ ] e2e: refresh via `grant_type=refresh_token` issues a new pair; the old refresh token is
+        rejected afterwards (rotation); a refresh token used with another client is rejected; a
+        revoked client is rejected; the deprecated alias still works and returns the same shape.
+        Existing `oauth-token.e2e-spec.ts` refresh cases move to the grant.
+
 ## New CLI commands
 
 - [x] **`app:generate-secret`**: generate a new `APP_SECRET` (cryptographically random, 64 hex

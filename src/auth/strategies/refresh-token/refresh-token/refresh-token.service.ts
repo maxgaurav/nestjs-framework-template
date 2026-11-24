@@ -12,7 +12,6 @@ import { RefreshTokenModel } from '../../../../databases/models/oauth/refresh-to
 import { RefreshTokenDto } from '../../../dtos/refresh-token.dto.js';
 import { validateOrReject } from 'class-validator';
 import { AuthService } from '../../../services/auth/auth.service.js';
-import moment from 'moment';
 import { ClientRepoService } from '../../../services/oauth/client-repo/client-repo.service.js';
 import { plainToInstance } from 'class-transformer';
 
@@ -65,8 +64,8 @@ export class RefreshTokenService extends PassportStrategy(
     }
 
     if (
-      !!refreshToken.expires_at &&
-      moment().isAfter(moment(refreshToken.expires_at))
+      refreshToken.expires_at &&
+      Date.now() > new Date(refreshToken.expires_at).getTime()
     ) {
       throw new UnauthorizedException();
     }

@@ -5,3 +5,5 @@
 process.env['MAIL_DRIVER'] = 'memory';
 // @nestjs/mail validates the sender at boot; keep tests independent of the local .env sender
 process.env['MAIL_FROM_ADDRESS'] = 'noreply@example.com';
+// Same store as CI; no session files written under storage/session
+process.env['SESSION_DRIVER'] = 'memory';

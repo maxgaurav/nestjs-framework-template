@@ -67,9 +67,7 @@ describe('RefreshTokenRepoService', () => {
     const refreshToken: RefreshTokenModel = { id: 'test' } as any;
 
     expect(await service.createBearerToken(refreshToken)).toEqual(testContent);
-    expect(signSpy).toHaveBeenCalledWith(Buffer.from(refreshToken.id), {
-      algorithm: 'HS256',
-    });
+    expect(signSpy).toHaveBeenCalledWith(Buffer.from(refreshToken.id));
   });
 
   it('should find or fail', async () => {

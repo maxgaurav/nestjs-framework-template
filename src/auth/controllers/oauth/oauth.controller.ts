@@ -12,7 +12,6 @@ import { RefreshAccessTokenGuard } from '../../guards/refresh-access-token/refre
 import { RefreshTokenModel } from '../../../databases/models/oauth/refresh-token.model.js';
 import { ConfigService } from '@nestjs/config';
 import { JwtConfig } from '../../../environment/environment-types.interface.js';
-import moment from 'moment';
 import {
   ApiBody,
   ApiHeader,
@@ -179,9 +178,7 @@ export class OauthController {
       return null;
     }
 
-    return moment()
-      .add(config.expirationTimeAccessToken, 'milliseconds')
-      .toDate();
+    return new Date(Date.now() + config.expirationTimeAccessToken);
   }
 
   /**
@@ -193,8 +190,6 @@ export class OauthController {
       return null;
     }
 
-    return moment()
-      .add(config.expirationTimeRefreshToken, 'milliseconds')
-      .toDate();
+    return new Date(Date.now() + config.expirationTimeRefreshToken);
   }
 }

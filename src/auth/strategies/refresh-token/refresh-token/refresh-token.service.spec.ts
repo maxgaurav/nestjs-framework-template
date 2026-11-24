@@ -11,7 +11,6 @@ import { Request } from 'express';
 import { RefreshTokenDto } from '../../../dtos/refresh-token.dto.js';
 import { RefreshTokenModel } from '../../../../databases/models/oauth/refresh-token.model.js';
 import { IsNotEmpty } from 'class-validator';
-import moment from 'moment';
 import { ClientRepoService } from '../../../services/oauth/client-repo/client-repo.service.js';
 import { ClientModel } from '../../../../databases/models/oauth/client.model.js';
 
@@ -195,7 +194,7 @@ describe('RefreshTokenService', () => {
 
     const token: RefreshTokenModel = {
       id: 1,
-      expires_at: moment().subtract(1, 'day'),
+      expires_at: new Date(Date.now() - 24 * 60 * 60 * 1000),
     } as any;
 
     const findTokenSpy = vi

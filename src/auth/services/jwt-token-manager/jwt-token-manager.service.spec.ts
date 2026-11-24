@@ -1,108 +1,61 @@
-import { vi } from 'vitest';
-import { Test, TestingModule } from '@nestjs/testing';
-import { JwtTokenManagerService } from './jwt-token-manager.service.js';
-import { join } from 'path';
-import { promises as fsPromises, constants as fsConstants } from 'fs';
-import { Buffer } from 'buffer';
+import { generateKeyPairSync } from 'node:crypto';
+import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import {
+  JwtKeysMissingError,
+  JwtTokenManagerService,
+} from './jwt-token-manager.service.js';
 
 describe('JwtTokenManagerService', () => {
-  let service: JwtTokenManagerService;
+  const service = new JwtTokenManagerService();
+  let dir: string;
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [JwtTokenManagerService],
-    }).compile();
-
-    service = module.get<JwtTokenManagerService>(JwtTokenManagerService);
+  beforeEach(() => {
+    dir = mkdtempSync(join(tmpdir(), 'jwt-keys-'));
+    vi.spyOn(service, 'keyPath').mockImplementation((file) => join(dir, file));
   });
 
-  it('should be defined', () => {
-    expect(service).toBeDefined();
+  afterEach(() => {
+    rmSync(dir, { recursive: true, force: true });
   });
 
-  it('should return correct key path', () => {
-    // `cwd` is a named ESM import of node:process and cannot be spied on
-    expect(service.keyPath('test.pem')).toEqual(
-      join(process.cwd(), 'storage', 'test.pem'),
-    );
-  });
-
-  it('should return public key content', async () => {
-    const keyPathSpy = vi
-      .spyOn(service, 'keyPath')
-      .mockReturnValue('/test/public-key.pem');
-    const content = 'content';
-    const readFileSpy = vi
-      .spyOn(fsPromises, 'readFile')
-      .mockReturnValue(Promise.resolve(Buffer.from(content)));
-    const existsFileSpy = vi
-      .spyOn(service, 'createFileIfNotExists')
-      .mockReturnValue(Promise.resolve(true));
-
-    expect(await service.publicKey()).toEqual(Buffer.from(content));
-    expect(keyPathSpy).toHaveBeenCalledWith('public-key.pem');
-    expect(readFileSpy).toHaveBeenCalledWith('/test/public-key.pem');
-    expect(existsFileSpy).toHaveBeenCalled();
-  });
-
-  it('should return private key content', async () => {
-    const keyPathSpy = vi
-      .spyOn(service, 'keyPath')
-      .mockReturnValue('/test/private-key.pem');
-    const content = 'content';
-    const readFileSpy = vi
-      .spyOn(fsPromises, 'readFile')
-      .mockReturnValue(Promise.resolve(Buffer.from(content)));
-
-    const existsFileSpy = vi
-      .spyOn(service, 'createFileIfNotExists')
-      .mockReturnValue(Promise.resolve(true));
-
-    expect(await service.privateKey()).toEqual(Buffer.from(content));
-    expect(keyPathSpy).toHaveBeenCalledWith('private-key.pem');
-    expect(readFileSpy).toHaveBeenCalledWith('/test/private-key.pem');
-    expect(existsFileSpy).toHaveBeenCalled();
-  });
-
-  it('should return correct jwt options', async () => {
-    const content = 'content';
-    const publicKeySpy = vi
-      .spyOn(service, 'publicKey')
-      .mockReturnValue(Promise.resolve(Buffer.from(content)));
-
-    const privateKeySpy = vi
-      .spyOn(service, 'privateKey')
-      .mockReturnValue(Promise.resolve(Buffer.from(content)));
-
-    expect(await service.createJwtOptions()).toEqual({
-      privateKey: Buffer.from(content),
-      publicKey: Buffer.from(content),
+  const writeKeyPair = () => {
+    const { publicKey, privateKey } = generateKeyPairSync('rsa', {
+      modulusLength: 2048,
+      publicKeyEncoding: { type: 'spki', format: 'pem' },
+      privateKeyEncoding: { type: 'pkcs8', format: 'pem' },
     });
+    writeFileSync(join(dir, 'private-key.pem'), privateKey);
+    writeFileSync(join(dir, 'public-key.pem'), publicKey);
+  };
 
-    expect(privateKeySpy).toHaveBeenCalled();
-    expect(publicKeySpy).toHaveBeenCalled();
+  it('returns the key pair with RS256 only for signing and verification', async () => {
+    writeKeyPair();
+
+    const options = await service.createJwtOptions();
+
+    expect(String(options.privateKey as Buffer)).toContain('BEGIN PRIVATE KEY');
+    expect(String(options.publicKey as Buffer)).toContain('BEGIN PUBLIC KEY');
+    expect(options.signOptions).toEqual({ algorithm: 'RS256' });
+    expect(options.verifyOptions).toEqual({ algorithms: ['RS256'] });
   });
 
-  it('should return true if file exists', async () => {
-    const accessSpy = vi
-      .spyOn(fsPromises, 'access')
-      .mockReturnValue(Promise.resolve());
-
-    expect(await service.createFileIfNotExists('test')).toEqual(true);
-    expect(accessSpy).toHaveBeenCalledWith('test', fsConstants.F_OK);
+  // Regression: missing keys used to be created as empty files, so tokens were "signed" with an
+  // empty secret
+  it('fails clearly when a key file is missing, without creating it', async () => {
+    await expect(service.createJwtOptions()).rejects.toBeInstanceOf(
+      JwtKeysMissingError,
+    );
+    await expect(service.privateKey()).rejects.toThrow(/oauth:generate-keys/);
   });
 
-  it('should return false and create file if file does not exists', async () => {
-    const accessSpy = vi
-      .spyOn(fsPromises, 'access')
-      .mockReturnValue(Promise.reject(new Error('ENOENT')));
+  it('fails clearly when a key file is empty', async () => {
+    writeKeyPair();
+    writeFileSync(join(dir, 'private-key.pem'), '  \n');
 
-    const writeSpy = vi
-      .spyOn(fsPromises, 'writeFile')
-      .mockReturnValue(Promise.resolve());
-
-    expect(await service.createFileIfNotExists('test')).toEqual(false);
-    expect(accessSpy).toHaveBeenCalledWith('test', fsConstants.F_OK);
-    expect(writeSpy).toHaveBeenCalledWith('test', '');
+    await expect(service.createJwtOptions()).rejects.toBeInstanceOf(
+      JwtKeysMissingError,
+    );
   });
 });

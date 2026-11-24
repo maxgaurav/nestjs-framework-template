@@ -20,12 +20,15 @@ import {
   type StorageModuleOptions,
 } from '@nestjs/storage';
 import { Transaction } from 'sequelize';
+import { generateKeyPairSync } from 'node:crypto';
+import type { JwtModuleOptions } from '@nestjs/jwt';
 import { useContainer } from 'class-validator';
 import helmet from 'helmet';
 import request from 'supertest';
 import { Observable } from 'rxjs';
 import type { NextFunction, Request, Response } from 'express';
 import { AppModule } from '../src/app.module.js';
+import { JwtTokenManagerService } from '../src/auth/services/jwt-token-manager/jwt-token-manager.service.js';
 import { NotFoundConverterInterceptor } from '../src/helpers/interceptors/not-found-converter/not-found-converter.interceptor.js';
 import { ContextInterceptor } from '../src/helpers/interceptors/context/context.interceptor.js';
 import { ErrorValidationFormatFilter } from '../src/helpers/filters/error-validation-format/error-validation-format.filter.js';
@@ -49,6 +52,16 @@ import {
 // Mirror the Sequelize setup done in src/main.ts
 registerPgTypeParsers();
 registerSequelizeCls();
+
+/**
+ * Throwaway RS256 key pair for this test process: tests never read or need the developer's
+ * storage/*.pem files
+ */
+const testJwtKeys = generateKeyPairSync('rsa', {
+  modulusLength: 2048,
+  publicKeyEncoding: { type: 'spki', format: 'pem' },
+  privateKeyEncoding: { type: 'pkcs8', format: 'pem' },
+});
 
 /**
  * Marker error used to force a managed Sequelize transaction to roll back
@@ -145,6 +158,15 @@ export async function basicE2eSetup(
   let moduleBuilder: TestingModuleBuilder = Test.createTestingModule({
     imports: [rootModule],
   })
+    .overrideProvider(JwtTokenManagerService)
+    .useValue({
+      createJwtOptions: (): JwtModuleOptions => ({
+        privateKey: testJwtKeys.privateKey,
+        publicKey: testJwtKeys.publicKey,
+        signOptions: { algorithm: 'RS256' },
+        verifyOptions: { algorithms: ['RS256'] },
+      }),
+    })
     // Same disk names as the app, kept in memory so tests never touch storage/ or S3
     .overrideProvider(STORAGE_MODULE_OPTIONS)
     .useFactory({
