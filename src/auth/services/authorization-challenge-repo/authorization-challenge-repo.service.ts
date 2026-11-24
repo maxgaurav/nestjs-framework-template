@@ -57,6 +57,9 @@ export class AuthorizationChallengeRepoService {
     codeVerifier: string,
   ): Promise<AuthorizationChallengeModel | false> {
     const result = await this.consumeCode(code);
+    if (!result) {
+      return false;
+    }
 
     return this.compareChallengeAndVerifier(
       result.challenge,
@@ -90,18 +93,17 @@ export class AuthorizationChallengeRepoService {
     messageBefore:
       'Finding record for code and consuming the challenge record if found by deleting it',
   })
-  private async consumeCode(code: string) {
-    return await this.transactionProvider.createManaged<AuthorizationChallengeModel>(
+  private async consumeCode(
+    code: string,
+  ): Promise<AuthorizationChallengeModel | null> {
+    return this.transactionProvider.createManaged<AuthorizationChallengeModel | null>(
       async (transaction) => {
+        // Unknown or already used (consumed) codes are an invalid grant, not an error
         const challengeRecord = await this.authorizationChallengeModel.findByPk(
           code,
-          {
-            transaction,
-            rejectOnEmpty: true,
-            include: [UserModel, ClientModel],
-          },
+          { transaction, include: [UserModel, ClientModel] },
         );
-        await challengeRecord.destroy({ transaction });
+        await challengeRecord?.destroy({ transaction });
         return challengeRecord;
       },
     );
@@ -143,6 +145,6 @@ export class AuthorizationChallengeRepoService {
     clientId: string,
   ): Promise<AuthorizationChallengeModel | false> {
     const result = await this.consumeCode(code);
-    return result.client.id === clientId ? result : false;
+    return result && result.client_id === clientId ? result : false;
   }
 }

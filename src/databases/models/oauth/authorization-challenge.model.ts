@@ -32,9 +32,11 @@ export class AuthorizationChallengeModel extends DatesMapping<AuthorizationChall
   @Column
   declare public client_id: string;
 
+  // `declare`, not class fields: a field is re-initialised after Sequelize's constructor and
+  // wipes the eager-loaded association
   @BelongsTo(() => UserModel)
-  public user!: UserModel;
+  declare public user: UserModel;
 
   @BelongsTo(() => ClientModel)
-  public client!: ClientModel;
+  declare public client: ClientModel;
 }
