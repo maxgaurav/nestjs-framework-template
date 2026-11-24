@@ -3,6 +3,7 @@ import { vi } from 'vitest';
 import { AuthorizationCodeGrantType } from './authorization-code.grant-type.js';
 import { AuthorizationChallengeRepoService } from '../../services/authorization-challenge-repo/authorization-challenge-repo.service.js';
 import { Test, TestingModule } from '@nestjs/testing';
+import { ClientRepoService } from '../../services/oauth/client-repo/client-repo.service.js';
 
 describe('AuthorizationCodeGrantType', () => {
   let service: AuthorizationCodeGrantType;
@@ -10,6 +11,10 @@ describe('AuthorizationCodeGrantType', () => {
   const authChallengeRepo: AuthorizationChallengeRepoService = {
     verifyWithClientId: () => Promise.resolve(false),
   } as unknown as AuthorizationChallengeRepoService;
+
+  const clientRepo = {
+    findForIdAndSecret: () => Promise.resolve({ id: 'client' }),
+  } as unknown as ClientRepoService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -19,6 +24,7 @@ describe('AuthorizationCodeGrantType', () => {
           provide: AuthorizationChallengeRepoService,
           useValue: authChallengeRepo,
         },
+        { provide: ClientRepoService, useValue: clientRepo },
       ],
     }).compile();
 
@@ -56,5 +62,19 @@ describe('AuthorizationCodeGrantType', () => {
     await expect(
       service.validate({ code: 'code', client_id: 'client' } as never),
     ).resolves.toEqual(result);
+  });
+
+  it('rejects without redeeming the code when the client does not authenticate', async () => {
+    vi.spyOn(clientRepo, 'findForIdAndSecret').mockResolvedValue(null);
+    const verifySpy = vi.spyOn(authChallengeRepo, 'verifyWithClientId');
+
+    await expect(
+      service.validate({
+        code: 'code',
+        client_id: 'client',
+        client_secret: 'wrong',
+      } as never),
+    ).rejects.toBeInstanceOf(UnprocessableEntityException);
+    expect(verifySpy).not.toHaveBeenCalled();
   });
 });

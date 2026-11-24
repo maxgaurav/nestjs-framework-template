@@ -16,14 +16,17 @@ export class AuthorizationRedirector implements RedirectRouteExecutorInterface {
     request: Request,
     response: AuthorizationChallengeModel,
   ): Promise<string> | string {
-    const url = new URL(
-      (request.body as never as { token: { redirect_url: string } }).token
-        .redirect_url,
-    );
+    // The original authorization request travels (encrypted) in the form token
+    const authorization = (
+      request.body as { token: { redirect_url: string; state?: unknown } }
+    ).token;
+    const url = new URL(authorization.redirect_url);
     url.searchParams.append('code', response.id);
+    // Return the client's opaque state unchanged (RFC 6749 §4.1.2); it was read from the POST's
+    // query string before and always came back empty
     url.searchParams.append(
       'state',
-      (request.query as never as { state?: string }).state?.toString() || '',
+      typeof authorization.state === 'string' ? authorization.state : '',
     );
 
     return url.toString();
