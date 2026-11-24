@@ -154,7 +154,7 @@ describe('RefreshTokenRepoService', () => {
           return Promise.resolve(client);
         }
 
-        Promise.reject(new Error(`incorrect type injected: ${type}`));
+        return Promise.reject(new Error(`incorrect type injected: ${type}`));
       });
 
     const currentAccessTokenDestroySpy = vi
@@ -240,7 +240,7 @@ describe('RefreshTokenRepoService', () => {
           return Promise.resolve(client);
         }
 
-        Promise.reject(new Error(`incorrect type injected: ${type}`));
+        return Promise.reject(new Error(`incorrect type injected: ${type}`));
       });
 
     const currentAccessTokenDestroySpy = vi

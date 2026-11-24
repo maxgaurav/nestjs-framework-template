@@ -39,7 +39,7 @@ import { RepositoriesModule } from './repositories/repositories.module.js';
       middleware: {
         mount: true,
         saveReq: true,
-        setup: (cls, req: Request, res: Response) => {
+        setup: (cls, _req: Request, res: Response) => {
           const requestId = cls.getId();
           res.setHeader('Request-Id', requestId);
           cls.set('type', 'REQUEST');

@@ -9,7 +9,7 @@ import { notFoundPipe } from '../../not-found-pipe.js';
 
 @Injectable()
 export class NotFoundConverterInterceptor implements NestInterceptor {
-  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+  intercept(_context: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(notFoundPipe());
   }
 }
