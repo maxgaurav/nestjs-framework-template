@@ -15,18 +15,18 @@ describe('RefreshTokenRepoService', () => {
   let service: RefreshTokenRepoService;
 
   const model: typeof RefreshTokenModel = {
-    findByPk: (value) => value,
-    build: (value) => value,
+    findByPk: (value: any) => value,
+    build: (value: any) => value,
   } as any;
   const accessTokenRepo: AccessTokenRepoService = {
-    create: (value) => value,
+    create: (value: any) => value,
   } as any;
   const jwtService: JwtService = {
-    signAsync: (value) => value,
+    signAsync: (value: any) => value,
   } as any;
-  const randomByteGenerate: RandomByteGeneratorService = {
-    generateRandomByte: (value) => value,
-  };
+  const randomByteGenerate = {
+    generateRandomByte: (value: any) => value,
+  } as unknown as RandomByteGeneratorService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -77,7 +77,7 @@ describe('RefreshTokenRepoService', () => {
     const findSpy = vi
       .spyOn(model, 'findByPk')
       .mockReturnValue(Promise.resolve(token));
-    const transaction = null;
+    const transaction = undefined;
     expect(await service.findOrFail('test', transaction)).toEqual(token);
     expect(findSpy).toHaveBeenCalledWith('test', {
       transaction,
@@ -88,8 +88,8 @@ describe('RefreshTokenRepoService', () => {
   it('should create new refresh token', async () => {
     const refreshToken: RefreshTokenModel = {
       id: 'test',
-      setAttributes: (value) => value,
-      save: (value) => value,
+      setAttributes: (value: any) => value,
+      save: (value: any) => value,
     } as any;
 
     const buildSpy = vi.spyOn(model, 'build').mockReturnValue(refreshToken);
@@ -108,7 +108,7 @@ describe('RefreshTokenRepoService', () => {
 
     const accessToken: AccessTokenModel = { id: 'test' } as any;
     const expiresAt = new Date();
-    const transaction = null;
+    const transaction = undefined;
 
     expect(await service.create(accessToken, expiresAt, transaction)).toEqual(
       refreshToken,
@@ -126,26 +126,26 @@ describe('RefreshTokenRepoService', () => {
   it('should consume refresh token and generate new access and refresh token', async () => {
     const refreshToken: RefreshTokenModel = {
       id: 1,
-      $get: (value) => value,
+      $get: (value: any) => value,
     } as any;
 
     const currentAccessToken: AccessTokenModel = {
       id: 'current',
-      $get: (value) => value,
-      destroy: (value) => value,
+      $get: (value: any) => value,
+      destroy: (value: any) => value,
     } as any;
 
     const mappedUser: UserModel = { id: 1 } as any;
 
     const currentRefreshTokenGetSpy = vi
-      .spyOn(refreshToken, '$get')
+      .spyOn(refreshToken as any, '$get')
       .mockReturnValue(Promise.resolve(currentAccessToken));
 
     const client: ClientModel = { id: 'client' } as any;
 
     const currentAccessTokenGetSpy = vi
-      .spyOn(currentAccessToken, '$get')
-      .mockImplementation((type: string) => {
+      .spyOn(currentAccessToken as any, '$get')
+      .mockImplementation((type: any) => {
         if (type === 'user') {
           return Promise.resolve(mappedUser);
         }
@@ -175,7 +175,7 @@ describe('RefreshTokenRepoService', () => {
       .spyOn(service, 'create')
       .mockReturnValue(Promise.resolve(newRefreshToken));
 
-    const transaction = null;
+    const transaction = undefined;
 
     expect(
       await service.consumeToken(refreshToken, null, null, transaction),
@@ -212,26 +212,26 @@ describe('RefreshTokenRepoService', () => {
   it('should consume refresh token and generate new access and refresh token with default dates', async () => {
     const refreshToken: RefreshTokenModel = {
       id: 1,
-      $get: (value) => value,
+      $get: (value: any) => value,
     } as any;
 
     const currentAccessToken: AccessTokenModel = {
       id: 'current',
-      $get: (value) => value,
-      destroy: (value) => value,
+      $get: (value: any) => value,
+      destroy: (value: any) => value,
     } as any;
 
     const mappedUser: UserModel = { id: 1 } as any;
 
     const currentRefreshTokenGetSpy = vi
-      .spyOn(refreshToken, '$get')
+      .spyOn(refreshToken as any, '$get')
       .mockReturnValue(Promise.resolve(currentAccessToken));
 
     const client: ClientModel = { id: 'client' } as any;
 
     const currentAccessTokenGetSpy = vi
-      .spyOn(currentAccessToken, '$get')
-      .mockImplementation((type: string) => {
+      .spyOn(currentAccessToken as any, '$get')
+      .mockImplementation((type: any) => {
         if (type === 'user') {
           return Promise.resolve(mappedUser);
         }
@@ -299,7 +299,7 @@ describe('RefreshTokenRepoService', () => {
       .spyOn(model, 'findByPk')
       .mockReturnValue(Promise.resolve(refreshToken));
 
-    const transaction = null;
+    const transaction = undefined;
     expect(await service.find(refreshToken.id, transaction)).toEqual(
       refreshToken,
     );
@@ -311,7 +311,7 @@ describe('RefreshTokenRepoService', () => {
       .spyOn(model, 'findByPk')
       .mockReturnValue(Promise.resolve(null));
 
-    const transaction = null;
+    const transaction = undefined;
     expect(await service.find('test', transaction)).toEqual(null);
     expect(findSpy).toHaveBeenCalledWith('test', { transaction });
   });
@@ -319,8 +319,8 @@ describe('RefreshTokenRepoService', () => {
   it('should create new refresh token with default date', async () => {
     const refreshToken: RefreshTokenModel = {
       id: 'test',
-      setAttributes: (value) => value,
-      save: (value) => value,
+      setAttributes: (value: any) => value,
+      save: (value: any) => value,
     } as any;
 
     const buildSpy = vi.spyOn(model, 'build').mockReturnValue(refreshToken);

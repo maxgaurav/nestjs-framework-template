@@ -9,7 +9,7 @@ describe('RedirectIfAuthenticatedInterceptor', () => {
   let interceptor: RedirectIfAuthenticatedInterceptor;
 
   const webGuard: WebGuard = {
-    canActivate: (value) => value,
+    canActivate: (value: any) => value,
   } as any;
 
   beforeEach(() => {
@@ -75,7 +75,7 @@ describe('RedirectIfAuthenticatedInterceptor', () => {
   });
 
   it('should call redirect when authentication is mapped', async () => {
-    const response = { redirect: (value) => value };
+    const response = { redirect: (value: any) => value };
     const context = { switchToHttp: () => ({ getResponse: () => response }) };
     const next = { handle: () => of(true) };
 

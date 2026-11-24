@@ -7,8 +7,8 @@ describe('HashEncryptService', () => {
   let service: HashEncryptService;
 
   const configService: ConfigService = {
-    get: (value) => value,
-    getOrThrow: (value) => value,
+    get: (value: any) => value,
+    getOrThrow: (value: any) => value,
   } as any;
 
   beforeEach(async () => {

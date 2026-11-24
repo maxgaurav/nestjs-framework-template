@@ -6,7 +6,7 @@ describe('SetupIntendInterceptor', () => {
   let interceptor: SetupIntendInterceptor;
 
   const intendManager: IntendManagerService = {
-    setupIntend: (value) => value,
+    setupIntend: (value: any) => value,
   } as any;
 
   beforeEach(() => {

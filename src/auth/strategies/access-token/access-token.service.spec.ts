@@ -8,7 +8,7 @@ import { IsNotEmpty } from 'class-validator';
 
 class FailureClass {
   @IsNotEmpty()
-  public name;
+  public name: unknown;
 
   constructor(public content: any) {}
 }
@@ -17,10 +17,10 @@ describe('AccessTokenService', () => {
   let service: AccessTokenService;
 
   const authService: AuthService = {
-    validateForPassword: (value) => value,
+    validateForPassword: (value: any) => value,
   } as any;
   const clientRepo: ClientRepoService = {
-    findForIdAndSecret: (value) => value,
+    findForIdAndSecret: (value: any) => value,
   } as any;
 
   beforeEach(async () => {

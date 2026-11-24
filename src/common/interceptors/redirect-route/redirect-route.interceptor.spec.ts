@@ -2,7 +2,8 @@ import { vi } from 'vitest';
 import { RedirectRouteInterceptor } from './redirect-route.interceptor.js';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ExecutionContext, Injectable, Scope } from '@nestjs/common';
-import { HttpArgumentsHost } from '@nestjs/common/interfaces';
+
+type HttpArgumentsHost = ReturnType<ExecutionContext['switchToHttp']>;
 import { Reflector } from '@nestjs/core';
 import { RedirectRouteExecutorInterface } from '../../../interfaces/redirect-route-executor.interface.js';
 import { RedirectGenerator } from '../../decorators/redirect-generator.decorator.js';
@@ -71,7 +72,7 @@ describe('RedirectRouteInterceptor', () => {
       .mockReturnValue(SampleRedirect);
     const redirectSpy = vi
       .spyOn(response, 'redirect')
-      .mockImplementation(() => undefined);
+      .mockImplementation(() => undefined as never);
 
     expect(
       await firstValueFrom(
@@ -118,7 +119,7 @@ describe('RedirectRouteInterceptor', () => {
       .mockReturnValue(SampleRedirectPromise);
     const redirectSpy = vi
       .spyOn(response, 'redirect')
-      .mockImplementation(() => undefined);
+      .mockImplementation(() => undefined as never);
 
     expect(
       await firstValueFrom(
@@ -139,7 +140,7 @@ describe('RedirectRouteInterceptor', () => {
   });
 
   it('should resolve promise when session is saved', async () => {
-    const request = { session: { save: (value) => value } };
+    const request = { session: { save: (value: any) => value } };
 
     const saveSpy = vi
       .spyOn(request.session, 'save')
@@ -152,7 +153,7 @@ describe('RedirectRouteInterceptor', () => {
   });
 
   it('should reject promise with session save error', async () => {
-    const request = { session: { save: (value) => value } };
+    const request = { session: { save: (value: any) => value } };
 
     const saveSpy = vi
       .spyOn(request.session, 'save')

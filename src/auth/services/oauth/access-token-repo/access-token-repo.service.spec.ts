@@ -13,16 +13,16 @@ describe('AccessTokenRepoService', () => {
   let service: AccessTokenRepoService;
 
   const model: typeof AccessTokenModel = {
-    findByPk: (value) => value,
-    build: (value) => value,
-    findOne: (value) => value,
+    findByPk: (value: any) => value,
+    build: (value: any) => value,
+    findOne: (value: any) => value,
   } as any;
   const jwtService: JwtService = {
-    signAsync: (value) => value,
+    signAsync: (value: any) => value,
   } as any;
-  const randomByteGenerate: RandomByteGeneratorService = {
-    generateRandomByte: (value) => value,
-  };
+  const randomByteGenerate = {
+    generateRandomByte: (value: any) => value,
+  } as unknown as RandomByteGeneratorService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -55,7 +55,7 @@ describe('AccessTokenRepoService', () => {
     const findSpy = vi
       .spyOn(model, 'findByPk')
       .mockReturnValue(Promise.resolve(token));
-    const transaction = null;
+    const transaction = undefined;
     expect(await service.findOrFail('test', transaction)).toEqual(token);
     expect(findSpy).toHaveBeenCalledWith('test', {
       transaction,
@@ -80,8 +80,8 @@ describe('AccessTokenRepoService', () => {
   it('should create new access token with user', async () => {
     const accessToken: AccessTokenModel = {
       id: 'test',
-      save: (value) => value,
-      setAttributes: (value) => value,
+      save: (value: any) => value,
+      setAttributes: (value: any) => value,
     } as any;
 
     const buildSpy = vi.spyOn(model, 'build').mockReturnValue(accessToken);
@@ -102,7 +102,7 @@ describe('AccessTokenRepoService', () => {
       .mockReturnValue(Buffer.from(sample));
 
     const expiresAt = new Date();
-    const transaction = null;
+    const transaction = undefined;
 
     expect(await service.create(client, user, expiresAt, transaction)).toEqual(
       accessToken,
@@ -123,8 +123,8 @@ describe('AccessTokenRepoService', () => {
   it('should create new access token with user with default expire at value', async () => {
     const accessToken: AccessTokenModel = {
       id: 'test',
-      save: (value) => value,
-      setAttributes: (value) => value,
+      save: (value: any) => value,
+      setAttributes: (value: any) => value,
     } as any;
 
     const buildSpy = vi.spyOn(model, 'build').mockReturnValue(accessToken);
@@ -164,8 +164,8 @@ describe('AccessTokenRepoService', () => {
   it('should create new access token with user null', async () => {
     const accessToken: AccessTokenModel = {
       id: 'test',
-      save: (value) => value,
-      setAttributes: (value) => value,
+      save: (value: any) => value,
+      setAttributes: (value: any) => value,
     } as any;
 
     const buildSpy = vi.spyOn(model, 'build').mockReturnValue(accessToken);
@@ -186,7 +186,7 @@ describe('AccessTokenRepoService', () => {
       .mockReturnValue(Buffer.from(sample));
 
     const expiresAt = new Date();
-    const transaction = null;
+    const transaction = undefined;
 
     expect(await service.create(client, user, expiresAt, transaction)).toEqual(
       accessToken,
@@ -209,15 +209,17 @@ describe('AccessTokenRepoService', () => {
     const findSpy = vi
       .spyOn(model, 'findOne')
       .mockReturnValue(Promise.resolve(token));
-    expect(await service.findForActiveState(token.id, null)).toEqual(token);
+    expect(await service.findForActiveState(token.id, undefined)).toEqual(
+      token,
+    );
     expect(findSpy).toHaveBeenCalled();
   });
 
   it('should return null when active token not found', async () => {
     const findSpy = vi
       .spyOn(model, 'findOne')
-      .mockReturnValue(Promise.resolve(undefined));
-    expect(await service.findForActiveState('test', null)).toEqual(null);
+      .mockReturnValue(Promise.resolve(null));
+    expect(await service.findForActiveState('test', undefined)).toEqual(null);
     expect(findSpy).toHaveBeenCalled();
   });
 });

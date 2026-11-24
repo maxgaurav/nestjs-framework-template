@@ -15,7 +15,7 @@ describe('OldInputsInterceptor', () => {
 
   it('should  map empty object to _oldInput when flash does not contain any input', async () => {
     const request: any = {
-      flash: (value) => value,
+      flash: (value: any) => value,
     };
     const context = {
       switchToHttp: () => ({ getRequest: () => request }),
@@ -38,7 +38,7 @@ describe('OldInputsInterceptor', () => {
 
   it('should not map property _oldInput when template value is not an object', async () => {
     const request: any = {
-      flash: (value) => value,
+      flash: (value: any) => value,
     };
     const context = {
       switchToHttp: () => ({ getRequest: () => request }),
@@ -57,7 +57,7 @@ describe('OldInputsInterceptor', () => {
 
   it('should map correct old inputs to template when found', async () => {
     const request: any = {
-      flash: (value) => value,
+      flash: (value: any) => value,
     };
 
     const oldInput = { input: true };
@@ -85,7 +85,7 @@ describe('OldInputsInterceptor', () => {
 
   it('should map correct old inputs to template when found but with incorrect', async () => {
     const request: any = {
-      flash: (value) => value,
+      flash: (value: any) => value,
     };
 
     const oldInput = 'sample';
@@ -113,7 +113,7 @@ describe('OldInputsInterceptor', () => {
 
   it('should return template context without mapping old input when template context is not object', async () => {
     const request: any = {
-      flash: (value) => value,
+      flash: (value: any) => value,
     };
 
     const oldInput = 'sample';

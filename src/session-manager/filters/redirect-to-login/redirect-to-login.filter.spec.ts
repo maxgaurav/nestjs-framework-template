@@ -7,8 +7,8 @@ const DefaultValue = 'will-not-match';
 describe('RedirectToLoginFilter', () => {
   let filter: RedirectFromLoginFilter;
   const intendManager: IntendManagerService = {
-    getUrl: (value) => value,
-    setUrl: (value) => value,
+    getUrl: (value: any) => value,
+    setUrl: (value: any) => value,
   } as any;
 
   beforeEach(() => {
@@ -25,10 +25,10 @@ describe('RedirectToLoginFilter', () => {
       accepts: () => DefaultValue,
       method: 'GET',
       url: 'currentUrl',
-      session: { save: (value) => value },
+      session: { save: (value: any) => value },
     };
     const response = {
-      redirect: (value) => value,
+      redirect: (value: any) => value,
     };
     const host = {
       switchToHttp: () => ({
@@ -62,10 +62,10 @@ describe('RedirectToLoginFilter', () => {
       accepts: () => DefaultValue,
       method: 'POST',
       url: 'currentUrl',
-      session: { save: (value) => value },
+      session: { save: (value: any) => value },
     };
     const response = {
-      redirect: (value) => value,
+      redirect: (value: any) => value,
     };
     const host = {
       switchToHttp: () => ({
@@ -96,8 +96,8 @@ describe('RedirectToLoginFilter', () => {
   it('should return json when set to xhr and method is get', () => {
     const request = { xhr: true, accepts: () => DefaultValue };
     const response = {
-      status: (value) => value,
-      json: (value) => value,
+      status: (value: any) => value,
+      json: (value: any) => value,
       url: 'url',
       method: 'get',
       session: {},
@@ -123,8 +123,8 @@ describe('RedirectToLoginFilter', () => {
   it('should return json when set to json', () => {
     const request = { xhr: false, accepts: () => 'json' };
     const response = {
-      status: (value) => value,
-      json: (value) => value,
+      status: (value: any) => value,
+      json: (value: any) => value,
     };
     const host = {
       switchToHttp: () => ({

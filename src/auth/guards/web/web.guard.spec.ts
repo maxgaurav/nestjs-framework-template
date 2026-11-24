@@ -7,7 +7,9 @@ import { NotFoundException, UnauthorizedException } from '@nestjs/common';
 describe('WebGuard', () => {
   let service: WebGuard;
 
-  const authService: AuthService = { getLoggedInUser: (value) => value } as any;
+  const authService: AuthService = {
+    getLoggedInUser: (value: any) => value,
+  } as any;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({

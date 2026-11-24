@@ -17,13 +17,13 @@ describe('ProcessMessagingService', () => {
   let eventType: any;
 
   const eventEmitter = {
-    emit: (value) => value,
+    emit: (value: any) => value,
   };
 
   beforeEach(async () => {
     processOnSpy = vi
-      .spyOn(process, 'on')
-      .mockImplementation((type: string, callback: any) => {
+      .spyOn(process as any, 'on')
+      .mockImplementation((type: any, callback: any) => {
         eventType = type;
         onHandler = callback;
         return this;
@@ -155,7 +155,7 @@ describe('ProcessMessagingService', () => {
   });
 
   it('should send command to worker', () => {
-    const worker: Worker = { send: (value) => value } as any;
+    const worker: Worker = { send: (value: any) => value } as any;
     const sendSpy = vi.spyOn(worker, 'send');
 
     service.sendCommandToWorker(
@@ -171,7 +171,7 @@ describe('ProcessMessagingService', () => {
   });
 
   it('should log errors when send command to worker fails', () => {
-    const worker: Worker = { send: (value) => value } as any;
+    const worker: Worker = { send: (value: any) => value } as any;
     const sendSpy = vi.spyOn(worker, 'send').mockImplementation(() => {
       throw new Error();
     });
@@ -193,14 +193,14 @@ describe('ProcessMessagingService', () => {
   });
 
   it('should receive command from worker when subscribed and command is received', async () => {
-    let messageHandler;
+    let messageHandler: any;
     let eventType;
     const worker: Worker = {
-      addListener: (value) => value,
-      removeListener: (value, handler) => ({ value, handler }),
+      addListener: (value: any) => value,
+      removeListener: (value: any, handler: any) => ({ value, handler }),
     } as any;
     const listenerSpy = vi
-      .spyOn(worker, 'addListener')
+      .spyOn(worker as any, 'addListener')
       .mockImplementation((eventName, handler) => {
         eventType = eventName;
         messageHandler = handler;
@@ -226,14 +226,14 @@ describe('ProcessMessagingService', () => {
   });
 
   it('should not receive command from worker when subscribed and command is empty', async () => {
-    let messageHandler;
+    let messageHandler: any;
     let eventType;
     const worker: Worker = {
-      addListener: (value) => value,
-      removeListener: (value, handler) => ({ value, handler }),
+      addListener: (value: any) => value,
+      removeListener: (value: any, handler: any) => ({ value, handler }),
     } as any;
     const listenerSpy = vi
-      .spyOn(worker, 'addListener')
+      .spyOn(worker as any, 'addListener')
       .mockImplementation((eventName, handler) => {
         eventType = eventName;
         messageHandler = handler;
@@ -264,14 +264,14 @@ describe('ProcessMessagingService', () => {
   });
 
   it('should not receive command from worker when subscribed and command is not structured correct', async () => {
-    let messageHandler;
+    let messageHandler: any;
     let eventType;
     const worker: Worker = {
-      addListener: (value) => value,
-      removeListener: (value, handler) => ({ value, handler }),
+      addListener: (value: any) => value,
+      removeListener: (value: any, handler: any) => ({ value, handler }),
     } as any;
     const listenerSpy = vi
-      .spyOn(worker, 'addListener')
+      .spyOn(worker as any, 'addListener')
       .mockImplementation((eventName, handler) => {
         eventType = eventName;
         messageHandler = handler;
