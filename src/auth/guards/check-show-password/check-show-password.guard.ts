@@ -14,7 +14,7 @@ export class CheckShowPasswordGuard implements CanActivate {
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest<Request>();
-    const sessionId = request.query.stateId;
+    const sessionId = request.query['stateId'];
 
     return (
       !!sessionId &&

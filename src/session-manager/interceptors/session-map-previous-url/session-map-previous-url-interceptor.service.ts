@@ -6,7 +6,6 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { Request } from 'express';
-import { Session } from 'express-session';
 
 @Injectable()
 export class SessionMapPreviousUrlInterceptor implements NestInterceptor {
@@ -20,8 +19,7 @@ export class SessionMapPreviousUrlInterceptor implements NestInterceptor {
       return next.handle();
     }
 
-    const session: Session & { _previous?: { url: string | null } } =
-      request.session;
+    const session = request.session;
     session._previous = session._previous || { url: null };
     if (
       request.method.toUpperCase() === 'GET' &&

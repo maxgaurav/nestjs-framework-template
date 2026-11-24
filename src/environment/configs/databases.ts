@@ -14,20 +14,22 @@ export const databaseConfig = () => {
   config.databases[ConnectionNames.DefaultConnection] = {
     dialect: 'postgres',
     name: ConnectionNames.DefaultConnection,
-    host: process.env.DB_HOST,
-    username: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    port: process.env.DB_PORT ? parseFloat(process.env.DB_PORT) : 5432,
+    host: process.env['DB_HOST'],
+    username: process.env['DB_USERNAME'],
+    password: process.env['DB_PASSWORD'],
+    database: process.env['DB_NAME'],
+    port: process.env['DB_PORT'] ? parseFloat(process.env['DB_PORT']) : 5432,
     pool: {
-      max: process.env.DB_POOL_CONNECTION_LIMIT
-        ? parseFloat(process.env.DB_POOL_CONNECTION_LIMIT)
+      max: process.env['DB_POOL_CONNECTION_LIMIT']
+        ? parseFloat(process.env['DB_POOL_CONNECTION_LIMIT'])
         : 2,
       min: 1,
     },
-    timezone: process.env.DB_TIMEZONE ? process.env.DB_TIMEZONE : '+00:00',
-    logging: process.env.DB_DEBUG === 'true',
-    benchmark: process.env.DB_DEBUG === 'true',
+    timezone: process.env['DB_TIMEZONE']
+      ? process.env['DB_TIMEZONE']
+      : '+00:00',
+    logging: process.env['DB_DEBUG'] === 'true',
+    benchmark: process.env['DB_DEBUG'] === 'true',
     replication: readWriteClusterSettings(),
     // Models are registered explicitly from DefaultConnectionModels (DatabaseConfigService);
     // sequelize-typescript's path glob loads files with require(), which cannot load ESM.
@@ -84,7 +86,7 @@ function setReadServerConfigValues(
 }
 
 function readWriteClusterSettings(): ReplicationOptions | false {
-  if (process.env.DB_USE_READ_WRITE_CLUSTER !== 'true') {
+  if (process.env['DB_USE_READ_WRITE_CLUSTER'] !== 'true') {
     return false;
   }
 
@@ -120,11 +122,11 @@ function readWriteClusterSettings(): ReplicationOptions | false {
 
   return {
     write: {
-      host: process.env.DB_HOST,
-      username: process.env.DB_USERNAME,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME,
-      port: process.env.DB_PORT ? parseFloat(process.env.DB_PORT) : 3306,
+      host: process.env['DB_HOST'],
+      username: process.env['DB_USERNAME'],
+      password: process.env['DB_PASSWORD'],
+      database: process.env['DB_NAME'],
+      port: process.env['DB_PORT'] ? parseFloat(process.env['DB_PORT']) : 3306,
     },
     read: Array.from(readServerMappings.values()),
   };

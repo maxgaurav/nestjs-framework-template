@@ -37,7 +37,7 @@ export class OldInputsInterceptor implements NestInterceptor {
             | string,
         ) => {
           if (typeof templateContext === 'object' && templateContext !== null) {
-            templateContext._oldInputs = oldInputs;
+            templateContext['_oldInputs'] = oldInputs;
           }
 
           return templateContext;
