@@ -53,11 +53,11 @@ export class MigrationStatusService {
     connectionName: ConnectionNames = ConnectionNames.DefaultConnection,
   ): Promise<MigrationStatusEntry[]> {
     const migrator = this.migratorFactory.create(connectionName);
-    const [recorded, executed, pending] = await Promise.all([
-      this.migratorFactory.executedNames(),
-      migrator.executed(),
-      migrator.pending(),
-    ]);
+    // Sequential on purpose: each call creates SequelizeMeta when it is missing, and concurrent
+    // CREATE TABLEs on an empty database collide ("Validation error")
+    const recorded = await this.migratorFactory.executedNames();
+    const executed = await migrator.executed();
+    const pending = await migrator.pending();
     // Files on disk = executed (with a file) + pending
     return migrationStatus(
       recorded,
