@@ -60,6 +60,9 @@ their new code must already compile under these flags.
       SessionData { … } }`) instead of casting.
 - [ ] Config loaders use `satisfies XConfig` instead of `as XConfig`, so a missing key fails to
       compile (started in phase 01 for cluster/cors/databases/view; finish the rest).
+- [ ] Add `test/**/*` to `tsconfig.json` `include` (today only `src` is type-checked). Fix the
+      155 spec errors left after phase 02 (implicit `any` in mock lambdas, `null` passed where the
+      type forbids it).
 - [ ] `test/` and the specs compile under the same `tsconfig.json`, with no `// @ts-ignore` left
       (the `connect-flash` one goes away in phase 03). Any `@ts-expect-error` gets a reason.
 - [ ] Final tsconfig:

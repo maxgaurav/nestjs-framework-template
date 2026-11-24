@@ -45,7 +45,7 @@ describe('RefreshAccessTokenGuard', () => {
   });
 
   it('should continue to process with normal flow if all things are correct', () => {
-    const superHandleSpy = jest
+    const superHandleSpy = vi
       .spyOn(AuthGuard('refreshToken').prototype, 'handleRequest')
       .mockReturnValueOnce(true);
 

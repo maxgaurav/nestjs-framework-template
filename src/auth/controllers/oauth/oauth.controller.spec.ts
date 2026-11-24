@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { OauthController } from './oauth.controller';
 import { TransactionProviderService } from '../../../transaction-manager/services/transaction-provider/transaction-provider.service';
@@ -8,7 +9,6 @@ import { ClientModel } from '../../../databases/models/oauth/client.model';
 import { AccessTokenModel } from '../../../databases/models/oauth/access-token.model';
 import { RefreshTokenModel } from '../../../databases/models/oauth/refresh-token.model';
 import { ConfigService } from '@nestjs/config';
-import mockdate from 'mockdate';
 import moment from 'moment';
 import { HashEncryptService } from '../../services/hash-encrypt/hash-encrypt.service';
 import { AuthorizationChallengeRepoService } from '../../services/authorization-challenge-repo/authorization-challenge-repo.service';
@@ -28,7 +28,12 @@ describe('OauthController', () => {
 
   const configService: ConfigService = {
     get: (value) => value,
+    getOrThrow: (value) => value,
   } as any;
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -77,26 +82,26 @@ describe('OauthController', () => {
     const accessToken: AccessTokenModel = { id: 'token' } as any;
     const refreshToken: RefreshTokenModel = { id: 'token' } as any;
 
-    const createAccessTokenSpy = jest
+    const createAccessTokenSpy = vi
       .spyOn(accessTokenRepo, 'create')
       .mockReturnValue(Promise.resolve(accessToken));
 
-    const createAccessTokenBearerSpy = jest
+    const createAccessTokenBearerSpy = vi
       .spyOn(accessTokenRepo, 'createBearerToken')
       .mockReturnValue(Promise.resolve('accessBearer'));
 
-    const createRefreshTokenSpy = jest
+    const createRefreshTokenSpy = vi
       .spyOn(refreshTokenRepo, 'create')
       .mockReturnValue(Promise.resolve(refreshToken));
 
-    const createRefreshTokenBearerSpy = jest
+    const createRefreshTokenBearerSpy = vi
       .spyOn(refreshTokenRepo, 'createBearerToken')
       .mockReturnValue(Promise.resolve('refreshBearer'));
 
-    const getAccessDateSpy = jest
+    const getAccessDateSpy = vi
       .spyOn(controller, 'accessTokenExpiration')
       .mockReturnValue(null);
-    const getRefreshDateSpy = jest
+    const getRefreshDateSpy = vi
       .spyOn(controller, 'refreshTokenExpiration')
       .mockReturnValue(null);
 
@@ -129,22 +134,22 @@ describe('OauthController', () => {
     const refreshToken: RefreshTokenModel = { id: 'new' } as any;
     const accessToken: AccessTokenModel = { id: 'new' } as any;
 
-    const getAccessDateSpy = jest
+    const getAccessDateSpy = vi
       .spyOn(controller, 'accessTokenExpiration')
       .mockReturnValue(null);
-    const getRefreshDateSpy = jest
+    const getRefreshDateSpy = vi
       .spyOn(controller, 'refreshTokenExpiration')
       .mockReturnValue(null);
 
-    const createAccessTokenBearerSpy = jest
+    const createAccessTokenBearerSpy = vi
       .spyOn(accessTokenRepo, 'createBearerToken')
       .mockReturnValue(Promise.resolve('accessBearer'));
 
-    const createRefreshTokenBearerSpy = jest
+    const createRefreshTokenBearerSpy = vi
       .spyOn(refreshTokenRepo, 'createBearerToken')
       .mockReturnValue(Promise.resolve('refreshBearer'));
 
-    const consumerRefreshTokenSpy = jest
+    const consumerRefreshTokenSpy = vi
       .spyOn(refreshTokenRepo, 'consumeToken')
       .mockReturnValue(Promise.resolve({ refreshToken, accessToken }));
 
@@ -172,8 +177,8 @@ describe('OauthController', () => {
   });
 
   it('should return null when expiration time for access token is null', () => {
-    const getSpy = jest
-      .spyOn(configService, 'get')
+    const getSpy = vi
+      .spyOn(configService, 'getOrThrow')
       .mockReturnValue({ expirationTimeAccessToken: null });
 
     expect(controller.accessTokenExpiration()).toEqual(null);
@@ -181,9 +186,9 @@ describe('OauthController', () => {
   });
 
   it('should return date with time extended by expiration time for access token', () => {
-    mockdate.set('2021-01-01 00:00:00');
-    const getSpy = jest
-      .spyOn(configService, 'get')
+    vi.setSystemTime(new Date('2021-01-01 00:00:00'));
+    const getSpy = vi
+      .spyOn(configService, 'getOrThrow')
       .mockReturnValue({ expirationTimeAccessToken: 30000 });
 
     const expectedDate = moment().add(30000, 'milliseconds');
@@ -194,8 +199,8 @@ describe('OauthController', () => {
   });
 
   it('should return null when expiration time for refresh token is null', () => {
-    const getSpy = jest
-      .spyOn(configService, 'get')
+    const getSpy = vi
+      .spyOn(configService, 'getOrThrow')
       .mockReturnValue({ expirationTimeRefreshToken: null });
 
     expect(controller.refreshTokenExpiration()).toEqual(null);
@@ -203,9 +208,9 @@ describe('OauthController', () => {
   });
 
   it('should return date with time extended by expiration time for refresh token', () => {
-    mockdate.set('2021-01-01 00:00:00');
-    const getSpy = jest
-      .spyOn(configService, 'get')
+    vi.setSystemTime(new Date('2021-01-01 00:00:00'));
+    const getSpy = vi
+      .spyOn(configService, 'getOrThrow')
       .mockReturnValue({ expirationTimeRefreshToken: 30000 });
 
     const expectedDate = moment().add(30000, 'milliseconds');

@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClientRepoService } from './client-repo.service';
 import { RandomByteGeneratorService } from '../../../../common/services/random-byte-generator/random-byte-generator.service';
@@ -43,7 +44,7 @@ describe('ClientRepoService', () => {
   it('should find or fail', async () => {
     const client: ClientModel = { id: 'test' } as any;
     const transaction = null;
-    const findSpy = jest
+    const findSpy = vi
       .spyOn(model, 'findByPk')
       .mockReturnValue(Promise.resolve(client));
     expect(await service.findOrFail('test', transaction)).toEqual(client);
@@ -62,16 +63,16 @@ describe('ClientRepoService', () => {
 
     const transaction = null;
 
-    const buildSpy = jest.spyOn(model, 'build').mockReturnValue(client);
-    const setAttributeSpy = jest
+    const buildSpy = vi.spyOn(model, 'build').mockReturnValue(client);
+    const setAttributeSpy = vi
       .spyOn(client, 'setAttributes')
       .mockReturnValue(client);
-    const saveSpy = jest
+    const saveSpy = vi
       .spyOn(client, 'save')
       .mockReturnValue(Promise.resolve(client));
 
     const sample = 'sample';
-    const generateSpy = jest
+    const generateSpy = vi
       .spyOn(randomByeGenerator, 'generateRandomByte')
       .mockReturnValue(Buffer.from(sample));
     expect(
@@ -94,22 +95,22 @@ describe('ClientRepoService', () => {
       save: (value) => value,
     } as any;
 
-    const setAttributeSpy = jest
+    const setAttributeSpy = vi
       .spyOn(client, 'setAttributes')
       .mockReturnValue(client);
-    const saveSpy = jest
+    const saveSpy = vi
       .spyOn(client, 'save')
       .mockReturnValue(Promise.resolve(client));
     const transaction = null;
 
     expect(await service.revoke(client, transaction)).toEqual(client);
-    expect(setAttributeSpy).toHaveBeenCalledWith({ is_revoked: false });
+    expect(setAttributeSpy).toHaveBeenCalledWith({ is_revoked: true });
     expect(saveSpy).toHaveBeenCalledWith({ transaction });
   });
 
   it('should return client when searching with both client and secret and found', async () => {
     const client: ClientModel = { id: 'client', secret: 'secret' } as any;
-    const findSpy = jest
+    const findSpy = vi
       .spyOn(model, 'findOne')
       .mockReturnValue(Promise.resolve(client));
     const transaction = null;
@@ -126,7 +127,7 @@ describe('ClientRepoService', () => {
 
   it('should return null when client is not found for id and secret', async () => {
     const client: ClientModel = { id: 'client', secret: 'secret' } as any;
-    const findSpy = jest
+    const findSpy = vi
       .spyOn(model, 'findOne')
       .mockReturnValue(Promise.resolve(undefined));
     const transaction = null;

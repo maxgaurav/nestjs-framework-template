@@ -39,7 +39,7 @@ describe('TransactionInterceptor', () => {
     );
     let callbackCalled = false;
 
-    const transactionSpy = jest
+    const transactionSpy = vi
       .spyOn(transactionManager, 'createManaged')
       .mockImplementation((callback: (value: any) => any) => {
         callbackCalled = true;

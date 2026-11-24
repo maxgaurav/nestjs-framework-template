@@ -39,6 +39,16 @@ describe('MethodChangeMiddleware', () => {
     expect(request.method).toEqual('GET');
   });
 
+  it.each([
+    { body: { _method: ['put'] }, type: 'an array' },
+    { body: { _method: { value: 'put' } }, type: 'an object' },
+    { body: null, type: 'a null body' },
+  ])('should keep original state when override is $type', ({ body }) => {
+    const request = { body, method: 'post' };
+    middleware.use(request as any, {}, () => ({}));
+    expect(request.method).toEqual('POST');
+  });
+
   it('should keep original state if body override value is not allowed', () => {
     const request = { body: { _method: 'fail' }, method: 'get' };
     const next = () => ({});

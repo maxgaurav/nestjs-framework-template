@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { ClientIdExistsValidator } from './client-id-exists.validator';
 import { ClientRepoService } from '../../services/oauth/client-repo/client-repo.service';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -31,7 +32,7 @@ describe('ClientIdExistsValidator', () => {
   });
 
   it('should return correct validation message', () =>
-    expect(service.message()).toEqual('The client id is not valid'));
+    expect(service.defaultMessage()).toEqual('The client id is not valid'));
 
   const emptyValues = [
     { value: null, type: 'null' },
@@ -42,7 +43,7 @@ describe('ClientIdExistsValidator', () => {
   test.each(emptyValues)(
     'should return true for $type value',
     async ({ value }) =>
-      expect(await service.check(value, {} as any)).toEqual(true),
+      expect(await service.validate(value, {} as any)).toEqual(true),
   );
 
   test.each([
@@ -55,7 +56,7 @@ describe('ClientIdExistsValidator', () => {
     },
   ])('should return true if grant type value is $type', async ({ value }) => {
     const [value1, value2] = value;
-    expect(await service.check(value1 as any, value2 as any)).toEqual(true);
+    expect(await service.validate(value1 as any, value2 as any)).toEqual(true);
   });
 
   test.each([
@@ -88,17 +89,17 @@ describe('ClientIdExistsValidator', () => {
     `should return false for failed conditions when $type`,
     async ({ value }) => {
       const [findResult, grantType] = value;
-      const findSpy = jest
+      const findSpy = vi
         .spyOn(clientRepo, 'find')
         .mockReturnValue(Promise.resolve(findResult as any));
 
-      expect(await service.check('123', grantType as any)).toEqual(false);
+      expect(await service.validate('123', grantType as any)).toEqual(false);
       expect(findSpy).toHaveBeenCalledWith('123');
     },
   );
 
   it('should return true when client repo exists and is not revoked and grant type matches', async () => {
-    const findSpy = jest.spyOn(clientRepo, 'find').mockReturnValue(
+    const findSpy = vi.spyOn(clientRepo, 'find').mockReturnValue(
       Promise.resolve({
         grant_type: GrantTypes.AuthorizationCode,
         is_revoked: false,
@@ -106,7 +107,7 @@ describe('ClientIdExistsValidator', () => {
     );
 
     expect(
-      await service.check('123', {
+      await service.validate('123', {
         object: { grant_type: GrantTypes.AuthorizationCode },
       } as any),
     ).toEqual(true);

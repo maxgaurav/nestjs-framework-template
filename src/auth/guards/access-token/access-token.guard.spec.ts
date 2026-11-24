@@ -89,12 +89,12 @@ describe('AccessTokenGuard', () => {
       switchToHttp: () => ({ getRequest: () => request }),
     };
 
-    const getBearerSpy = jest
+    const getBearerSpy = vi
       .spyOn(guard, 'getBearerToken')
       .mockReturnValue('test');
     const user: UserModel = { id: 1 } as any;
 
-    const findTokenSpy = jest
+    const findTokenSpy = vi
       .spyOn(authService, 'findUserByToken')
       .mockReturnValue(Promise.resolve(user));
 
@@ -112,11 +112,11 @@ describe('AccessTokenGuard', () => {
       switchToHttp: () => ({ getRequest: () => request }),
     };
 
-    const getBearerSpy = jest
+    const getBearerSpy = vi
       .spyOn(guard, 'getBearerToken')
       .mockReturnValue('test');
 
-    const findTokenSpy = jest
+    const findTokenSpy = vi
       .spyOn(authService, 'findUserByToken')
       .mockReturnValue(Promise.resolve(null));
 

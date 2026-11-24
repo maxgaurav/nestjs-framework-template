@@ -5,8 +5,12 @@ import { basicE2eSetup } from './basic-e2e-setup';
 describe('AppController (e2e)', () => {
   let app: INestApplication;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     [app] = await basicE2eSetup();
+  });
+
+  afterAll(async () => {
+    await app.close();
   });
 
   it('/ (GET)', () => {

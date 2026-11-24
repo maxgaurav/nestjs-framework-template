@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { RefreshTokenRepoService } from './refresh-token-repo.service';
 import { RefreshTokenModel } from '../../../../databases/models/oauth/refresh-token.model';
@@ -59,7 +60,7 @@ describe('RefreshTokenRepoService', () => {
 
   it('should create bearer token', async () => {
     const testContent = 'testContent';
-    const signSpy = jest
+    const signSpy = vi
       .spyOn(jwtService, 'signAsync')
       .mockReturnValue(Promise.resolve(testContent));
 
@@ -73,7 +74,7 @@ describe('RefreshTokenRepoService', () => {
 
   it('should find or fail', async () => {
     const token: RefreshTokenModel = { id: 'test' } as any;
-    const findSpy = jest
+    const findSpy = vi
       .spyOn(model, 'findByPk')
       .mockReturnValue(Promise.resolve(token));
     const transaction = null;
@@ -91,17 +92,17 @@ describe('RefreshTokenRepoService', () => {
       save: (value) => value,
     } as any;
 
-    const buildSpy = jest.spyOn(model, 'build').mockReturnValue(refreshToken);
+    const buildSpy = vi.spyOn(model, 'build').mockReturnValue(refreshToken);
 
     const content = 'content';
-    const generateSpy = jest
+    const generateSpy = vi
       .spyOn(randomByteGenerate, 'generateRandomByte')
       .mockReturnValue(Buffer.from(content));
 
-    const setAttributesSpy = jest
+    const setAttributesSpy = vi
       .spyOn(refreshToken, 'setAttributes')
       .mockReturnValue(refreshToken);
-    const saveSpy = jest
+    const saveSpy = vi
       .spyOn(refreshToken, 'save')
       .mockReturnValue(Promise.resolve(refreshToken));
 
@@ -136,13 +137,13 @@ describe('RefreshTokenRepoService', () => {
 
     const mappedUser: UserModel = { id: 1 } as any;
 
-    const currentRefreshTokenGetSpy = jest
+    const currentRefreshTokenGetSpy = vi
       .spyOn(refreshToken, '$get')
       .mockReturnValue(Promise.resolve(currentAccessToken));
 
     const client: ClientModel = { id: 'client' } as any;
 
-    const currentAccessTokenGetSpy = jest
+    const currentAccessTokenGetSpy = vi
       .spyOn(currentAccessToken, '$get')
       .mockImplementation((type: string) => {
         if (type === 'user') {
@@ -156,7 +157,7 @@ describe('RefreshTokenRepoService', () => {
         Promise.reject(new Error(`incorrect type injected: ${type}`));
       });
 
-    const currentAccessTokenDestroySpy = jest
+    const currentAccessTokenDestroySpy = vi
       .spyOn(currentAccessToken, 'destroy')
       .mockReturnValue(Promise.resolve());
 
@@ -164,13 +165,13 @@ describe('RefreshTokenRepoService', () => {
       id: 'new',
     } as any;
 
-    const createAccessTokenSpy = jest
+    const createAccessTokenSpy = vi
       .spyOn(accessTokenRepo, 'create')
       .mockReturnValue(Promise.resolve(newAccessToken));
 
     const newRefreshToken: RefreshTokenModel = { id: 'new' } as any;
 
-    const createRefreshTokenSpy = jest
+    const createRefreshTokenSpy = vi
       .spyOn(service, 'create')
       .mockReturnValue(Promise.resolve(newRefreshToken));
 
@@ -222,13 +223,13 @@ describe('RefreshTokenRepoService', () => {
 
     const mappedUser: UserModel = { id: 1 } as any;
 
-    const currentRefreshTokenGetSpy = jest
+    const currentRefreshTokenGetSpy = vi
       .spyOn(refreshToken, '$get')
       .mockReturnValue(Promise.resolve(currentAccessToken));
 
     const client: ClientModel = { id: 'client' } as any;
 
-    const currentAccessTokenGetSpy = jest
+    const currentAccessTokenGetSpy = vi
       .spyOn(currentAccessToken, '$get')
       .mockImplementation((type: string) => {
         if (type === 'user') {
@@ -242,7 +243,7 @@ describe('RefreshTokenRepoService', () => {
         Promise.reject(new Error(`incorrect type injected: ${type}`));
       });
 
-    const currentAccessTokenDestroySpy = jest
+    const currentAccessTokenDestroySpy = vi
       .spyOn(currentAccessToken, 'destroy')
       .mockReturnValue(Promise.resolve());
 
@@ -250,13 +251,13 @@ describe('RefreshTokenRepoService', () => {
       id: 'new',
     } as any;
 
-    const createAccessTokenSpy = jest
+    const createAccessTokenSpy = vi
       .spyOn(accessTokenRepo, 'create')
       .mockReturnValue(Promise.resolve(newAccessToken));
 
     const newRefreshToken: RefreshTokenModel = { id: 'new' } as any;
 
-    const createRefreshTokenSpy = jest
+    const createRefreshTokenSpy = vi
       .spyOn(service, 'create')
       .mockReturnValue(Promise.resolve(newRefreshToken));
 
@@ -294,7 +295,7 @@ describe('RefreshTokenRepoService', () => {
 
   it('should return refresh token on find succeeds', async () => {
     const refreshToken: RefreshTokenModel = { id: 'token' } as any;
-    const findSpy = jest
+    const findSpy = vi
       .spyOn(model, 'findByPk')
       .mockReturnValue(Promise.resolve(refreshToken));
 
@@ -306,7 +307,7 @@ describe('RefreshTokenRepoService', () => {
   });
 
   it('should return null when find fails', async () => {
-    const findSpy = jest
+    const findSpy = vi
       .spyOn(model, 'findByPk')
       .mockReturnValue(Promise.resolve(null));
 
@@ -322,17 +323,17 @@ describe('RefreshTokenRepoService', () => {
       save: (value) => value,
     } as any;
 
-    const buildSpy = jest.spyOn(model, 'build').mockReturnValue(refreshToken);
+    const buildSpy = vi.spyOn(model, 'build').mockReturnValue(refreshToken);
 
     const content = 'content';
-    const generateSpy = jest
+    const generateSpy = vi
       .spyOn(randomByteGenerate, 'generateRandomByte')
       .mockReturnValue(Buffer.from(content));
 
-    const setAttributesSpy = jest
+    const setAttributesSpy = vi
       .spyOn(refreshToken, 'setAttributes')
       .mockReturnValue(refreshToken);
-    const saveSpy = jest
+    const saveSpy = vi
       .spyOn(refreshToken, 'save')
       .mockReturnValue(Promise.resolve(refreshToken));
 

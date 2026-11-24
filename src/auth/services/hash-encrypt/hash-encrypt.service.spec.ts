@@ -6,7 +6,10 @@ import { ConfigService } from '@nestjs/config';
 describe('HashEncryptService', () => {
   let service: HashEncryptService;
 
-  const configService: ConfigService = { get: (value) => value } as any;
+  const configService: ConfigService = {
+    get: (value) => value,
+    getOrThrow: (value) => value,
+  } as any;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -43,14 +46,19 @@ describe('HashEncryptService', () => {
   it('should encrypt content', async () => {
     const secret = '9a3821cd5152199f';
     const text = 'sample';
-    const configGetSpy = jest
-      .spyOn(configService, 'get')
+    const configGetOrThrowSpy = vi
+      .spyOn(configService, 'getOrThrow')
       .mockReturnValue(secret);
+    const configGetSpy = vi.spyOn(configService, 'get').mockReturnValue(secret);
     await service.onApplicationBootstrap();
 
     const encryptedText = await service.encrypt(text);
     const decryptedText = await service.decrypt(encryptedText);
     expect(decryptedText).toEqual(text);
-    expect(configGetSpy).toHaveBeenCalledTimes(2);
+    expect(configGetOrThrowSpy).toHaveBeenCalledWith('APP_SECRET');
+    expect(configGetSpy).toHaveBeenCalledWith(
+      'APP_ENCRYPT_HEX_KEY',
+      expect.any(String),
+    );
   });
 });

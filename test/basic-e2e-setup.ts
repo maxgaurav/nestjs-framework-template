@@ -4,32 +4,45 @@ import {
   HttpStatus,
   INestApplication,
   NestInterceptor,
+  Type,
   UnprocessableEntityException,
   ValidationError,
   ValidationPipe,
+  VersioningType,
 } from '@nestjs/common';
 import { Test, TestingModule, TestingModuleBuilder } from '@nestjs/testing';
-import { AppModule } from '../src/app.module';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { ConfigService } from '@nestjs/config';
 import { Transaction } from 'sequelize';
 import { useContainer } from 'class-validator';
+import helmet from 'helmet';
+import request from 'supertest';
+import { Observable } from 'rxjs';
+import type { NextFunction, Request, Response } from 'express';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore connect-flash ships no types; replaced by an in-house middleware in phase 03
+import flash from 'connect-flash';
+import { AppModule } from '../src/app.module';
 import { NotFoundConverterInterceptor } from '../src/helpers/interceptors/not-found-converter/not-found-converter.interceptor';
 import { ContextInterceptor } from '../src/helpers/interceptors/context/context.interceptor';
 import { ErrorValidationFormatFilter } from '../src/helpers/filters/error-validation-format/error-validation-format.filter';
-import request from 'supertest';
 import { LoggingService } from '../src/services/logging/logging.service';
-import { NestExpressApplication } from '@nestjs/platform-express';
 import { SessionConfigService } from '../src/session-manager/services/session-config/session-config.service';
 import { TransactionProviderService } from '../src/transaction-manager/services/transaction-provider/transaction-provider.service';
 import { RedirectFromLoginFilter } from '../src/session-manager/filters/redirect-to-login/redirect-to-login.filter';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import flash from 'connect-flash';
 import { SessionMapPreviousUrlInterceptor } from '../src/session-manager/interceptors/session-map-previous-url/session-map-previous-url-interceptor.service';
 import { SetupIntendInterceptor } from '../src/session-manager/interceptors/setup-intend/setup-intend.interceptor';
-import helmet from 'helmet';
+import { KillForApiInterceptor } from '../src/session-manager/interceptors/kill-for-api/kill-for-api.interceptor';
 import { ViewConfig } from '../src/environment/environment-types.interface';
-import { ConfigService } from '@nestjs/config';
-import { Observable } from 'rxjs';
+import { registerPgTypeParsers } from '../src/helpers/pg-type-parsers/pg-type-parsers';
+import {
+  registerSequelizeCls,
+  sequelizeNamespace,
+} from '../src/helpers/sequelize-namespace/sequelize-namespace';
+
+// Mirror the Sequelize setup done in src/main.ts
+registerPgTypeParsers();
+registerSequelizeCls();
 
 /**
  * Marker error used to force a managed Sequelize transaction to roll back
@@ -44,14 +57,38 @@ class TestingTransactionRollbackError extends Error {
 
 /**
  * Active parent transaction for the current {@link managedTransaction} scope.
- * Read by {@link TestingTransactionInterceptor} on each HTTP request.
+ * Read by the CLS request middleware and {@link TestingTransactionInterceptor}.
  */
 let activeTestingTransaction: Transaction | null = null;
 
 /**
+ * Runs every request inside the active test transaction (if any), so all queries of
+ * the request — guards, validators, repositories, listeners — join it through
+ * cls-hooked and see the data the test created.
+ */
+const testingTransactionMiddleware = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): void => {
+  const transaction = activeTestingTransaction;
+  if (!transaction) {
+    next();
+    return;
+  }
+
+  sequelizeNamespace.bindEmitter(req);
+  sequelizeNamespace.bindEmitter(res);
+  sequelizeNamespace.run(() => {
+    sequelizeNamespace.set('transaction', transaction);
+    next();
+  });
+};
+
+/**
  * Sets the active test parent transaction on {@link TransactionProviderService}
- * for each request, so route-level {@link TransactionInterceptor} creates a
- * nested child transaction while the rest of the app flow stays unchanged.
+ * for each request, so route-level `TransactionInterceptor` creates a nested
+ * child transaction (savepoint) while the rest of the app flow stays unchanged.
  */
 export class TestingTransactionInterceptor implements NestInterceptor {
   constructor(
@@ -85,29 +122,37 @@ export type TestingAppCreatePreHook = (
 ) => Promise<void>;
 
 /**
- * Sets basic e2e testing module of app
+ * Sets basic e2e testing module of app. Mirrors the bootstrap in src/main.ts.
  */
 export async function basicE2eSetup(
   config: {
     moduleBuilderHook?: TestingModuleCreatePreHook;
     appInitHook?: TestingAppCreatePreHook;
+    /**
+     * Root module of the application under test; a feature test may boot only the
+     * feature module and the infrastructure it needs
+     */
+    rootModule?: Type;
   } = {},
 ): Promise<[NestExpressApplication, TestingModule]> {
+  const rootModule = config.rootModule ?? AppModule;
   let moduleBuilder: TestingModuleBuilder = Test.createTestingModule({
-    imports: [AppModule],
+    imports: [rootModule],
   });
 
-  if (!!config.moduleBuilderHook) {
+  if (config.moduleBuilderHook) {
     moduleBuilder = config.moduleBuilderHook(moduleBuilder);
   }
 
   const moduleFixture: TestingModule = await moduleBuilder.compile();
 
   const app = moduleFixture.createNestApplication<NestExpressApplication>();
+  app.useLogger(app.get<LoggingService>(LoggingService));
   app.enableCors();
   app.use(helmet());
+  app.use(testingTransactionMiddleware);
 
-  useContainer(app.select(AppModule), { fallbackOnErrors: true });
+  useContainer(app.select(rootModule), { fallbackOnErrors: true });
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -123,46 +168,49 @@ export async function basicE2eSetup(
   );
   app.useGlobalFilters(new ErrorValidationFormatFilter());
   app.useGlobalFilters(app.get(RedirectFromLoginFilter));
+  app.enableVersioning({ type: VersioningType.URI, prefix: 'api/v' });
 
   app.use(await app.get<SessionConfigService>(SessionConfigService).session());
   app.use(flash());
   app.useGlobalInterceptors(
-    new TestingTransactionInterceptor(
-      app.get(TransactionProviderService),
-    ),
+    new TestingTransactionInterceptor(app.get(TransactionProviderService)),
     app.get(NotFoundConverterInterceptor),
     app.get(SessionMapPreviousUrlInterceptor),
     app.get(SetupIntendInterceptor),
+    app.get(KillForApiInterceptor),
     new ContextInterceptor(),
   );
 
-  app.useLogger(app.get<LoggingService>(LoggingService));
-
   const viewConfig = app
     .get<ConfigService>(ConfigService)
-    .get<ViewConfig>('view');
+    .getOrThrow<ViewConfig>('view');
   app.useStaticAssets(viewConfig.publicPath);
   app.setBaseViewsDir(viewConfig.viewPath);
   app.setViewEngine('twig');
-
-  app.useGlobalFilters(new ErrorValidationFormatFilter());
 
   if (config.appInitHook) {
     await config.appInitHook(app);
   }
 
-  return [await app.init(), moduleFixture];
+  // Listen here, outside any test transaction. Otherwise supertest starts the server lazily
+  // on the first request, the server inherits whatever CLS context that request ran in, and
+  // transaction scoping works by accident. With an already-listening server, the request
+  // middleware above is the only thing that puts a request inside the test transaction.
+  await app.listen(0);
+
+  return [app, moduleFixture];
 }
 
 /**
  * Runs `callback` inside a managed Sequelize transaction that always rolls
  * back (success or failure), for transactional e2e tests.
  *
- * While the callback runs, HTTP requests via supertest pick up the parent
- * transaction through {@link TestingTransactionInterceptor}, so
- * {@link TransactionInterceptor} opens a nested child transaction.
+ * While the callback runs:
+ * - direct model/repository calls join the transaction through cls-hooked;
+ * - supertest requests run inside it too (see the request middleware), and
+ *   route-level `TransactionInterceptor` opens a nested child transaction.
  *
- * @param app Nest application (or testing module holder of TransactionProviderService)
+ * @param app Nest application
  * @param callback Test body; receives the parent transaction for direct DB work
  */
 export const managedTransaction = async <T>(
@@ -199,7 +247,7 @@ export const managedTransaction = async <T>(
  * @param res
  */
 export const checkValidationErrors = (res: request.Response) => {
-  if (res.status === HttpStatus.UNPROCESSABLE_ENTITY) {
+  if (res.status === Number(HttpStatus.UNPROCESSABLE_ENTITY)) {
     console.error('Validation Errors', res.body);
   }
   expect(res.status).not.toEqual(HttpStatus.UNPROCESSABLE_ENTITY);

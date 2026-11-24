@@ -51,7 +51,7 @@ describe('ResourceConversionInterceptor', () => {
     } as any;
 
     const reflector = module.get<Reflector>(Reflector);
-    const getOverrideSpy = jest
+    const getOverrideSpy = vi
       .spyOn(reflector, 'getAllAndOverride')
       .mockReturnValue(SampleResource);
 
@@ -77,7 +77,7 @@ describe('ResourceConversionInterceptor', () => {
     } as any;
 
     const reflector = module.get<Reflector>(Reflector);
-    const getOverrideSpy = jest
+    const getOverrideSpy = vi
       .spyOn(reflector, 'getAllAndOverride')
       .mockReturnValue(SampleResource);
 

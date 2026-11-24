@@ -7,14 +7,17 @@ export class MethodChangeMiddleware implements NestMiddleware {
 
   use(req: Request, res: any, next: () => void) {
     let overrideMethod = req.method;
-    if (typeof req.body === 'object') {
-      overrideMethod =
-        (req.body as never as { _method?: string | undefined })._method ||
-        req.method;
+    const requestedMethod: unknown = (
+      req.body as { _method?: unknown } | null | undefined
+    )?._method;
 
-      if (!this.allowedMethods.includes(overrideMethod.toLowerCase())) {
-        overrideMethod = req.method;
-      }
+    // Only a string from the allow-list may override; anything else (numbers, arrays from
+    // `_method[]=x`, objects) is ignored instead of crashing the request
+    if (
+      typeof requestedMethod === 'string' &&
+      this.allowedMethods.includes(requestedMethod.toLowerCase())
+    ) {
+      overrideMethod = requestedMethod;
     }
     req.method = overrideMethod.toUpperCase();
     next();

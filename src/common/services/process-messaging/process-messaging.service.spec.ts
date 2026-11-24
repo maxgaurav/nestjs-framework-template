@@ -1,3 +1,4 @@
+import { MockInstance, onTestFinished, vi } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProcessMessagingService } from './process-messaging.service';
 import { Logger } from '@nestjs/common';
@@ -14,7 +15,7 @@ import { SystemEvents } from '../../../system-events/system-events';
 
 describe('ProcessMessagingService', () => {
   let service: ProcessMessagingService;
-  let processOnSpy: jest.SpyInstance;
+  let processOnSpy: MockInstance;
   let onHandler: any | ((event) => void);
   let eventType: any;
 
@@ -23,7 +24,7 @@ describe('ProcessMessagingService', () => {
   };
 
   beforeEach(async () => {
-    processOnSpy = jest
+    processOnSpy = vi
       .spyOn(process, 'on')
       .mockImplementation((type: string, callback: any | ((event) => void)) => {
         eventType = type;
@@ -122,8 +123,15 @@ describe('ProcessMessagingService', () => {
   });
 
   it('should send command through send action', () => {
-    const sendSpy = jest.spyOn(process, 'send');
-    const isPrimary = jest
+    // process.send only exists in a child process with an IPC channel (a cluster worker);
+    // the test runner may use worker threads, so provide one for this test
+    const originalSend = process.send;
+    const sendSpy = vi.fn(() => true);
+    process.send = sendSpy;
+    onTestFinished(() => {
+      process.send = originalSend;
+    });
+    const isPrimary = vi
       .spyOn(service, 'isPrimaryProcess')
       .mockReturnValue(false);
     service.sendCommand(CommunicationCommands.HealthCheckStatus, null);
@@ -135,10 +143,10 @@ describe('ProcessMessagingService', () => {
   });
 
   it('should send command through send action will convert to self event', () => {
-    const convertToSystemEvent = jest
+    const convertToSystemEvent = vi
       .spyOn(service, 'convertCommandsToSystemEvents')
-      .mockImplementation();
-    const isPrimary = jest
+      .mockImplementation(() => undefined);
+    const isPrimary = vi
       .spyOn(service, 'isPrimaryProcess')
       .mockReturnValue(true);
     service.sendCommand(CommunicationCommands.HealthCheckStatus, null);
@@ -151,7 +159,7 @@ describe('ProcessMessagingService', () => {
 
   it('should send command to worker', () => {
     const worker: Worker = { send: (value) => value } as any;
-    const sendSpy = jest.spyOn(worker, 'send');
+    const sendSpy = vi.spyOn(worker, 'send');
 
     service.sendCommandToWorker(
       worker,
@@ -167,11 +175,11 @@ describe('ProcessMessagingService', () => {
 
   it('should log errors when send command to worker fails', () => {
     const worker: Worker = { send: (value) => value } as any;
-    const sendSpy = jest.spyOn(worker, 'send').mockImplementation(() => {
+    const sendSpy = vi.spyOn(worker, 'send').mockImplementation(() => {
       throw new Error();
     });
 
-    const errorLogSpy = jest.spyOn(console, 'error');
+    const errorLogSpy = vi.spyOn(console, 'error');
 
     service.sendCommandToWorker(
       worker,
@@ -194,7 +202,7 @@ describe('ProcessMessagingService', () => {
       addListener: (value) => value,
       removeListener: (value, handler) => ({ value, handler }),
     } as any;
-    const listenerSpy = jest
+    const listenerSpy = vi
       .spyOn(worker, 'addListener')
       .mockImplementation((eventName, handler) => {
         eventType = eventName;
@@ -227,7 +235,7 @@ describe('ProcessMessagingService', () => {
       addListener: (value) => value,
       removeListener: (value, handler) => ({ value, handler }),
     } as any;
-    const listenerSpy = jest
+    const listenerSpy = vi
       .spyOn(worker, 'addListener')
       .mockImplementation((eventName, handler) => {
         eventType = eventName;
@@ -265,7 +273,7 @@ describe('ProcessMessagingService', () => {
       addListener: (value) => value,
       removeListener: (value, handler) => ({ value, handler }),
     } as any;
-    const listenerSpy = jest
+    const listenerSpy = vi
       .spyOn(worker, 'addListener')
       .mockImplementation((eventName, handler) => {
         eventType = eventName;
@@ -292,7 +300,7 @@ describe('ProcessMessagingService', () => {
   });
 
   it('should trigger warning when command is not found/mapped', () => {
-    const warnSpy = jest.spyOn(console, 'warn');
+    const warnSpy = vi.spyOn(console, 'warn');
     service.convertCommandsToSystemEvents({
       command: 'fail' as any,
       message: null,
@@ -301,7 +309,7 @@ describe('ProcessMessagingService', () => {
   });
 
   it('should emit health check system event on health check command', () => {
-    const emitSpy = jest.spyOn(eventEmitter, 'emit');
+    const emitSpy = vi.spyOn(eventEmitter, 'emit');
     service.convertCommandsToSystemEvents({
       command: CommunicationCommands.HealthCheckRequest,
       message: null,
@@ -311,7 +319,7 @@ describe('ProcessMessagingService', () => {
   });
 
   it('should recursively call system event converter when broadcast command is found', () => {
-    const emitSpy = jest.spyOn(eventEmitter, 'emit');
+    const emitSpy = vi.spyOn(eventEmitter, 'emit');
     service.convertCommandsToSystemEvents({
       command: CommunicationCommands.BroadcastCommand,
       message: {
