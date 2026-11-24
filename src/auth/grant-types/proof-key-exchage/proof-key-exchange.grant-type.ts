@@ -30,7 +30,8 @@ export class ProofKeyExchangeGrantType implements GrantTypeImplementation {
       payload.code_verifier as string,
     );
 
-    if (!result) {
+    // A client revoked after the authorization step must not receive tokens
+    if (!result || result.client.is_revoked) {
       const errors: ValidationError[] = [
         {
           property: 'code_verifier',

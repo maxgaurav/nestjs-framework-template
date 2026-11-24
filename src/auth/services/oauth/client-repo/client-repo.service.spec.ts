@@ -120,7 +120,7 @@ describe('ClientRepoService', () => {
     ).toEqual(client);
 
     expect(findSpy).toHaveBeenCalledWith({
-      where: { id: client.id, secret: client.secret },
+      where: { id: client.id, secret: client.secret, is_revoked: false },
       transaction,
     });
   });
@@ -137,7 +137,7 @@ describe('ClientRepoService', () => {
     ).toEqual(null);
 
     expect(findSpy).toHaveBeenCalledWith({
-      where: { id: client.id, secret: client.secret },
+      where: { id: client.id, secret: client.secret, is_revoked: false },
       transaction,
     });
   });
