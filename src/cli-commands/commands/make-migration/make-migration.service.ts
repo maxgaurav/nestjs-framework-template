@@ -70,7 +70,7 @@ export class MakeMigrationService {
         }
         dateFormat[index] = formatPart.value;
         return dateFormat;
-      }, new Array(6))
+      }, new Array<string>(6))
       .join('');
 
     return umzug.create({

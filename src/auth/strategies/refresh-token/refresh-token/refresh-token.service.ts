@@ -34,7 +34,10 @@ export class RefreshTokenService extends PassportStrategy(
       throw new NotFoundException();
     }
 
-    const payload = await this.validateContent(request.body, RefreshTokenDto);
+    const payload = await this.validateContent(
+      request.body as Record<string, unknown>,
+      RefreshTokenDto,
+    );
 
     const client = await this.clientRepo.findForIdAndSecret(
       payload.client_id,

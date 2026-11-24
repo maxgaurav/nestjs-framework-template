@@ -22,6 +22,20 @@ The app is native ESM (`"type": "module"`):
 * CommonJS packages that build their exports dynamically (e.g. `twig`, `jsonwebtoken`) must use a **default import** (`import Twig from 'twig'`); `import * as` only exposes `default` under native ESM.
 * Migrations are ES modules exporting `export default { up, down }`.
 
+## TypeScript strictness
+
+`tsconfig.json` is strict across `src` and `test`: `strict` plus `noUncheckedIndexedAccess`, `noImplicitOverride`, `noImplicitReturns`, `noUnusedLocals`, `noUnusedParameters`, `noFallthroughCasesInSwitch`, `noPropertyAccessFromIndexSignature`. `npm run typecheck` (TS 7) must report 0 errors.
+
+* **Sequelize models**: columns *and associations* use `declare` (`@Column declare public email: string;`, `@BelongsTo(() => X) declare public x: X | null;`). A class field would be re-initialised after Sequelize's constructor and wipe values and eager-loaded associations.
+* **DTOs, API resources, Swagger response classes**: definite assignment on required fields (`public email!: string;`); `ValidationPipe` / class-transformer assign them. Optional fields stay `?`.
+* **State set by a lifecycle hook**: `!` plus a comment naming the hook (e.g. `onApplicationBootstrap`). Never use `!` for a value that can really be missing; type it `T | undefined` and handle it.
+* **Indexed access** returns `T | undefined`: handle it (early throw, default, guard) instead of `!`.
+* **`override`** on every member that overrides a base class member.
+* **Config loaders** read `process.env['KEY']` and use `satisfies XConfig` (never `as XConfig`), so a missing or mistyped key fails to compile. Variables the app cannot run without use `requiredEnv('KEY')` (fails at boot).
+* **Session data** is typed by augmenting `express-session`'s `SessionData` in `src/express.d.ts`; add new session keys there instead of casting `req.session`.
+* `exactOptionalPropertyTypes` is **deliberately off**: Sequelize, class-validator, `node:tls` and `@nestjs/storage` option types reject an explicit `undefined` (every optional `{ transaction }`), and the workarounds add noise without safety.
+* Unused parameters required by a signature are prefixed with `_`.
+
 ## API vs web controllers
 
 * **API (JSON)** — versioned controllers (`version: ['1']`, global prefix `api/v`), `ResourceConversionInterceptor`, `@ResourceMap`, auth via token guards. Return models/repo results; resources shape the response.

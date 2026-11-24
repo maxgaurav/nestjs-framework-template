@@ -1,6 +1,6 @@
 # Upgrade plan: NestJS 11 → 12, ESM, Vitest, TypeScript 7, oxlint, `@nestjs/mail`, `@nestjs/storage`
 
-Status: **in progress** on branch `feature/upgrade-nestjs`: phases 01–08 done, 10 next. Plan written 2026-11-24 against `master` @ `f62f6cf`.
+Status: **in progress** on branch `feature/upgrade-nestjs`: phases 01–08 and 10 done, 09 next. Plan written 2026-11-24 against `master` @ `f62f6cf`.
 
 Reference implementation: `wisekeep-backend/upgrade-nestjs/` (same template lineage, upgraded
 10 → 12 on 2026-11-20…23). Its findings are reused here. This plan goes further than wisekeep in two
@@ -66,7 +66,7 @@ Each phase leaves the app building, booting and passing tests, so each one can b
 | 06 | [ESLint → oxlint](./06-oxlint.md)                                        | 01 (05 for type-aware rules) | ✅ done |
 | 07 | [Mail → `@nestjs/mail`](./07-mail.md)                                    | 03         | ✅ done |
 | 08 | [File storage → `@nestjs/storage`](./08-file-storage.md)                 | 03         | ✅ done |
-| 10 | [Full strict TypeScript](./10-strict-typescript.md)                      | 05 (runs before 09) | ⬜ not started |
+| 10 | [Full strict TypeScript](./10-strict-typescript.md)                      | 05 (runs before 09) | ✅ done |
 | 09 | [CI, AGENTS.md, final verification](./09-ci-and-verification.md)         | all        | ⬜ not started |
 
 **Why Vitest comes before Nest 12.** Nest 12 packages are ESM-only. Jest loads them only on Node
@@ -103,7 +103,7 @@ and before 09, so CI enforces the strict flags.
    `@ReqTransaction()`. See 02.
 10. **No legacy shims.** This is a template, so things are replaced outright.
 11. **Full strict TypeScript** (phase 10): drop `strictPropertyInitialization: false` and add
-    `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`, `noImplicitOverride`,
+    `noUncheckedIndexedAccess` (`exactOptionalPropertyTypes` was later left off on purpose, see phase 10), `noImplicitOverride`,
     `noPropertyAccessFromIndexSignature` and the unused/returns checks. About 140 errors in `src`
     (measured), mostly mechanical: `declare` on model columns, `!` on DTO fields.
 
@@ -129,13 +129,15 @@ and before 09, so CI enforces the strict flags.
 | `ClientRepoService.revoke()` set `is_revoked: false` | ✅ fixed in phase 02 |
 | Password grant (`POST /oauth/token`) did not check `is_revoked` / `grant_type`; refresh and code/PKCE exchanges accepted revoked clients | ✅ fixed after phase 02 (`test/auth/oauth-token.e2e-spec.ts`) |
 | `registerEventCallBacks` without a transaction does not fire immediately (AGENTS.md says it does) | open; decide in phase 09 |
-| `tsconfig.json` includes only `src`, so `test/` is never type-checked | phase 10 |
+| `tsconfig.json` includes only `src`, so `test/` is never type-checked | ✅ fixed in phase 10 |
 | `migration:rollback --till N` always rolled back 1 (string option) | ✅ fixed in phase 03 |
 | `ContextInterceptor` returned 500 for any body-less non-GET request (Express 5) | ✅ fixed in phase 03 |
 | `GET /oauth/authorization` with invalid params and no `Referer` redirects to itself (loop) | planned in phase 09 (port wisekeep's fix) |
 | Sessions run on every API request; `KillForApiInterceptor` destroys them afterwards (logs web users out when they call the API, substring URL match) | planned in phase 09 (stateless API routes, `@UseSession()` opt-in) |
 | `dist/cli.js` does not find migrations (`*.ts` glob) | ✅ fixed in phase 04 (`MigratorFactoryService`) |
 | migration run/rollback used different module shapes (`default.up` vs `down`) | ✅ fixed in phase 04 |
+| `AccessTokenModel` associations were class fields (eager-loaded `client` always `undefined`) | ✅ fixed in phase 10 |
+| Missing `APP_SECRET` left the session/encryption secret `undefined` | ✅ fixed in phase 10 (required at boot) |
 | Swagger operation ids duplicated as `OauthController_` (`LoggingDecorator` dropped the method name) | ✅ fixed in phase 04 |
 
 ## Follow-ups (out of scope)

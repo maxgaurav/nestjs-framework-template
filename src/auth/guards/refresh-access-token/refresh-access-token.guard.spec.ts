@@ -1,3 +1,4 @@
+import type { ExecutionContext } from '@nestjs/common';
 import { RefreshAccessTokenGuard } from './refresh-access-token.guard.js';
 import {
   UnauthorizedException,
@@ -20,7 +21,12 @@ describe('RefreshAccessTokenGuard', () => {
     let errorThrown = false;
 
     try {
-      guard.handleRequest(new UnauthorizedException(), true, false, false);
+      guard.handleRequest(
+        new UnauthorizedException(),
+        true,
+        false,
+        {} as ExecutionContext,
+      );
     } catch (err) {
       if (err instanceof UnprocessableEntityException) {
         errorThrown = true;
@@ -34,7 +40,7 @@ describe('RefreshAccessTokenGuard', () => {
     let errorThrown = false;
     const error = new UnprocessableEntityException();
     try {
-      guard.handleRequest(error, true, false, false);
+      guard.handleRequest(error, true, false, {} as ExecutionContext);
     } catch (err) {
       if (err instanceof UnprocessableEntityException && err === error) {
         errorThrown = true;
@@ -49,7 +55,14 @@ describe('RefreshAccessTokenGuard', () => {
       .spyOn(AuthGuard('refreshToken').prototype, 'handleRequest')
       .mockReturnValueOnce(true);
 
-    expect(guard.handleRequest(false, true, true, true, true)).toEqual(true);
-    expect(superHandleSpy).toHaveBeenCalledWith(false, true, true, true, true);
+    const context = {} as ExecutionContext;
+    expect(guard.handleRequest(false, true, true, context, true)).toEqual(true);
+    expect(superHandleSpy).toHaveBeenCalledWith(
+      false,
+      true,
+      true,
+      context,
+      true,
+    );
   });
 });
