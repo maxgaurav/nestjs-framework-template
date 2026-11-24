@@ -10,7 +10,7 @@ export class UserModel extends BaseModel<UserModel> {
   @Column(DataType.STRING)
   declare public password: string | null;
 
-  public toJSON(): any {
+  public override toJSON(): any {
     const content = super.toJSON() as Partial<UserModel>;
     delete content.password;
     return content;

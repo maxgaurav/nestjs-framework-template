@@ -16,7 +16,7 @@ import { StorageError, StorageServiceError } from '@nestjs/storage';
 export class StorageErrorFilter extends BaseExceptionFilter {
   private readonly logger = new Logger(StorageErrorFilter.name);
 
-  catch(exception: StorageError, host: ArgumentsHost) {
+  override catch(exception: StorageError, host: ArgumentsHost) {
     super.catch(this.toHttpException(exception), host);
   }
 

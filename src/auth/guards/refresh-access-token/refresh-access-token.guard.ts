@@ -12,7 +12,7 @@ export class RefreshAccessTokenGuard
   extends AuthGuard('refreshToken')
   implements CanActivate
 {
-  public handleRequest(
+  public override handleRequest(
     err: any,
     user: any,
     info: any,

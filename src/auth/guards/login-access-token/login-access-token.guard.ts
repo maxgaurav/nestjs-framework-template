@@ -20,7 +20,7 @@ export class LoginAccessTokenGuard
    * @param context
    * @param status
    */
-  public handleRequest(
+  public override handleRequest(
     err: any,
     user: any,
     info: any,
