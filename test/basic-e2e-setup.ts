@@ -13,6 +13,12 @@ import {
 import { Test, TestingModule, TestingModuleBuilder } from '@nestjs/testing';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { ConfigService } from '@nestjs/config';
+import { HttpAdapterHost } from '@nestjs/core';
+import {
+  InMemoryDisk,
+  STORAGE_MODULE_OPTIONS,
+  type StorageModuleOptions,
+} from '@nestjs/storage';
 import { Transaction } from 'sequelize';
 import { useContainer } from 'class-validator';
 import helmet from 'helmet';
@@ -31,7 +37,12 @@ import { RedirectFromLoginFilter } from '../src/session-manager/filters/redirect
 import { SessionMapPreviousUrlInterceptor } from '../src/session-manager/interceptors/session-map-previous-url/session-map-previous-url-interceptor.service.js';
 import { SetupIntendInterceptor } from '../src/session-manager/interceptors/setup-intend/setup-intend.interceptor.js';
 import { KillForApiInterceptor } from '../src/session-manager/interceptors/kill-for-api/kill-for-api.interceptor.js';
-import { ViewConfig } from '../src/environment/environment-types.interface.js';
+import {
+  StorageConfig,
+  ViewConfig,
+} from '../src/environment/environment-types.interface.js';
+import { StorageErrorFilter } from '../src/helpers/filters/storage-error/storage-error.filter.js';
+import { StorageDisks } from '../src/file-management/storage-disks.js';
 import { registerPgTypeParsers } from '../src/helpers/pg-type-parsers/pg-type-parsers.js';
 import {
   registerSequelizeCls,
@@ -136,7 +147,29 @@ export async function basicE2eSetup(
   const rootModule = config.rootModule ?? AppModule;
   let moduleBuilder: TestingModuleBuilder = Test.createTestingModule({
     imports: [rootModule],
-  });
+  })
+    // Same disk names as the app, kept in memory so tests never touch storage/ or S3
+    .overrideProvider(STORAGE_MODULE_OPTIONS)
+    .useFactory({
+      factory: (configService: ConfigService): StorageModuleOptions => {
+        const storage = configService.getOrThrow<StorageConfig>('storage');
+        return {
+          default: StorageDisks.Private,
+          disks: {
+            [StorageDisks.Private]: new InMemoryDisk({
+              signedUrls: {
+                baseUrl: `${storage.signedUrlBase}/${StorageDisks.Private}`,
+                keys: storage.signingKeys,
+              },
+            }),
+            [StorageDisks.Public]: new InMemoryDisk({
+              publicUrl: storage.publicUrl,
+            }),
+          },
+        };
+      },
+      inject: [ConfigService],
+    });
 
   if (config.moduleBuilderHook) {
     moduleBuilder = config.moduleBuilderHook(moduleBuilder);
@@ -165,6 +198,9 @@ export async function basicE2eSetup(
     }),
   );
   app.useGlobalFilters(new ErrorValidationFormatFilter());
+  app.useGlobalFilters(
+    new StorageErrorFilter(app.get(HttpAdapterHost).httpAdapter),
+  );
   app.useGlobalFilters(app.get(RedirectFromLoginFilter));
   app.enableVersioning({ type: VersioningType.URI, prefix: 'api/v' });
 

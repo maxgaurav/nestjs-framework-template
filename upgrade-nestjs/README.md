@@ -1,6 +1,6 @@
 # Upgrade plan: NestJS 11 → 12, ESM, Vitest, TypeScript 7, oxlint, `@nestjs/mail`, `@nestjs/storage`
 
-Status: **in progress** on branch `feature/upgrade-nestjs`: phases 01–07 done, 08 next. Plan written 2026-11-24 against `master` @ `f62f6cf`.
+Status: **in progress** on branch `feature/upgrade-nestjs`: phases 01–08 done, 10 next. Plan written 2026-11-24 against `master` @ `f62f6cf`.
 
 Reference implementation: `wisekeep-backend/upgrade-nestjs/` (same template lineage, upgraded
 10 → 12 on 2026-11-20…23). Its findings are reused here. This plan goes further than wisekeep in two
@@ -65,7 +65,7 @@ Each phase leaves the app building, booting and passing tests, so each one can b
 | 05 | [TypeScript 7 build and direct run (gated)](./05-typescript-7-build-and-run.md) | 04  | ✅ done (GO) |
 | 06 | [ESLint → oxlint](./06-oxlint.md)                                        | 01 (05 for type-aware rules) | ✅ done |
 | 07 | [Mail → `@nestjs/mail`](./07-mail.md)                                    | 03         | ✅ done |
-| 08 | [File storage → `@nestjs/storage`](./08-file-storage.md)                 | 03         | ⬜ not started |
+| 08 | [File storage → `@nestjs/storage`](./08-file-storage.md)                 | 03         | ✅ done |
 | 10 | [Full strict TypeScript](./10-strict-typescript.md)                      | 05 (runs before 09) | ⬜ not started |
 | 09 | [CI, AGENTS.md, final verification](./09-ci-and-verification.md)         | all        | ⬜ not started |
 
