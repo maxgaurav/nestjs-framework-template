@@ -38,7 +38,8 @@ export class ClientRepoService {
   }
 
   /**
-   * Finds client for the id and secret
+   * Finds an active (not revoked) client for the id and secret.
+   * Revoked clients must not authenticate, so they are excluded at the query level.
    * @param id
    * @param secret
    * @param transaction
@@ -49,7 +50,7 @@ export class ClientRepoService {
     transaction?: Transaction,
   ): Promise<ClientModel | null> {
     const result = await this.clientModel.findOne({
-      where: { id, secret },
+      where: { id, secret, is_revoked: false },
       transaction,
     });
     return result ? result : null;

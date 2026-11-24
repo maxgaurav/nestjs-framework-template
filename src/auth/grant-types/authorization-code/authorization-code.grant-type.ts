@@ -31,7 +31,8 @@ export class AuthorizationCodeGrantType implements GrantTypeImplementation {
       payload.code as string,
       payload.client_id as string,
     );
-    if (!result) {
+    // A client revoked after the authorization step must not receive tokens
+    if (!result || result.client.is_revoked) {
       const errors: ValidationError[] = [
         {
           property: 'credentials',

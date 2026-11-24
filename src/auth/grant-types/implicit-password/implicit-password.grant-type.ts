@@ -5,7 +5,10 @@ import {
   UnprocessableEntityException,
   ValidationError,
 } from '@nestjs/common';
-import { GrantTypeImplementation } from '../grant-type-implementation';
+import {
+  GrantTypeImplementation,
+  GrantTypes,
+} from '../grant-type-implementation';
 import { ClientModel } from '../../../databases/models/oauth/client.model';
 import { UserModel } from '../../../databases/models/user.model';
 import { AuthService } from '../../services/auth/auth.service';
@@ -34,7 +37,8 @@ export class ImplicitPasswordGrantType implements GrantTypeImplementation {
       payload.client_secret as string,
     );
 
-    if (!client) {
+    // Only active clients registered for the password grant may use it
+    if (!client || client.grant_type !== GrantTypes.ImplicitPassword) {
       const errors: ValidationError[] = [
         {
           property: 'credentials',
