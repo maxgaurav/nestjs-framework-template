@@ -4,22 +4,14 @@ import { AccessTokenRepoService } from '../../services/oauth/access-token-repo/a
 import { RefreshTokenRepoService } from '../../services/oauth/refresh-token-repo/refresh-token-repo.service.js';
 import { TransactionInterceptor } from '../../../transaction-manager/interceptors/transaction/transaction.interceptor.js';
 import { AuthUser } from '../../decorators/auth-user.decorator.js';
-import { UserModel } from '../../../databases/models/user.model.js';
-import { ClientModel } from '../../../databases/models/oauth/client.model.js';
+import { AccessTokenModel } from '../../../databases/models/oauth/access-token.model.js';
+import type { GrantTypeResult } from '../../grant-types/grant-type-implementation.js';
 import { ReqTransaction } from '../../../transaction-manager/decorators/transaction.decorator.js';
 import { Transaction } from 'sequelize';
-import { RefreshAccessTokenGuard } from '../../guards/refresh-access-token/refresh-access-token.guard.js';
 import { RefreshTokenModel } from '../../../databases/models/oauth/refresh-token.model.js';
 import { ConfigService } from '@nestjs/config';
 import { JwtConfig } from '../../../environment/environment-types.interface.js';
-import {
-  ApiBody,
-  ApiHeader,
-  ApiOkResponse,
-  ApiProperty,
-  ApiResponse,
-} from '@nestjs/swagger';
-import { RefreshTokenDto } from '../../dtos/refresh-token.dto.js';
+import { ApiBody, ApiHeader, ApiProperty, ApiResponse } from '@nestjs/swagger';
 import { AccessTokenDto } from '../../dtos/access-token.dto.js';
 import { LoggingDecorator } from '../../../common/decorators/logging.decorator.js';
 import { HashEncryptService } from '../../services/hash-encrypt/hash-encrypt.service.js';
@@ -88,23 +80,26 @@ export class OauthController {
     messageAfter: 'Oauth2: Generated tokens and returning response',
   })
   public async token(
-    @AuthUser() user: { user: UserModel; client: ClientModel },
+    @AuthUser() grant: GrantTypeResult,
     @ReqTransaction() transaction?: Transaction,
   ): Promise<BearerTokenResult> {
     const accessTokenExpiration = this.accessTokenExpiration();
     const refreshTokenExpiration = this.refreshTokenExpiration();
 
-    const accessToken = await this.accessTokenRepo.create(
-      user.client,
-      user.user,
-      accessTokenExpiration,
-      transaction,
-    );
-    const refreshToken = await this.refreshTokenRepo.create(
-      accessToken,
-      refreshTokenExpiration,
-      transaction,
-    );
+    const { accessToken, refreshToken } = grant.refreshToken
+      ? // refresh_token grant: rotate (the used pair is revoked, a new pair issued)
+        await this.refreshTokenRepo.consumeToken(
+          grant.refreshToken,
+          refreshTokenExpiration,
+          accessTokenExpiration,
+          transaction,
+        )
+      : await this.issue(
+          grant,
+          accessTokenExpiration,
+          refreshTokenExpiration,
+          transaction,
+        );
 
     return {
       type: 'Bearer',
@@ -116,57 +111,29 @@ export class OauthController {
   }
 
   /**
-   * Regenerate tokens using refresh token
-   * @param currentRefreshToken
-   * @param transaction
+   * Issues a fresh access + refresh token pair for the client and user
    */
-  @ApiHeader({
-    name: 'accept',
-    allowEmptyValue: false,
-    required: true,
-    schema: {
-      type: 'string',
-      enum: ['application/json'],
-    },
-  })
-  @ApiBody({ type: RefreshTokenDto })
-  @ApiOkResponse({
-    type: BearerTokenResponse,
-    links: {
-      requestBody: {
-        $ref: '#/components/schemas/RefreshTokenDto',
-      },
-    },
-  })
-  @UseInterceptors(TransactionInterceptor)
-  @UseGuards(RefreshAccessTokenGuard)
-  @Post('refresh')
-  @LoggingDecorator({
-    messageBefore: 'Starting Oauth2 refresh token generation Implicit login',
-    messageAfter: 'Oauth2 Refresh Token created',
-  })
-  public async refreshAccessToken(
-    @AuthUser() currentRefreshToken: RefreshTokenModel,
-    @ReqTransaction() transaction?: Transaction,
-  ): Promise<BearerTokenResult> {
-    const accessTokenExpiration = this.accessTokenExpiration();
-    const refreshTokenExpiration = this.refreshTokenExpiration();
-
-    const { accessToken, refreshToken } =
-      await this.refreshTokenRepo.consumeToken(
-        currentRefreshToken,
-        refreshTokenExpiration,
-        accessTokenExpiration,
-        transaction,
-      );
-
-    return {
-      type: 'Bearer',
-      access_token: await this.accessTokenRepo.createBearerToken(accessToken),
-      refresh_token:
-        await this.refreshTokenRepo.createBearerToken(refreshToken),
-      expires_at: accessTokenExpiration,
-    };
+  protected async issue(
+    grant: GrantTypeResult,
+    accessTokenExpiration: Date | null,
+    refreshTokenExpiration: Date | null,
+    transaction?: Transaction,
+  ): Promise<{
+    accessToken: AccessTokenModel;
+    refreshToken: RefreshTokenModel;
+  }> {
+    const accessToken = await this.accessTokenRepo.create(
+      grant.client,
+      grant.user,
+      accessTokenExpiration,
+      transaction,
+    );
+    const refreshToken = await this.refreshTokenRepo.create(
+      accessToken,
+      refreshTokenExpiration,
+      transaction,
+    );
+    return { accessToken, refreshToken };
   }
 
   /**

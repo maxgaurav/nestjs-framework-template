@@ -11,6 +11,7 @@ import { GrantTypes } from '../../src/auth/grant-types/grant-type-implementation
 import { getModelToken } from '@nestjs/sequelize';
 import { createHmac } from 'node:crypto';
 import { AuthService } from '../../src/auth/services/auth/auth.service.js';
+import { RefreshTokenRepoService } from '../../src/auth/services/oauth/refresh-token-repo/refresh-token-repo.service.js';
 import { AccessTokenModel } from '../../src/databases/models/oauth/access-token.model.js';
 import { AccessTokenRepoService } from '../../src/auth/services/oauth/access-token-repo/access-token-repo.service.js';
 
@@ -156,45 +157,147 @@ describe('OAuth token endpoints (e2e)', () => {
       }));
   });
 
-  describe('POST /oauth/refresh', () => {
-    const refresh = (client: ClientModel, refreshToken: string) =>
+  describe('POST /oauth/token (refresh_token grant)', () => {
+    const DAY = 24 * 60 * 60 * 1000;
+
+    const refreshGrant = (client: ClientModel, refreshToken: string) =>
       request(app.getHttpServer())
-        .post('/oauth/refresh')
+        .post('/oauth/token')
         .set('Accept', 'application/json')
         .send({
+          grant_type: GrantTypes.RefreshToken,
           refresh_token: refreshToken,
           client_id: client.id,
           client_secret: client.secret,
         });
 
-    it('issues new tokens for an active client', () =>
+    const issueTokens = async () => {
+      const client = await clientFactory(app, GrantTypes.ImplicitPassword);
+      const user = await userFactory(app, { password });
+      const response = await passwordGrant(client, user).expect(
+        HttpStatus.CREATED,
+      );
+      return {
+        client,
+        user,
+        accessToken: response.body.access_token as string,
+        refreshToken: response.body.refresh_token as string,
+      };
+    };
+
+    const accessTokens = () =>
+      app.get<typeof AccessTokenModel>(getModelToken(AccessTokenModel));
+
+    it('issues a new token pair', () =>
       managedTransaction(app, async () => {
-        const client = await clientFactory(app, GrantTypes.ImplicitPassword);
-        const user = await userFactory(app, { password });
-        const tokens = await passwordGrant(client, user).expect(
+        const { client, refreshToken } = await issueTokens();
+
+        const response = await refreshGrant(client, refreshToken).expect(
           HttpStatus.CREATED,
         );
 
-        const response = await refresh(
-          client,
-          tokens.body.refresh_token as string,
-        ).expect(HttpStatus.CREATED);
-        expect(response.body.access_token).toEqual(expect.any(String));
+        expect(response.body).toEqual(
+          expect.objectContaining({
+            type: 'Bearer',
+            access_token: expect.any(String),
+            refresh_token: expect.any(String),
+          }),
+        );
+        expect(response.body.refresh_token).not.toEqual(refreshToken);
+      }));
+
+    it('rotates: the used refresh token and its access token stop working', () =>
+      managedTransaction(app, async () => {
+        const { client, user, refreshToken } = await issueTokens();
+        await refreshGrant(client, refreshToken).expect(HttpStatus.CREATED);
+
+        await refreshGrant(client, refreshToken).expect(
+          HttpStatus.UNPROCESSABLE_ENTITY,
+        );
+        // only the new access token is left for the user
+        expect(
+          await accessTokens().count({ where: { user_id: user.id } }),
+        ).toEqual(1);
+      }));
+
+    // Regression: consumeToken gave the access token the refresh lifetime and vice versa
+    it('gives the new tokens their own lifetimes', () =>
+      managedTransaction(app, async () => {
+        const { client, user, refreshToken } = await issueTokens();
+        await refreshGrant(client, refreshToken).expect(HttpStatus.CREATED);
+
+        const accessToken = await accessTokens().findOne({
+          where: { user_id: user.id },
+        });
+        const newRefresh = await app
+          .get(RefreshTokenRepoService)
+          .refreshToken.findOne({
+            where: { access_token_id: accessToken!.id },
+          });
+
+        const accessLifetime =
+          new Date(accessToken!.expires_at!).getTime() - Date.now();
+        const refreshLifetime =
+          new Date(newRefresh!.expires_at!).getTime() - Date.now();
+        expect(Math.round(accessLifetime / DAY)).toEqual(30);
+        expect(Math.round(refreshLifetime / DAY)).toEqual(60);
+      }));
+
+    // Regression: a refresh token could be redeemed with any client's credentials
+    it('rejects a refresh token presented by another client', () =>
+      managedTransaction(app, async () => {
+        const { refreshToken } = await issueTokens();
+        const otherClient = await clientFactory(
+          app,
+          GrantTypes.ImplicitPassword,
+        );
+
+        await refreshGrant(otherClient, refreshToken).expect(
+          HttpStatus.UNPROCESSABLE_ENTITY,
+        );
       }));
 
     it('rejects a client revoked after the tokens were issued', () =>
       managedTransaction(app, async () => {
-        const client = await clientFactory(app, GrantTypes.ImplicitPassword);
-        const user = await userFactory(app, { password });
-        const tokens = await passwordGrant(client, user).expect(
-          HttpStatus.CREATED,
-        );
-
+        const { client, refreshToken } = await issueTokens();
         await app.get(ClientRepoService).revoke(client);
 
-        await refresh(client, tokens.body.refresh_token as string).expect(
+        await refreshGrant(client, refreshToken).expect(
           HttpStatus.UNPROCESSABLE_ENTITY,
         );
       }));
+
+    it('rejects a malformed or forged refresh token without a server error', () =>
+      managedTransaction(app, async () => {
+        const { client } = await issueTokens();
+
+        await refreshGrant(client, 'not-a-jwt').expect(
+          HttpStatus.UNPROCESSABLE_ENTITY,
+        );
+      }));
+
+    it('requires the refresh token for this grant', () =>
+      managedTransaction(app, async () => {
+        const { client } = await issueTokens();
+
+        const response = await request(app.getHttpServer())
+          .post('/oauth/token')
+          .set('Accept', 'application/json')
+          .send({
+            grant_type: GrantTypes.RefreshToken,
+            client_id: client.id,
+            client_secret: client.secret,
+          })
+          .expect(HttpStatus.UNPROCESSABLE_ENTITY);
+        expect(response.body.errors.refresh_token).toBeDefined();
+      }));
+
+    it('no longer serves the dedicated POST /oauth/refresh endpoint', async () => {
+      await request(app.getHttpServer())
+        .post('/oauth/refresh')
+        .set('Accept', 'application/json')
+        .send({})
+        .expect(HttpStatus.NOT_FOUND);
+    });
   });
 });

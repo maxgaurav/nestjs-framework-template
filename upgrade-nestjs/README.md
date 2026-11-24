@@ -140,6 +140,8 @@ and before 09, so CI enforces the strict flags.
 | Missing `APP_SECRET` left the session/encryption secret `undefined` | ✅ fixed in phase 10 (required at boot) |
 | JWT signed HS256 with the key file as secret (RSA keys: refresh 500; empty keys: no real signature) | ✅ fixed in phase 09 (RS256, keys required at boot) |
 | `MemoryStore` per session middleware (opt-in routes could not see the web session) | ✅ fixed in phase 09 |
+| Refresh: lifetimes swapped on rotation; refresh token usable by any client | ✅ fixed in phase 09 (refresh_token grant) |
+| `LoggingService` logged errors as `{}` | ✅ fixed in phase 09 |
 | Swagger operation ids duplicated as `OauthController_` (`LoggingDecorator` dropped the method name) | ✅ fixed in phase 04 |
 
 ## Follow-ups (out of scope)

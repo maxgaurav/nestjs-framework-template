@@ -38,5 +38,9 @@ describe('LoggingService', () => {
     const service = module.get(LoggingService);
     expect(service.generateMessage('hello')).toEqual('[COMMAND-abc] hello');
     expect(service.generateMessage({ a: 1 })).toEqual('[COMMAND-abc] {"a":1}');
+    // Regression: errors were logged as "{}"
+    expect(service.generateMessage(new Error('boom'))).toContain(
+      '[COMMAND-abc] Error: boom',
+    );
   });
 });

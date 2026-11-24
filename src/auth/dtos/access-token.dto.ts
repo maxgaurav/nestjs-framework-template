@@ -33,13 +33,14 @@ export class AccessTokenDto {
   public password: string | null = null;
 
   @ApiProperty({
-    description: `Required with grant_type ${GrantTypes.ImplicitPassword}, ${GrantTypes.AuthorizationCode}`,
+    description: `Required with grant_type ${GrantTypes.ImplicitPassword}, ${GrantTypes.AuthorizationCode}, ${GrantTypes.RefreshToken}`,
     required: false,
   })
   @ValidateIf(
     (obj: AccessTokenDto) =>
       obj.grant_type === GrantTypes.ImplicitPassword ||
-      obj.grant_type === GrantTypes.AuthorizationCode,
+      obj.grant_type === GrantTypes.AuthorizationCode ||
+      obj.grant_type === GrantTypes.RefreshToken,
   )
   @IsNotEmpty()
   @IsString()
@@ -47,13 +48,14 @@ export class AccessTokenDto {
   public client_id: string | null = null;
 
   @ApiProperty({
-    description: `Required with grant_type ${GrantTypes.ImplicitPassword}, ${GrantTypes.AuthorizationCode}`,
+    description: `Required with grant_type ${GrantTypes.ImplicitPassword}, ${GrantTypes.AuthorizationCode}, ${GrantTypes.RefreshToken}`,
     required: false,
   })
   @ValidateIf(
     (obj: AccessTokenDto) =>
       obj.grant_type === GrantTypes.ImplicitPassword ||
-      obj.grant_type === GrantTypes.AuthorizationCode,
+      obj.grant_type === GrantTypes.AuthorizationCode ||
+      obj.grant_type === GrantTypes.RefreshToken,
   )
   @IsNotEmpty()
   @IsString()
@@ -85,4 +87,15 @@ export class AccessTokenDto {
   @IsNotEmpty()
   @IsUUID(4)
   public code: string | null = null;
+
+  @ApiProperty({
+    required: false,
+    description: `Required with grant_type ${GrantTypes.RefreshToken}: the refresh token from an earlier token response`,
+  })
+  @ValidateIf(
+    (obj: AccessTokenDto) => obj.grant_type === GrantTypes.RefreshToken,
+  )
+  @IsNotEmpty()
+  @IsString()
+  public refresh_token: string | null = null;
 }

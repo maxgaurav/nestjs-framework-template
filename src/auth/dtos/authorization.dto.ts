@@ -15,7 +15,7 @@ import { ClientIdExists } from '../validators/client-id-exists/client-id-exists.
 export class AuthorizationDto {
   @IsNotEmpty()
   @IsEnum(GrantTypes)
-  @IsNotIn([GrantTypes.ImplicitPassword])
+  @IsNotIn([GrantTypes.ImplicitPassword, GrantTypes.RefreshToken])
   public grant_type!: GrantTypes;
 
   @IsNotEmpty()

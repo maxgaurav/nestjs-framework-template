@@ -129,8 +129,7 @@ Pick the guard that matches the entry point (see `src/auth/guards/`):
 
 * **Web session login** — `WebGuard` (and related web/redirect interceptors)
 * **API bearer access token** — `AccessTokenGuard`
-* **OAuth password / login token exchange** — `LoginAccessTokenGuard`
-* **OAuth refresh** — `RefreshAccessTokenGuard`
+* **OAuth token endpoint** (`POST /oauth/token`, every grant: `password`, `authorization-code`, `pkce`, `refresh_token`) — `LoginAccessTokenGuard`. A new grant is a class implementing `GrantTypeImplementation` under `src/auth/grant-types/`, registered in `GrantTypeMappings` and the `AuthModule` providers. Refresh is the `refresh_token` grant (RFC 6749 §6); there is no separate refresh endpoint. Refresh tokens are bound to their client and rotated on use.
 * Use `@AuthUser()` for the authenticated user on protected handlers.
 
 ### Authorization
