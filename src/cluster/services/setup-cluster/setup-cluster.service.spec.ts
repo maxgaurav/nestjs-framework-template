@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { SetupClusterService } from './setup-cluster.service';
+import { SetupClusterService } from './setup-cluster.service.js';
 import { ConfigService } from '@nestjs/config';
-import { ProcessMessagingService } from '../../../common/services/process-messaging/process-messaging.service';
+import { ProcessMessagingService } from '../../../common/services/process-messaging/process-messaging.service.js';
 
 describe('SetupClusterService', () => {
   let service: SetupClusterService;

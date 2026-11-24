@@ -5,15 +5,15 @@ import {
 } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-custom';
-import { UserModel } from '../../../databases/models/user.model';
-import { HashEncryptService } from '../../services/hash-encrypt/hash-encrypt.service';
-import { AuthorizationDto } from '../../dtos/authorization.dto';
+import { UserModel } from '../../../databases/models/user.model.js';
+import { HashEncryptService } from '../../services/hash-encrypt/hash-encrypt.service.js';
+import { AuthorizationDto } from '../../dtos/authorization.dto.js';
 import type { Request } from 'express';
-import { LoginDto } from '../../dtos/login.dto';
+import { LoginDto } from '../../dtos/login.dto.js';
 import { plainToInstance } from 'class-transformer';
 import { validateOrReject } from 'class-validator';
-import { AuthService } from '../../services/auth/auth.service';
-import { LoggingDecorator } from '../../../common/decorators/logging.decorator';
+import { AuthService } from '../../services/auth/auth.service.js';
+import { LoggingDecorator } from '../../../common/decorators/logging.decorator.js';
 
 @Injectable()
 export class AuthorizationLoginStrategy extends PassportStrategy(

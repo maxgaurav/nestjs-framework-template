@@ -1,6 +1,6 @@
 import { vi } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
-import { JwtTokenManagerService } from './jwt-token-manager.service';
+import { JwtTokenManagerService } from './jwt-token-manager.service.js';
 import { join } from 'path';
 import { promises as fsPromises, constants as fsConstants } from 'fs';
 import { Buffer } from 'buffer';

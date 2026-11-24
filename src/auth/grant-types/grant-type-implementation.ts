@@ -1,5 +1,5 @@
-import { ClientModel } from '../../databases/models/oauth/client.model';
-import { UserModel } from '../../databases/models/user.model';
+import { ClientModel } from '../../databases/models/oauth/client.model.js';
+import { UserModel } from '../../databases/models/user.model.js';
 
 export interface GrantTypeImplementation<T = any> {
   validate(payload: T): Promise<{ client: ClientModel; user: UserModel }>;

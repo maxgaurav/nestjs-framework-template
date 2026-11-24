@@ -1,19 +1,19 @@
 import { vi } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
-import { RefreshTokenService } from './refresh-token.service';
-import { AuthService } from '../../../services/auth/auth.service';
+import { RefreshTokenService } from './refresh-token.service.js';
+import { AuthService } from '../../../services/auth/auth.service.js';
 import {
   NotFoundException,
   UnauthorizedException,
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { RefreshTokenDto } from '../../../dtos/refresh-token.dto';
-import { RefreshTokenModel } from '../../../../databases/models/oauth/refresh-token.model';
+import { RefreshTokenDto } from '../../../dtos/refresh-token.dto.js';
+import { RefreshTokenModel } from '../../../../databases/models/oauth/refresh-token.model.js';
 import { IsNotEmpty } from 'class-validator';
 import moment from 'moment';
-import { ClientRepoService } from '../../../services/oauth/client-repo/client-repo.service';
-import { ClientModel } from '../../../../databases/models/oauth/client.model';
+import { ClientRepoService } from '../../../services/oauth/client-repo/client-repo.service.js';
+import { ClientModel } from '../../../../databases/models/oauth/client.model.js';
 
 class PassValidation {
   @IsNotEmpty()

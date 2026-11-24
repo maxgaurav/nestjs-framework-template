@@ -1,6 +1,6 @@
 import { Command, CommandRunner, Option } from 'nest-commander';
-import { RollbackMigrationService } from './rollback-migration.service';
-import { ConnectionNames } from '../../../databases/connection-names';
+import { RollbackMigrationService } from './rollback-migration.service.js';
+import { ConnectionNames } from '../../../databases/connection-names.js';
 
 interface RollbackMigrationOptions {
   till?: number;

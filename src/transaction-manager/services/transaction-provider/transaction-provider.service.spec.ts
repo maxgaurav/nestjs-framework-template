@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { TransactionProviderService } from './transaction-provider.service';
+import { TransactionProviderService } from './transaction-provider.service.js';
 import { getConnectionToken } from '@nestjs/sequelize';
 
 describe('TransactionProviderService', () => {

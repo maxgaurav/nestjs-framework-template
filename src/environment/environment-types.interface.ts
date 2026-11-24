@@ -1,5 +1,5 @@
 import { SequelizeModuleOptions } from '@nestjs/sequelize';
-import { ConnectionNames } from '../databases/connection-names';
+import { ConnectionNames } from '../databases/connection-names.js';
 import { MailerOptions } from '@nestjs-modules/mailer';
 import { SessionOptions } from 'express-session';
 
@@ -28,7 +28,7 @@ export interface ClusterConfig {
 
 export interface DatabaseConnectionConfig extends SequelizeModuleOptions {
   migrationDirectory: string;
-  seedingDirectory: string;
+  migrationSourceDirectory: string;
 }
 
 export interface DatabaseConfig {

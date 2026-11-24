@@ -1,8 +1,8 @@
 import { vi } from 'vitest';
-import { ClientIdExistsValidator } from './client-id-exists.validator';
-import { ClientRepoService } from '../../services/oauth/client-repo/client-repo.service';
+import { ClientIdExistsValidator } from './client-id-exists.validator.js';
+import { ClientRepoService } from '../../services/oauth/client-repo/client-repo.service.js';
 import { Test, TestingModule } from '@nestjs/testing';
-import { GrantTypes } from '../../grant-types/grant-type-implementation';
+import { GrantTypes } from '../../grant-types/grant-type-implementation.js';
 
 describe('ClientIdExistsValidator', () => {
   let service: ClientIdExistsValidator;

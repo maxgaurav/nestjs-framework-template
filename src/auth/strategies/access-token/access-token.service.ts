@@ -6,19 +6,19 @@ import {
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-custom';
 import type { Request } from 'express';
-import { AccessTokenDto } from '../../dtos/access-token.dto';
+import { AccessTokenDto } from '../../dtos/access-token.dto.js';
 import { validateOrReject } from 'class-validator';
-import { UserModel } from '../../../databases/models/user.model';
-import { ClientModel } from '../../../databases/models/oauth/client.model';
-import { LoggingDecorator } from '../../../common/decorators/logging.decorator';
+import { UserModel } from '../../../databases/models/user.model.js';
+import { ClientModel } from '../../../databases/models/oauth/client.model.js';
+import { LoggingDecorator } from '../../../common/decorators/logging.decorator.js';
 import {
   GrantTypeImplementationInstance,
   GrantTypes,
-} from '../../grant-types/grant-type-implementation';
-import { ImplicitPasswordGrantType } from '../../grant-types/implicit-password/implicit-password.grant-type';
+} from '../../grant-types/grant-type-implementation.js';
+import { ImplicitPasswordGrantType } from '../../grant-types/implicit-password/implicit-password.grant-type.js';
 import { ModuleRef } from '@nestjs/core';
-import { ProofKeyExchangeGrantType } from '../../grant-types/proof-key-exchage/proof-key-exchange.grant-type';
-import { AuthorizationCodeGrantType } from '../../grant-types/authorization-code/authorization-code.grant-type';
+import { ProofKeyExchangeGrantType } from '../../grant-types/proof-key-exchage/proof-key-exchange.grant-type.js';
+import { AuthorizationCodeGrantType } from '../../grant-types/authorization-code/authorization-code.grant-type.js';
 import { plainToInstance } from 'class-transformer';
 
 const GrantTypeMappings: Record<GrantTypes, GrantTypeImplementationInstance> = {

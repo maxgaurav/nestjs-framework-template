@@ -7,8 +7,8 @@ import {
 import { from, Observable, of, switchMap } from 'rxjs';
 import { Request, Response } from 'express';
 import { ModuleRef, Reflector } from '@nestjs/core';
-import { RedirectRouteExecutorInterface } from '../../../interfaces/redirect-route-executor.interface';
-import { RedirectGenerator } from '../../decorators/redirect-generator.decorator';
+import { RedirectRouteExecutorInterface } from '../../../interfaces/redirect-route-executor.interface.js';
+import { RedirectGenerator } from '../../decorators/redirect-generator.decorator.js';
 import { map } from 'rxjs/operators';
 
 @Injectable()

@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { CreateDatabaseService } from './create-database.service';
+import { CreateDatabaseService } from './create-database.service.js';
 import { ConfigService } from '@nestjs/config';
 import { getConnectionToken } from '@nestjs/sequelize';
 import { Logger } from '@nestjs/common';

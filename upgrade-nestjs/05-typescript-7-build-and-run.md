@@ -48,10 +48,10 @@ failure is written into this file.
 - [ ] `tsconfig.build.json`: `"tsBuildInfoFile": "./dist/tsconfig.build.tsbuildinfo"`. Wisekeep: a
       stale root `.tsbuildinfo` made TS 7 skip the emit after `rimraf dist`, which left no `dist/`.
 - [ ] `tsconfig.json`: `target` → `ES2023` (ts-node no longer constrains it). Remove the `"ts-node"`
-      block. `rootDir` stays explicit.
+      block (already removed in phase 04). `rootDir` stays explicit.
 - [ ] `nest-cli.json`: remove `"builder": "swc"` and `"typeCheck": true`. Keep the file for
       `nest generate` only.
-- [ ] Remove `ts-node`, `tsconfig-paths`, `@swc/cli`, and `.swcrc` (if phase 02 has not already).
+- [ ] Remove `@swc/cli` and `.swcrc`. (`ts-node` and `tsconfig-paths` were already removed in phase 04.)
       Keep `@swc/core` only if Vitest uses `unplugin-swc`.
 - [ ] Twig views and the `migration.stub` are not TS. Check that nothing reads them from `dist/`;
       `ViewConfig` should point at the root `views/`. Copy assets only if something needs them in

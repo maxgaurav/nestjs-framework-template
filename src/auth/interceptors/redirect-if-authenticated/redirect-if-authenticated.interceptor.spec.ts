@@ -1,6 +1,6 @@
 import { vi } from 'vitest';
-import { RedirectIfAuthenticatedInterceptor } from './redirect-if-authenticated.interceptor';
-import { WebGuard } from '../../guards/web/web.guard';
+import { RedirectIfAuthenticatedInterceptor } from './redirect-if-authenticated.interceptor.js';
+import { WebGuard } from '../../guards/web/web.guard.js';
 import { firstValueFrom, of, race, switchMap, throwError, timer } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { UnauthorizedException } from '@nestjs/common';

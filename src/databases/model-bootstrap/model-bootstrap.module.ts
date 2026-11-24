@@ -4,11 +4,11 @@ import {
   getModelToken,
   SequelizeModule,
 } from '@nestjs/sequelize';
-import { DefaultConnectionModels } from './default-connection-models';
+import { DefaultConnectionModels } from './default-connection-models.js';
 import { Sequelize } from 'sequelize-typescript';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { EventRegisterCallbackService } from '../../common/services/event-register-callback/event-register-callback.service';
-import { UrlBuilderService } from '../../url-management/services/url-builder/url-builder.service';
+import { EventRegisterCallbackService } from '../../common/services/event-register-callback/event-register-callback.service.js';
+import { UrlBuilderService } from '../../url-management/services/url-builder/url-builder.service.js';
 // getModelToken/getConnectionToken default to the default connection; the
 // constant is internal to @nestjs/sequelize (not in its exports map)
 const providers: Provider[] = DefaultConnectionModels.map((model) => ({

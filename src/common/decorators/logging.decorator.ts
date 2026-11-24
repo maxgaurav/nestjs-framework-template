@@ -1,5 +1,5 @@
 import { Logger } from '@nestjs/common';
-import { applicationContext } from '../application-context';
+import { applicationContext } from '../application-context.js';
 
 function parseMessage(
   message: string | ((args: any[]) => string),
@@ -67,5 +67,18 @@ export const LoggingDecorator = (message: {
 
       return result;
     };
+
+    // Keep the wrapper indistinguishable from the original method: Swagger derives
+    // operation ids from the function name, and Nest/Swagger metadata set by decorators
+    // applied before this one lives on the original function.
+    const wrapper = propertyDescriptor.value as (...args: unknown[]) => unknown;
+    Object.defineProperty(wrapper, 'name', { value: originalMethod.name });
+    for (const key of Reflect.getMetadataKeys(originalMethod)) {
+      Reflect.defineMetadata(
+        key,
+        Reflect.getMetadata(key, originalMethod),
+        wrapper,
+      );
+    }
   };
 };

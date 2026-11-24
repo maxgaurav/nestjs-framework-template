@@ -1,12 +1,12 @@
 import { vi } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
-import { AccessTokenRepoService } from './access-token-repo.service';
-import { AccessTokenModel } from '../../../../databases/models/oauth/access-token.model';
+import { AccessTokenRepoService } from './access-token-repo.service.js';
+import { AccessTokenModel } from '../../../../databases/models/oauth/access-token.model.js';
 import { getModelToken } from '@nestjs/sequelize';
 import { JwtService } from '@nestjs/jwt';
-import { RandomByteGeneratorService } from '../../../../common/services/random-byte-generator/random-byte-generator.service';
-import { UserModel } from '../../../../databases/models/user.model';
-import { ClientModel } from '../../../../databases/models/oauth/client.model';
+import { RandomByteGeneratorService } from '../../../../common/services/random-byte-generator/random-byte-generator.service.js';
+import { UserModel } from '../../../../databases/models/user.model.js';
+import { ClientModel } from '../../../../databases/models/oauth/client.model.js';
 import { Buffer } from 'buffer';
 
 describe('AccessTokenRepoService', () => {

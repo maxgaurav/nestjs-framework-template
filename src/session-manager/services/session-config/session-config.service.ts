@@ -2,9 +2,9 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import session from 'express-session';
 import { RequestHandler } from 'express';
-import { SessionConfig } from '../../../environment/environment-types.interface';
+import { SessionConfig } from '../../../environment/environment-types.interface.js';
 import { MemoryStore, Store } from 'express-session';
-import { FileStore } from '../../session-stores/file-store/file-store';
+import { FileStore } from '../../session-stores/file-store/file-store.js';
 import { join } from 'node:path';
 import { cwd } from 'node:process';
 

@@ -1,5 +1,3 @@
-'use strict';
-
 import { QueryInterface } from 'sequelize';
 
 export default {

@@ -1,6 +1,6 @@
 import { ConsoleLogger, Injectable, Optional } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { SystemConfig } from '../../environment/environment-types.interface';
+import { SystemConfig } from '../../environment/environment-types.interface.js';
 import { ClsService } from 'nestjs-cls';
 
 @Injectable()

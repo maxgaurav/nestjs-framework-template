@@ -1,5 +1,5 @@
 import { Command, CommandRunner } from 'nest-commander';
-import { GenerateOauthKeysService } from './generate-oauth-keys.service';
+import { GenerateOauthKeysService } from './generate-oauth-keys.service.js';
 
 @Command({
   name: 'oauth:generate-keys',

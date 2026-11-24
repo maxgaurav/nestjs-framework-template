@@ -1,4 +1,4 @@
-import { SessionFunction } from './session.function';
+import { SessionFunction } from './session.function.js';
 import { ClsModule } from 'nestjs-cls';
 import { Test, TestingModule } from '@nestjs/testing';
 

@@ -1,5 +1,5 @@
 import { Command, CommandRunner } from 'nest-commander';
-import { RouteListService } from './route-list.service';
+import { RouteListService } from './route-list.service.js';
 
 @Command({ name: 'route:list', description: 'List the registered HTTP routes' })
 export class RouteListCommand extends CommandRunner {

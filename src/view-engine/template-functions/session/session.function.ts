@@ -1,6 +1,6 @@
-import { ExtendFunction } from '../extend-function';
+import { ExtendFunction } from '../extend-function.js';
 import { Injectable, Scope } from '@nestjs/common';
-import { TemplateRegister } from '../template-function-registration';
+import { TemplateRegister } from '../template-function-registration.js';
 import { CLS_REQ, ClsService } from 'nestjs-cls';
 import { Request } from 'express';
 

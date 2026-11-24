@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
 import { ClsService } from 'nestjs-cls';
-import { LoggingService } from './logging.service';
+import { LoggingService } from './logging.service.js';
 
 describe('LoggingService', () => {
   const configService = {

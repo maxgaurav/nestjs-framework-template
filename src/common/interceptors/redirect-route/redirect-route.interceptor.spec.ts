@@ -1,11 +1,11 @@
 import { vi } from 'vitest';
-import { RedirectRouteInterceptor } from './redirect-route.interceptor';
+import { RedirectRouteInterceptor } from './redirect-route.interceptor.js';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ExecutionContext, Injectable, Scope } from '@nestjs/common';
 import { HttpArgumentsHost } from '@nestjs/common/interfaces';
 import { Reflector } from '@nestjs/core';
-import { RedirectRouteExecutorInterface } from '../../../interfaces/redirect-route-executor.interface';
-import { RedirectGenerator } from '../../decorators/redirect-generator.decorator';
+import { RedirectRouteExecutorInterface } from '../../../interfaces/redirect-route-executor.interface.js';
+import { RedirectGenerator } from '../../decorators/redirect-generator.decorator.js';
 import { firstValueFrom, of } from 'rxjs';
 
 @Injectable({ scope: Scope.TRANSIENT })

@@ -6,9 +6,9 @@ import {
 } from '@nestjs/common';
 import { from, Observable, switchMap } from 'rxjs';
 import { Request, Response } from 'express';
-import { HashEncryptService } from '../../services/hash-encrypt/hash-encrypt.service';
+import { HashEncryptService } from '../../services/hash-encrypt/hash-encrypt.service.js';
 import { map } from 'rxjs/operators';
-import { AuthorizationDto } from '../../dtos/authorization.dto';
+import { AuthorizationDto } from '../../dtos/authorization.dto.js';
 
 @Injectable()
 export class AppendFormActionHeaderInterceptor implements NestInterceptor {

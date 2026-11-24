@@ -1,4 +1,4 @@
-import { CanRestartLoginGuard } from './can-restart-login.guard';
+import { CanRestartLoginGuard } from './can-restart-login.guard.js';
 
 describe('CanRestartLoginGuard', () => {
   it('should be defined', () => {

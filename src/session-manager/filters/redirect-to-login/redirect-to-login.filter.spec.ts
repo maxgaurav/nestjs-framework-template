@@ -1,7 +1,7 @@
 import { vi } from 'vitest';
-import { RedirectFromLoginFilter } from './redirect-to-login.filter';
+import { RedirectFromLoginFilter } from './redirect-to-login.filter.js';
 import { HttpStatus, UnauthorizedException } from '@nestjs/common';
-import { IntendManagerService } from '../../services/intend-manager/intend-manager.service';
+import { IntendManagerService } from '../../services/intend-manager/intend-manager.service.js';
 
 const DefaultValue = 'will-not-match';
 describe('RedirectToLoginFilter', () => {

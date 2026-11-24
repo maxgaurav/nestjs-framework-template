@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { MakeMigrationService } from './make-migration.service';
+import { MakeMigrationService } from './make-migration.service.js';
 import { ConfigService } from '@nestjs/config';
 import { Logger } from '@nestjs/common';
 

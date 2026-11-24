@@ -1,5 +1,5 @@
 import { Command, CommandRunner } from 'nest-commander';
-import { MakeMigrationService } from './make-migration.service';
+import { MakeMigrationService } from './make-migration.service.js';
 
 @Command({
   name: 'migration:make',

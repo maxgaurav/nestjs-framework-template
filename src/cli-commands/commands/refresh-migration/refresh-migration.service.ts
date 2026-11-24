@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { RunMigrationService } from '../run-migration/run-migration.service';
+import { RunMigrationService } from '../run-migration/run-migration.service.js';
 import { InjectConnection } from '@nestjs/sequelize';
 import { Sequelize } from 'sequelize';
 

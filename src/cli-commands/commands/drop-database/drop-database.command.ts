@@ -1,5 +1,5 @@
 import { Command, CommandRunner } from 'nest-commander';
-import { DropDatabaseService } from './drop-database.service';
+import { DropDatabaseService } from './drop-database.service.js';
 
 @Command({ name: 'database:drop', description: 'Drop the database' })
 export class DropDatabaseCommand extends CommandRunner {

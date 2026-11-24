@@ -4,7 +4,7 @@ import { createCipheriv, scrypt, createDecipheriv } from 'crypto';
 import { ConfigService } from '@nestjs/config';
 import { promisify } from 'util';
 import { Buffer } from 'buffer';
-import { SystemConfig } from '../../../environment/environment-types.interface';
+import { SystemConfig } from '../../../environment/environment-types.interface.js';
 
 @Injectable()
 export class HashEncryptService implements OnApplicationBootstrap {

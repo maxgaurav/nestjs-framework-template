@@ -1,4 +1,4 @@
-import { CheckShowPasswordGuard } from './check-show-password.guard';
+import { CheckShowPasswordGuard } from './check-show-password.guard.js';
 import { Test, TestingModule } from '@nestjs/testing';
 
 describe('CheckShowPasswordGuard', () => {

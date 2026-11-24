@@ -1,5 +1,5 @@
 import { Store } from 'express-session';
-import { SessionStoreContract } from '../../interfaces/session-store-contract.interface';
+import { SessionStoreContract } from '../../interfaces/session-store-contract.interface.js';
 import { Options } from 'session-file-store';
 import SessionStore from 'session-file-store';
 

@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { ClientRepoService } from '../../../../auth/services/oauth/client-repo/client-repo.service';
-import { GrantTypes } from '../../../../auth/grant-types/grant-type-implementation';
+import { ClientRepoService } from '../../../../auth/services/oauth/client-repo/client-repo.service.js';
+import { GrantTypes } from '../../../../auth/grant-types/grant-type-implementation.js';
 import { UseCls } from 'nestjs-cls';
 
 @Injectable()

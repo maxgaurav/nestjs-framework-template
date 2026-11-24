@@ -1,11 +1,11 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
-import { TEMPLATE_FUNCTIONS, VIEW_RENDER_ENGINE } from '../../constants';
+import { TEMPLATE_FUNCTIONS, VIEW_RENDER_ENGINE } from '../../constants.js';
 import { ConfigService } from '@nestjs/config';
-import { ViewConfig } from '../../../environment/environment-types.interface';
-import * as Twig from 'twig';
-import type { TemplateFunctionRegistrations } from '../../template-functions/template-function-registration';
+import { ViewConfig } from '../../../environment/environment-types.interface.js';
+import Twig from 'twig';
+import type { TemplateFunctionRegistrations } from '../../template-functions/template-function-registration.js';
 import { ModuleRef } from '@nestjs/core';
-import { ExtendFunction } from '../../template-functions/extend-function';
+import { ExtendFunction } from '../../template-functions/extend-function.js';
 
 @Injectable()
 export class ViewEngineConfigService implements OnModuleInit {

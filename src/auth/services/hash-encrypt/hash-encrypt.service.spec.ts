@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { HashEncryptService } from './hash-encrypt.service';
+import { HashEncryptService } from './hash-encrypt.service.js';
 import { compare } from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
 

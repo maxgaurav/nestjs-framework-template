@@ -1,14 +1,14 @@
 import { vi } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
-import { RefreshTokenRepoService } from './refresh-token-repo.service';
-import { RefreshTokenModel } from '../../../../databases/models/oauth/refresh-token.model';
-import { AccessTokenRepoService } from '../access-token-repo/access-token-repo.service';
+import { RefreshTokenRepoService } from './refresh-token-repo.service.js';
+import { RefreshTokenModel } from '../../../../databases/models/oauth/refresh-token.model.js';
+import { AccessTokenRepoService } from '../access-token-repo/access-token-repo.service.js';
 import { JwtService } from '@nestjs/jwt';
-import { RandomByteGeneratorService } from '../../../../common/services/random-byte-generator/random-byte-generator.service';
+import { RandomByteGeneratorService } from '../../../../common/services/random-byte-generator/random-byte-generator.service.js';
 import { getModelToken } from '@nestjs/sequelize';
-import { AccessTokenModel } from '../../../../databases/models/oauth/access-token.model';
-import { ClientModel } from '../../../../databases/models/oauth/client.model';
-import { UserModel } from '../../../../databases/models/user.model';
+import { AccessTokenModel } from '../../../../databases/models/oauth/access-token.model.js';
+import { ClientModel } from '../../../../databases/models/oauth/client.model.js';
+import { UserModel } from '../../../../databases/models/user.model.js';
 import { Buffer } from 'buffer';
 
 describe('RefreshTokenRepoService', () => {

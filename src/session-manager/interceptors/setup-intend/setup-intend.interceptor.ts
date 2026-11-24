@@ -5,7 +5,7 @@ import {
   NestInterceptor,
 } from '@nestjs/common';
 import { Observable, of, switchMap } from 'rxjs';
-import { IntendManagerService } from '../../services/intend-manager/intend-manager.service';
+import { IntendManagerService } from '../../services/intend-manager/intend-manager.service.js';
 import { Request } from 'express';
 import { map } from 'rxjs/operators';
 

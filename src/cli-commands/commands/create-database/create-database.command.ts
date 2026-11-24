@@ -1,5 +1,5 @@
 import { Command, CommandRunner } from 'nest-commander';
-import { CreateDatabaseService } from './create-database.service';
+import { CreateDatabaseService } from './create-database.service.js';
 
 @Command({ name: 'database:create', description: 'Create the database' })
 export class CreateDatabaseCommand extends CommandRunner {

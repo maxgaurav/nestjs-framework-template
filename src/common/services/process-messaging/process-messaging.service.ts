@@ -3,8 +3,8 @@ import {
   BroadcastCommandMessage,
   CommandToSystemEvent,
   CommunicationCommands,
-} from '../../../cluster/communication-commands';
-import { InterProcessCommunication } from '../../../interfaces/inter-process-communication';
+} from '../../../cluster/communication-commands.js';
+import { InterProcessCommunication } from '../../../interfaces/inter-process-communication.js';
 import { finalize, Observable, Subject } from 'rxjs';
 import { Worker } from 'cluster';
 import cluster from 'cluster';

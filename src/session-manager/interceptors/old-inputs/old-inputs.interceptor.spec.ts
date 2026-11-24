@@ -1,5 +1,5 @@
 import { vi } from 'vitest';
-import { OldInputsInterceptor } from './old-inputs.interceptor';
+import { OldInputsInterceptor } from './old-inputs.interceptor.js';
 import { firstValueFrom, of } from 'rxjs';
 
 describe('OldInputsInterceptor', () => {

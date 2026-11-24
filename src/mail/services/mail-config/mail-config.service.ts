@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { MailerOptions, MailerOptionsFactory } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
-import { MailConfig } from '../../../environment/environment-types.interface';
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-import MailMessage = require('nodemailer/lib/mailer/mail-message');
+import { MailConfig } from '../../../environment/environment-types.interface.js';
+import type MailMessage from 'nodemailer/lib/mailer/mail-message.js';
 import { ConnectionOptions } from 'node:tls';
 
 @Injectable()

@@ -1,4 +1,4 @@
-import { SystemConfig } from '../environment-types.interface';
+import { SystemConfig } from '../environment-types.interface.js';
 
 export const systemConfig = () => {
   const port = process.env.APP_PORT ? parseFloat(process.env.APP_PORT) : 3000;

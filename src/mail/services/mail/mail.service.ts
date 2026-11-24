@@ -1,11 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { ISendMailOptions } from '@nestjs-modules/mailer/dist/interfaces/send-mail-options.interface';
-import { VIEW_RENDER_ENGINE } from '../../../view-engine/constants';
+import { ISendMailOptions } from '@nestjs-modules/mailer/dist/interfaces/send-mail-options.interface.js';
+import { VIEW_RENDER_ENGINE } from '../../../view-engine/constants.js';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
 import { join } from 'path';
-import { ViewConfig } from '../../../environment/environment-types.interface';
-import * as Twig from 'twig';
+import { ViewConfig } from '../../../environment/environment-types.interface.js';
+import Twig from 'twig';
 import { RenderOptions } from 'twig';
 import { SentMessageInfo } from 'nodemailer';
 

@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { NEVER, Observable, of, switchMap, throwError } from 'rxjs';
 import { Response } from 'express';
-import { WebGuard } from '../../guards/web/web.guard';
+import { WebGuard } from '../../guards/web/web.guard.js';
 import { catchError } from 'rxjs/operators';
 
 @Injectable()

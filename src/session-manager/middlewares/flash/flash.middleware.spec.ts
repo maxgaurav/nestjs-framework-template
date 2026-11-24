@@ -1,5 +1,5 @@
 import type { Request } from 'express';
-import { flashMiddleware } from './flash.middleware';
+import { flashMiddleware } from './flash.middleware.js';
 
 const requestWithSession = (): Request => {
   const request = { session: {} } as unknown as Request;

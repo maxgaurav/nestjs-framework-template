@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { AuthorizationChallengeModel } from '../../../databases/models/oauth/authorization-challenge.model';
-import { UserModel } from '../../../databases/models/user.model';
-import { ClientModel } from '../../../databases/models/oauth/client.model';
+import { AuthorizationChallengeModel } from '../../../databases/models/oauth/authorization-challenge.model.js';
+import { UserModel } from '../../../databases/models/user.model.js';
+import { ClientModel } from '../../../databases/models/oauth/client.model.js';
 import { Transaction } from 'sequelize';
-import { LoggingDecorator } from '../../../common/decorators/logging.decorator';
-import { TransactionProviderService } from '../../../transaction-manager/services/transaction-provider/transaction-provider.service';
+import { LoggingDecorator } from '../../../common/decorators/logging.decorator.js';
+import { TransactionProviderService } from '../../../transaction-manager/services/transaction-provider/transaction-provider.service.js';
 import { createHash } from 'node:crypto';
 import { Buffer } from 'buffer';
 

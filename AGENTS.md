@@ -13,6 +13,15 @@
 * Feature code lives under the owning module (`src/<module>/`). Cross-cutting modules may be `@Global()` (`CommonModule`, `AuthModule`, `TransactionManagerModule`, `RepositoriesModule`, etc.).
 * Prefer matching patterns already in this repo; keep changes focused on the task.
 
+### ES modules
+
+The app is native ESM (`"type": "module"`):
+
+* Relative imports use the **`.js` extension** of the compiled file (`import { X } from './x.service.js'`); directory imports use `./dir/index.js`. Subpath imports into packages without an `exports` map need it too.
+* Use `import.meta.dirname` / `import.meta.filename`, never `__dirname` / `require()` (use `createRequire(import.meta.url)` only if unavoidable).
+* CommonJS packages that build their exports dynamically (e.g. `twig`, `jsonwebtoken`) must use a **default import** (`import Twig from 'twig'`); `import * as` only exposes `default` under native ESM.
+* Migrations are ES modules exporting `export default { up, down }`.
+
 ## API vs web controllers
 
 * **API (JSON)** — versioned controllers (`version: ['1']`, global prefix `api/v`), `ResourceConversionInterceptor`, `@ResourceMap`, auth via token guards. Return models/repo results; resources shape the response.

@@ -1,7 +1,7 @@
-import { ImplicitPasswordGrantType } from './implicit-password.grant-type';
+import { ImplicitPasswordGrantType } from './implicit-password.grant-type.js';
 import { Test, TestingModule } from '@nestjs/testing';
-import { AuthService } from '../../services/auth/auth.service';
-import { ClientRepoService } from '../../services/oauth/client-repo/client-repo.service';
+import { AuthService } from '../../services/auth/auth.service.js';
+import { ClientRepoService } from '../../services/oauth/client-repo/client-repo.service.js';
 
 describe('ImplicitPasswordGrantType', () => {
   let service: ImplicitPasswordGrantType;

@@ -1,6 +1,6 @@
 import { Injectable, Scope } from '@nestjs/common';
-import { RedirectRouteExecutorInterface } from '../../../interfaces/redirect-route-executor.interface';
-import { AuthorizationChallengeModel } from '../../../databases/models/oauth/authorization-challenge.model';
+import { RedirectRouteExecutorInterface } from '../../../interfaces/redirect-route-executor.interface.js';
+import { AuthorizationChallengeModel } from '../../../databases/models/oauth/authorization-challenge.model.js';
 import { Request } from 'express';
 
 @Injectable({ scope: Scope.TRANSIENT })

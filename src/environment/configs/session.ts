@@ -1,4 +1,4 @@
-import { SessionConfig } from '../environment-types.interface';
+import { SessionConfig } from '../environment-types.interface.js';
 
 export const sessionConfig = () => {
   return {

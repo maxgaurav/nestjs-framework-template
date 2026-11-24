@@ -1,5 +1,5 @@
 import { Command, CommandRunner } from 'nest-commander';
-import { RefreshMigrationService } from './refresh-migration.service';
+import { RefreshMigrationService } from './refresh-migration.service.js';
 
 @Command({
   name: 'migration:refresh',

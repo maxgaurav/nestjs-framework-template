@@ -7,7 +7,7 @@ import {
   ValidateIf,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { GrantTypes } from '../grant-types/grant-type-implementation';
+import { GrantTypes } from '../grant-types/grant-type-implementation.js';
 
 export class AccessTokenDto {
   @ApiProperty({

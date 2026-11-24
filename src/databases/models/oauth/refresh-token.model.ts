@@ -1,4 +1,4 @@
-import { DatesMapping } from '../dates-mapping';
+import { DatesMapping } from '../dates-mapping.js';
 import {
   BelongsTo,
   Column,
@@ -7,7 +7,7 @@ import {
   PrimaryKey,
   Table,
 } from 'sequelize-typescript';
-import { AccessTokenModel } from './access-token.model';
+import { AccessTokenModel } from './access-token.model.js';
 
 @Table({ tableName: 'oauth_refresh_tokens' })
 export class RefreshTokenModel extends DatesMapping<RefreshTokenModel> {

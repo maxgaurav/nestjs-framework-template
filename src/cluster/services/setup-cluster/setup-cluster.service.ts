@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import cluster from 'cluster';
 import { Cluster, Worker } from 'cluster';
 import os from 'os';
-import { ClusterConfig } from '../../../environment/environment-types.interface';
+import { ClusterConfig } from '../../../environment/environment-types.interface.js';
 import {
   auditTime,
   filter,
@@ -15,11 +15,11 @@ import {
   tap,
   timer,
 } from 'rxjs';
-import { ProcessMessagingService } from '../../../common/services/process-messaging/process-messaging.service';
+import { ProcessMessagingService } from '../../../common/services/process-messaging/process-messaging.service.js';
 import {
   BroadcastCommandMessage,
   CommunicationCommands,
-} from '../../communication-commands';
+} from '../../communication-commands.js';
 import { map } from 'rxjs/operators';
 import { HealthCheckResult } from '@nestjs/terminus';
 

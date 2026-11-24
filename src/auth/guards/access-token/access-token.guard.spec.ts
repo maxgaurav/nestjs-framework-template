@@ -1,7 +1,7 @@
-import { AccessTokenGuard } from './access-token.guard';
-import { AuthService } from '../../services/auth/auth.service';
+import { AccessTokenGuard } from './access-token.guard.js';
+import { AuthService } from '../../services/auth/auth.service.js';
 import { NotFoundException, UnauthorizedException } from '@nestjs/common';
-import { UserModel } from '../../../databases/models/user.model';
+import { UserModel } from '../../../databases/models/user.model.js';
 import { firstValueFrom } from 'rxjs';
 
 const AcceptApplicationJson = 'application/json';

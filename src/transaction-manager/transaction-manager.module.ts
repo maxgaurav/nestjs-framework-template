@@ -1,6 +1,6 @@
 import { Global, Module } from '@nestjs/common';
-import { DatabasesModule } from '../databases/databases.module';
-import { TransactionProviderService } from './services/transaction-provider/transaction-provider.service';
+import { DatabasesModule } from '../databases/databases.module.js';
+import { TransactionProviderService } from './services/transaction-provider/transaction-provider.service.js';
 
 @Global()
 @Module({

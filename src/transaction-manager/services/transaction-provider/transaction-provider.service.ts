@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectConnection } from '@nestjs/sequelize';
 import { Sequelize, Transaction, TransactionOptions } from 'sequelize';
-import { sequelizeNamespace } from '../../../helpers/sequelize-namespace/sequelize-namespace';
+import { sequelizeNamespace } from '../../../helpers/sequelize-namespace/sequelize-namespace.js';
 
 @Injectable()
 export class TransactionProviderService {

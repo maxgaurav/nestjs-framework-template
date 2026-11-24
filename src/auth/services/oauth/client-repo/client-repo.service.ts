@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { ClientModel } from '../../../../databases/models/oauth/client.model';
+import { ClientModel } from '../../../../databases/models/oauth/client.model.js';
 import { Transaction } from 'sequelize';
-import { RandomByteGeneratorService } from '../../../../common/services/random-byte-generator/random-byte-generator.service';
-import { GrantTypes } from '../../../grant-types/grant-type-implementation';
+import { RandomByteGeneratorService } from '../../../../common/services/random-byte-generator/random-byte-generator.service.js';
+import { GrantTypes } from '../../../grant-types/grant-type-implementation.js';
 
 @Injectable()
 export class ClientRepoService {

@@ -1,4 +1,4 @@
-import { MethodChangeMiddleware } from './method-change.middleware';
+import { MethodChangeMiddleware } from './method-change.middleware.js';
 
 describe('MethodChangeMiddleware', () => {
   let middleware: MethodChangeMiddleware;

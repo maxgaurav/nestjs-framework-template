@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { UserModel } from '../../databases/models/user.model';
+import { UserModel } from '../../databases/models/user.model.js';
 import { Transaction } from 'sequelize';
 import { InjectModel } from '@nestjs/sequelize';
 

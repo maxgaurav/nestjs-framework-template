@@ -1,7 +1,7 @@
-import { TransactionInterceptor } from './transaction.interceptor';
+import { TransactionInterceptor } from './transaction.interceptor.js';
 import { firstValueFrom, of } from 'rxjs';
 import { Test, TestingModule } from '@nestjs/testing';
-import { TransactionProviderService } from '../../services/transaction-provider/transaction-provider.service';
+import { TransactionProviderService } from '../../services/transaction-provider/transaction-provider.service.js';
 
 describe('TransactionInterceptor', () => {
   let interceptor: TransactionInterceptor;

@@ -1,9 +1,10 @@
-import { ConnectionNames } from '../../databases/connection-names';
+import { ConnectionNames } from '../../databases/connection-names.js';
 import {
   DatabaseConfig,
   DatabaseConnectionConfig,
-} from '../environment-types.interface';
+} from '../environment-types.interface.js';
 import { ReplicationOptions } from 'sequelize';
+import { join } from 'node:path';
 
 export const databaseConfig = () => {
   const config: DatabaseConfig = {
@@ -28,9 +29,23 @@ export const databaseConfig = () => {
     logging: process.env.DB_DEBUG === 'true',
     benchmark: process.env.DB_DEBUG === 'true',
     replication: readWriteClusterSettings(),
-    models: [__dirname + '/../../databases/models/**'],
-    migrationDirectory: __dirname + '/../../databases/migrations',
-    seedingDirectory: __dirname + '/../../databases/seeds',
+    // Models are registered explicitly from DefaultConnectionModels (DatabaseConfigService);
+    // sequelize-typescript's path glob loads files with require(), which cannot load ESM.
+    // Migrations next to the running code: src/ under vitest, dist/ for the built CLI
+    migrationDirectory: join(
+      import.meta.dirname,
+      '..',
+      '..',
+      'databases',
+      'migrations',
+    ),
+    // migration:make always writes TypeScript sources
+    migrationSourceDirectory: join(
+      process.cwd(),
+      'src',
+      'databases',
+      'migrations',
+    ),
   } satisfies DatabaseConnectionConfig;
   return config;
 };

@@ -1,4 +1,4 @@
-import { MailConfig } from '../environment-types.interface';
+import { MailConfig } from '../environment-types.interface.js';
 import { join } from 'path';
 
 export const mailConfig = () => {

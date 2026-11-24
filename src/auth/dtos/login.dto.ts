@@ -1,6 +1,6 @@
 import { IsEmail, IsNotEmpty, IsString, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
-import { AuthorizationDto } from './authorization.dto';
+import { AuthorizationDto } from './authorization.dto.js';
 
 export class LoginDto {
   @IsNotEmpty()

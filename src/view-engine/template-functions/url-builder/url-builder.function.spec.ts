@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UrlBuilderFunction } from './url-builder.function';
+import { UrlBuilderFunction } from './url-builder.function.js';
 import { ConfigService } from '@nestjs/config';
-import { UrlBuilderService } from '../../../url-management/services/url-builder/url-builder.service';
+import { UrlBuilderService } from '../../../url-management/services/url-builder/url-builder.service.js';
 
 describe('UrlBuilderFunction', () => {
   let service: UrlBuilderFunction;

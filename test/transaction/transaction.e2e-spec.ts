@@ -3,16 +3,16 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { getModelToken } from '@nestjs/sequelize';
 import { faker } from '@faker-js/faker';
 import request from 'supertest';
-import { basicE2eSetup, managedTransaction } from '../basic-e2e-setup';
-import { userFactory } from '../factories/user.factory';
-import { clientFactory } from '../factories/client.factory';
-import { UserModel } from '../../src/databases/models/user.model';
-import { AccessTokenModel } from '../../src/databases/models/oauth/access-token.model';
-import { GrantTypes } from '../../src/auth/grant-types/grant-type-implementation';
+import { basicE2eSetup, managedTransaction } from '../basic-e2e-setup.js';
+import { userFactory } from '../factories/user.factory.js';
+import { clientFactory } from '../factories/client.factory.js';
+import { UserModel } from '../../src/databases/models/user.model.js';
+import { AccessTokenModel } from '../../src/databases/models/oauth/access-token.model.js';
+import { GrantTypes } from '../../src/auth/grant-types/grant-type-implementation.js';
 import {
   TransactionProbeModule,
   TransactionProbeState,
-} from './transaction-probe.module';
+} from './transaction-probe.module.js';
 
 describe('E2E transaction setup (cls-hooked)', () => {
   let app: NestExpressApplication;

@@ -1,8 +1,8 @@
 import { HttpStatus } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import request from 'supertest';
-import { basicE2eSetup } from '../basic-e2e-setup';
-import { TransactionProbeModule } from '../transaction/transaction-probe.module';
+import { basicE2eSetup } from '../basic-e2e-setup.js';
+import { TransactionProbeModule } from '../transaction/transaction-probe.module.js';
 
 describe('Requests without a body (e2e)', () => {
   let app: NestExpressApplication;

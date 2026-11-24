@@ -1,9 +1,9 @@
 import { Injectable, Scope } from '@nestjs/common';
-import { RedirectRouteExecutorInterface } from '../../../interfaces/redirect-route-executor.interface';
-import { HashEncryptService } from '../../services/hash-encrypt/hash-encrypt.service';
-import { UrlBuilderService } from '../../../url-management/services/url-builder/url-builder.service';
-import { LoggingDecorator } from '../../../common/decorators/logging.decorator';
-import { AuthorizationDto } from '../../dtos/authorization.dto';
+import { RedirectRouteExecutorInterface } from '../../../interfaces/redirect-route-executor.interface.js';
+import { HashEncryptService } from '../../services/hash-encrypt/hash-encrypt.service.js';
+import { UrlBuilderService } from '../../../url-management/services/url-builder/url-builder.service.js';
+import { LoggingDecorator } from '../../../common/decorators/logging.decorator.js';
+import { AuthorizationDto } from '../../dtos/authorization.dto.js';
 
 @Injectable({ scope: Scope.TRANSIENT })
 export class RestartLoginRedirector implements RedirectRouteExecutorInterface {

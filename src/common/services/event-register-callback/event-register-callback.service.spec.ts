@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { EventRegisterCallbackService } from './event-register-callback.service';
+import { EventRegisterCallbackService } from './event-register-callback.service.js';
 
 describe('EventRegisterCallbackService', () => {
   let service: EventRegisterCallbackService;

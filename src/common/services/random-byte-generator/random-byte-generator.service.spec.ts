@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { RandomByteGeneratorService } from './random-byte-generator.service';
+import { RandomByteGeneratorService } from './random-byte-generator.service.js';
 import { Buffer } from 'node:buffer';
 
 describe('RandomByteGeneratorService', () => {

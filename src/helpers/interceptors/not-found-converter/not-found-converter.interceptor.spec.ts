@@ -1,4 +1,4 @@
-import { NotFoundConverterInterceptor } from './not-found-converter.interceptor';
+import { NotFoundConverterInterceptor } from './not-found-converter.interceptor.js';
 import { firstValueFrom, of } from 'rxjs';
 
 describe('NotFoundConverterInterceptor', () => {

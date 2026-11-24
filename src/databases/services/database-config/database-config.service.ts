@@ -4,9 +4,9 @@ import {
   SequelizeModuleOptions,
   SequelizeOptionsFactory,
 } from '@nestjs/sequelize';
-import { ConnectionNames } from '../../connection-names';
-import { DefaultConnectionModels } from '../../model-bootstrap/default-connection-models';
-import { LoggingService } from '../../../services/logging/logging.service';
+import { ConnectionNames } from '../../connection-names.js';
+import { DefaultConnectionModels } from '../../model-bootstrap/default-connection-models.js';
+import { LoggingService } from '../../../services/logging/logging.service.js';
 import { ClsServiceManager } from 'nestjs-cls';
 
 @Injectable()

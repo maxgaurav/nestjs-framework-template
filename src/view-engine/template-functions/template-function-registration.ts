@@ -1,4 +1,4 @@
-import { ExtendFunctionConstructor } from './extend-function';
+import { ExtendFunctionConstructor } from './extend-function.js';
 
 export const TemplateFunctionRegistrations: ExtendFunctionConstructor[] = [];
 

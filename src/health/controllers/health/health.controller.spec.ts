@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { HealthController } from './health.controller';
+import { HealthController } from './health.controller.js';
 import {
   HealthCheckService,
   MemoryHealthIndicator,
@@ -7,9 +7,9 @@ import {
   TerminusModule,
 } from '@nestjs/terminus';
 import { ConfigService } from '@nestjs/config';
-import { ConnectionNames } from '../../../databases/connection-names';
+import { ConnectionNames } from '../../../databases/connection-names.js';
 import { getConnectionToken } from '@nestjs/sequelize';
-import { ProcessMessagingService } from '../../../common/services/process-messaging/process-messaging.service';
+import { ProcessMessagingService } from '../../../common/services/process-messaging/process-messaging.service.js';
 
 describe('HealthController', () => {
   let controller: HealthController;
