@@ -1,0 +1,9 @@
+GET /
+GET /health
+POST /oauth/token
+POST /oauth/refresh
+GET /oauth/authorization
+POST /oauth/authorization/password
+GET /oauth/authorization/password
+GET /oauth/authorization/restart-login
+POST /oauth/authorization/login

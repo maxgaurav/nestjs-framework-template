@@ -6,5 +6,5 @@ export const viewConfig = () => ({
     viewPath: join(process.cwd(), 'views'),
     publicPath: join(process.cwd(), 'public'),
     templateCaching: process.env.VIEW_TEMPLATE_CACHING === 'true',
-  } as ViewConfig,
+  } satisfies ViewConfig,
 });
