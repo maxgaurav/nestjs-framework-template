@@ -128,7 +128,7 @@ and before 09, so CI enforces the strict flags.
 | `MethodChangeMiddleware` crashed (500) on a non-string `_method` | ✅ fixed in phase 02 |
 | `ClientRepoService.revoke()` set `is_revoked: false` | ✅ fixed in phase 02 |
 | Password grant (`POST /oauth/token`) did not check `is_revoked` / `grant_type`; refresh and code/PKCE exchanges accepted revoked clients | ✅ fixed after phase 02 (`test/auth/oauth-token.e2e-spec.ts`) |
-| `registerEventCallBacks` without a transaction does not fire immediately (AGENTS.md says it does) | open; decide in phase 09 |
+| `registerEventCallBacks` without a transaction did not fire immediately (AGENTS.md says it does) | ✅ fixed in phase 09 (code now matches the docs) |
 | `tsconfig.json` includes only `src`, so `test/` is never type-checked | ✅ fixed in phase 10 |
 | `migration:rollback --till N` always rolled back 1 (string option) | ✅ fixed in phase 03 |
 | `ContextInterceptor` returned 500 for any body-less non-GET request (Express 5) | ✅ fixed in phase 03 |

@@ -172,7 +172,7 @@ Emit create/update/delete events only via:
 1. **Repositories** after a successful write, or
 2. **Model lifecycle hooks** scheduling emission with `EventRegisterCallbackService` (`src/common/services/event-register-callback/event-register-callback.service.ts`).
 
-When after-commit emission is required, pass the Sequelize `Transaction` into `registerEventCallBacks` (obtain via `@ReqTransaction()` in the controller when needed). Without a transaction, callbacks run immediately.
+When after-commit emission is required, pass the Sequelize `Transaction` into `registerEventCallBacks` (obtain via `@ReqTransaction()` in the controller when needed). Without a transaction, callbacks run immediately; the returned executioner only gives access to the result (no need to call it). Failing callbacks are logged, never unhandled.
 
 ## API resources
 

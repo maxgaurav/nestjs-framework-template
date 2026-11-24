@@ -3,7 +3,6 @@ import type { Transaction } from 'sequelize';
 import type { PasswordDto } from './auth/dtos/password.dto.js';
 
 declare global {
-  // oxlint-disable-next-line typescript/no-namespace -- augmenting Express's global namespace
   namespace Express {
     interface Request {
       user?: UserModel | null;
