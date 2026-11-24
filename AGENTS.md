@@ -40,6 +40,8 @@ The app is native ESM (`"type": "module"`):
 
 * **API (JSON)** — versioned controllers (`version: ['1']`, global prefix `api/v`), `ResourceConversionInterceptor`, `@ResourceMap`, auth via token guards. Return models/repo results; resources shape the response.
 * **Web (HTML)** — Twig views under `views/`, session/flash interceptors from `session-manager`, web auth/redirect flow. Do not apply API resource conversion to web pages.
+* **Sessions** — API routes are **stateless**: `SessionManagerModule` mounts the session (and flash) middleware on web routes only and excludes `api/*`, `oauth/token`, `oauth/refresh`, `health`, `files/*` and `storage/*` (`STATELESS_ROUTES`). Never call `req.session.destroy()` to "clean up" after an API call. Session-dependent code checks `if (!req.session)` instead of matching URLs.
+* **Cookie authentication on an API route** is the exception: put those endpoints in their own controller marked `@UseSession()`, authenticate with a session guard, and rely on the built-in same-origin check (state-changing requests from another origin get 403) plus the `SameSite=Lax`, `HttpOnly` session cookie.
 
 ### API REST controllers
 

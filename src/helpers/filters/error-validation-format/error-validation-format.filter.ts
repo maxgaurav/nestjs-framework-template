@@ -28,7 +28,11 @@ export class ErrorValidationFormatFilter implements ExceptionFilter {
 
     const errors = this.formattedErrors(errorResponse.message);
 
-    if (request.accepts(['html', 'text', 'json']) === 'json') {
+    // Flash + redirect-back needs a session; stateless routes always answer as JSON
+    if (
+      !request.session ||
+      request.accepts(['html', 'text', 'json']) === 'json'
+    ) {
       response.status(exception.getStatus()).json({
         errors,
         message: errorResponse.error,

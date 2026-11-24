@@ -17,11 +17,8 @@ export class SetupIntendInterceptor implements NestInterceptor {
     return of(true)
       .pipe(
         map(() => {
-          if (
-            request.url.includes('api/v') ||
-            request.url.includes('oauth/login') ||
-            request.url.includes('oauth/refresh')
-          ) {
+          // Stateless routes (API, token endpoints) have no session
+          if (!request.session) {
             return true;
           }
 

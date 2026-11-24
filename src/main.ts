@@ -26,12 +26,9 @@ import { serveLocalPublicDisk } from './file-management/serve-local-public-disk/
 import { LoggingService } from './services/logging/logging.service.js';
 import helmet from 'helmet';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { SessionConfigService } from './session-manager/services/session-config/session-config.service.js';
-import { flashMiddleware } from './session-manager/middlewares/flash/flash.middleware.js';
 import { SessionMapPreviousUrlInterceptor } from './session-manager/interceptors/session-map-previous-url/session-map-previous-url-interceptor.service.js';
 import { RedirectFromLoginFilter } from './session-manager/filters/redirect-to-login/redirect-to-login.filter.js';
 import { SetupIntendInterceptor } from './session-manager/interceptors/setup-intend/setup-intend.interceptor.js';
-import { KillForApiInterceptor } from './session-manager/interceptors/kill-for-api/kill-for-api.interceptor.js';
 import { registerApplicationContext } from './common/application-context.js';
 import { registerPgTypeParsers } from './helpers/pg-type-parsers/pg-type-parsers.js';
 import { registerSequelizeCls } from './helpers/sequelize-namespace/sequelize-namespace.js';
@@ -86,13 +83,11 @@ async function bootstrap() {
   app.enableVersioning({ type: VersioningType.URI, prefix: 'api/v' });
   setupApiDocumentation(app);
 
-  app.use(await app.get<SessionConfigService>(SessionConfigService).session());
-  app.use(flashMiddleware());
+  // Sessions are mounted per route by SessionManagerModule (none on API routes)
   app.useGlobalInterceptors(
     app.get(NotFoundConverterInterceptor),
     app.get(SessionMapPreviousUrlInterceptor),
     app.get(SetupIntendInterceptor),
-    app.get(KillForApiInterceptor),
     new ContextInterceptor(),
   );
 

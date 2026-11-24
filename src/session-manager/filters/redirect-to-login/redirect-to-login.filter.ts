@@ -18,7 +18,12 @@ export class RedirectFromLoginFilter implements ExceptionFilter {
     const response = host.switchToHttp().getResponse<Response>();
     const request = host.switchToHttp().getRequest<Request>();
 
-    if (request.xhr || request.accepts(['html', 'text', 'json']) === 'json') {
+    // Stateless routes have no session to remember the intended URL in: answer as JSON
+    if (
+      !request.session ||
+      request.xhr ||
+      request.accepts(['html', 'text', 'json']) === 'json'
+    ) {
       response.status(HttpStatus.UNAUTHORIZED).json({
         errors: { error: [exception.message] },
         message: exception.message,

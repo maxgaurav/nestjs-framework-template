@@ -11,11 +11,8 @@ import { Request } from 'express';
 export class SessionMapPreviousUrlInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const request = context.switchToHttp().getRequest<Request>();
-    if (
-      request.url.includes('api/v1') ||
-      request.url.includes('oauth/token') ||
-      request.url.includes('oauth/refresh')
-    ) {
+    // Stateless routes (API, token endpoints) have no session
+    if (!request.session) {
       return next.handle();
     }
 

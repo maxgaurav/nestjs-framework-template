@@ -26,17 +26,14 @@ import request from 'supertest';
 import { Observable } from 'rxjs';
 import type { NextFunction, Request, Response } from 'express';
 import { AppModule } from '../src/app.module.js';
-import { flashMiddleware } from '../src/session-manager/middlewares/flash/flash.middleware.js';
 import { NotFoundConverterInterceptor } from '../src/helpers/interceptors/not-found-converter/not-found-converter.interceptor.js';
 import { ContextInterceptor } from '../src/helpers/interceptors/context/context.interceptor.js';
 import { ErrorValidationFormatFilter } from '../src/helpers/filters/error-validation-format/error-validation-format.filter.js';
 import { LoggingService } from '../src/services/logging/logging.service.js';
-import { SessionConfigService } from '../src/session-manager/services/session-config/session-config.service.js';
 import { TransactionProviderService } from '../src/transaction-manager/services/transaction-provider/transaction-provider.service.js';
 import { RedirectFromLoginFilter } from '../src/session-manager/filters/redirect-to-login/redirect-to-login.filter.js';
 import { SessionMapPreviousUrlInterceptor } from '../src/session-manager/interceptors/session-map-previous-url/session-map-previous-url-interceptor.service.js';
 import { SetupIntendInterceptor } from '../src/session-manager/interceptors/setup-intend/setup-intend.interceptor.js';
-import { KillForApiInterceptor } from '../src/session-manager/interceptors/kill-for-api/kill-for-api.interceptor.js';
 import {
   StorageConfig,
   ViewConfig,
@@ -204,14 +201,11 @@ export async function basicE2eSetup(
   app.useGlobalFilters(app.get(RedirectFromLoginFilter));
   app.enableVersioning({ type: VersioningType.URI, prefix: 'api/v' });
 
-  app.use(await app.get<SessionConfigService>(SessionConfigService).session());
-  app.use(flashMiddleware());
   app.useGlobalInterceptors(
     new TestingTransactionInterceptor(app.get(TransactionProviderService)),
     app.get(NotFoundConverterInterceptor),
     app.get(SessionMapPreviousUrlInterceptor),
     app.get(SetupIntendInterceptor),
-    app.get(KillForApiInterceptor),
     new ContextInterceptor(),
   );
 
