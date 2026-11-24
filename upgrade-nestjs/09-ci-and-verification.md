@@ -1,6 +1,6 @@
 # 09 — CI, AGENTS.md, final verification
 
-**Status: not started**
+**Status: done** on branch `feature/upgrade-nestjs`. See "Final checklist outcome" at the end.
 
 ## CI (`.github/workflows/node.js.yml`)
 
@@ -223,22 +223,68 @@ failed 3 tests that passed locally, which exposed two real bugs, both fixed in `
 
 ## Final checklist
 
-- [ ] Clean clone: `npm ci && npm run build && npm run start:prod` boots (cluster), and `/health`
+- [x] Clean clone: `npm ci && npm run build && npm run start:prod` boots (cluster), and `/health`
       is 200.
-- [ ] `format:check`, `lint`, `typecheck`, `test` and `test:e2e` are all green.
-- [ ] `route:list` and the OpenAPI JSON match the baselines (only intentional diffs, listed in the
+- [x] `format:check`, `lint`, `typecheck`, `test` and `test:e2e` are all green.
+- [x] `route:list` and the OpenAPI JSON match the baselines (only intentional diffs, listed in the
       PR).
-- [ ] Web flow: login → session/flash → redirect-to-login, in a browser.
-- [ ] API flow: OAuth password grant, refresh, the user CRUD endpoints, pagination.
-- [ ] Mail via Mailpit (SMTP) and the log driver.
-- [ ] Storage: local disks created; signed link downloads, supports Range and returns 403 when
+- [x] Web flow: login → session/flash → redirect-to-login (driven over HTTP with a cookie jar, not a real browser).
+- [x] API flow: OAuth password, authorization-code, PKCE and refresh grants (the template has no user CRUD endpoints or paginated index to check).
+- [x] Mail via Mailpit (SMTP) and the log driver (verified in phase 07; mail code unchanged since).
+- [x] Storage: local disks created; signed link downloads, supports Range and returns 403 when
       tampered with; upload validation returns 422.
-- [ ] Migrations: `migration:run` on an existing DB shows 0 pending; `make` / `rollback` /
+- [x] Migrations: `migration:run` on an existing DB shows 0 pending; `make` / `rollback` /
       `refresh` work from `dist`.
-- [ ] No leftovers:
+- [x] No leftovers:
       `grep -rnE "nestjs-modules/mailer|nodemailer|nestjs-command|connect-flash|ts-node|jest|eslint|__dirname" package.json src test`
       returns nothing.
-- [ ] `.env` note in the PR: local `.env` files must set a valid `MAIL_FROM_ADDRESS`; the new
+- [-] `.env` note in the PR (no PR opened yet; the note is in the outcome below): local `.env` files must set a valid `MAIL_FROM_ADDRESS`; the new
       `STORAGE_*` vars are optional.
-- [ ] Delete `upgrade-nestjs/` after the merge, or keep it until the follow-ups in README.md are
+- [-] Delete `upgrade-nestjs/` after the merge (for the project owner, after merging), or keep it until the follow-ups in README.md are
       scheduled.
+
+## Final checklist outcome (2026-11-24)
+
+Run against a **clean checkout** of the branch with a **fresh PostgreSQL container** (not the
+developer database): `npm ci` (about 6 s), `cp .env.example .env`, `app:generate-secret`,
+`oauth:generate-keys`, `migration:status` (0 up, 6 pending) → `migration:run` →
+`migration:refresh` → `migration:status` (6 up, 0 pending), clients via `oauth:generate-client`,
+a user via `tinker`, then `npm run start:prod` and an HTTP script with a cookie jar:
+
+| Check | Result |
+| ----- | ------ |
+| Web login: login page, email step (session cookie), password page shows the remembered email, wrong password → flash + redirect back with the error shown, correct password → redirect to the client with `code` and `state` | ✅ |
+| Code exchange; same code twice → 422 | ✅ |
+| `refresh_token` grant; used refresh token rejected (rotation) | ✅ |
+| Password grant; refused for an authorization-code client | ✅ |
+| Tokens RS256; `POST /oauth/refresh` 404; `/health` 200 without cookie; unsigned private file 403; invalid authorization request renders a page (no redirect) | ✅ |
+| OpenAPI: only `POST /oauth/token`, operation id `OauthController_token` | ✅ |
+| `route:list` vs `baseline-routes.txt` | only intentional diffs: `- POST /oauth/refresh`, `+ GET /files/:disk` |
+| E2E on the fresh database | ✅ 56/56 |
+| Graceful shutdown (SIGTERM) | ✅ |
+| Leftovers grep | clean (remaining hits are `refresh-token-repo` paths and a comment) |
+| Unit + e2e / typecheck / lint (incl. Prettier) | ✅ 333 tests / 0 errors / clean |
+
+**Bugs the checklist found** (all fixed, each with a test that fails without the fix):
+
+- The **authorization-code and PKCE flows were broken end to end on `master`**:
+  `AuthorizationChallengeModel` associations were class fields (wiped after load) → every code
+  exchange 500; a used code → 500; `client_secret` was never checked on the code exchange; the
+  OAuth `state` always came back empty. New e2e `test/auth/authorization-code-flow.e2e-spec.ts`
+  drives the whole browser flow (7 tests).
+- `migration:status` failed on an empty database (concurrent `SequelizeMeta` creation).
+- `.env.example` shipped `APP_SECRET=changeThisValue`, so `app:generate-secret` refused a fresh
+  copy and the placeholder became the real secret.
+- `registerEventCallBacks` did not run the callback without a transaction (now matches
+  AGENTS.md; failures are logged).
+
+**Before merging / for local environments:**
+
+- `.env`: set a valid `MAIL_FROM_ADDRESS` (`noreply@nesttemplate` stops the app), and an
+  `APP_SECRET` (required at boot; `npm run app:command -- app:generate-secret`).
+- JWT keys are required at boot: `npm run app:command -- oauth:generate-keys`. Existing tokens
+  signed the old way (HS256) are no longer accepted.
+- API clients: refresh moved to `POST /oauth/token` with `grant_type=refresh_token`;
+  `POST /oauth/refresh` is gone.
+- Node 26 on every machine and in CI.
+
