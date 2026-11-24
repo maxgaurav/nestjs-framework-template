@@ -72,7 +72,7 @@ describe('AuthorizationController', () => {
 
     const authorization = {} as AuthorizationChallengeModel;
     authorization.id = Math.random().toString(32).substring(7);
-    const transaction = null;
+    const transaction = undefined;
 
     const repo = module.get(AuthorizationChallengeRepoService);
     const createChallengeSpy = vi
@@ -107,7 +107,7 @@ describe('AuthorizationController', () => {
 
     const authorization = {} as AuthorizationChallengeModel;
     authorization.id = Math.random().toString(32).substring(7);
-    const transaction = null;
+    const transaction = undefined;
 
     const repo = module.get(AuthorizationChallengeRepoService);
     const createChallengeSpy = vi

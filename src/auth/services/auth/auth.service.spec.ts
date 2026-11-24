@@ -17,20 +17,20 @@ describe('AuthService', () => {
 
   const configService: ConfigService = {} as any;
   const accessTokenRepo: AccessTokenRepoService = {
-    findForActiveState: (value) => value,
+    findForActiveState: (value: any) => value,
   } as any;
   const jwtService: JwtService = {
-    decode: (value) => value,
-    verifyAsync: (value) => value,
+    decode: (value: any) => value,
+    verifyAsync: (value: any) => value,
   } as any;
 
   const userRepo: UserRepository = {
-    findByEmail: (value) => value,
-    findOrFail: (value) => value,
+    findByEmail: (value: any) => value,
+    findOrFail: (value: any) => value,
   } as any;
 
   const refreshTokenRepo: RefreshTokenRepoService = {
-    find: (value) => value,
+    find: (value: any) => value,
   } as any;
 
   beforeEach(async () => {
@@ -136,19 +136,19 @@ describe('AuthService', () => {
 
   it('should map user to session', async () => {
     const session = {
-      save: (value) => value,
-      regenerate: (value) => value,
+      save: (value: any) => value,
+      regenerate: (value: any) => value,
     } as any;
 
     const regenerateSpy = vi
-      .spyOn(session, 'regenerate')
-      .mockImplementation((callback: () => void) => {
+      .spyOn(session as any, 'regenerate')
+      .mockImplementation((callback: any) => {
         callback();
       });
 
     const saveSpy = vi
-      .spyOn(session, 'save')
-      .mockImplementation((callback: () => void) => {
+      .spyOn(session as any, 'save')
+      .mockImplementation((callback: any) => {
         callback();
       });
 
@@ -165,19 +165,19 @@ describe('AuthService', () => {
 
   it('should throw error when mapping of user to session fails to be saved', async () => {
     const session = {
-      save: (value) => value,
-      regenerate: (value) => value,
+      save: (value: any) => value,
+      regenerate: (value: any) => value,
     } as any;
 
     const saveSpy = vi
-      .spyOn(session, 'save')
-      .mockImplementation((callback: (err: string) => void) => {
+      .spyOn(session as any, 'save')
+      .mockImplementation((callback: any) => {
         callback('errorPassed');
       });
 
     const regenerateSpy = vi
-      .spyOn(session, 'regenerate')
-      .mockImplementation((callback: () => void) => {
+      .spyOn(session as any, 'regenerate')
+      .mockImplementation((callback: any) => {
         callback();
       });
 
@@ -226,7 +226,7 @@ describe('AuthService', () => {
 
     const loggedInUserSpy = vi
       .spyOn(service, 'getLoggedInUser')
-      .mockReturnValue(Promise.resolve(null));
+      .mockReturnValue(Promise.resolve(null as never));
 
     expect(await service.findUserByToken('token')).toEqual(null);
     expect(decodeSpy).toHaveBeenCalledWith('token');

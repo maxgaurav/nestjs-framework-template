@@ -51,7 +51,10 @@ export class TransactionProbeController {
     @ReqTransaction() transaction?: Transaction,
   ): Promise<{ email: string }> {
     // No explicit transaction: the insert must join the request transaction through CLS
-    await this.userRepository.userModel.create({ email: dto.email });
+    await this.userRepository.userModel
+      .build()
+      .setAttributes({ email: dto.email })
+      .save();
 
     this.eventCallbacks.registerEventCallBacks(() => {
       this.state.committedEmails.push(dto.email);

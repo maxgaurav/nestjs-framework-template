@@ -17,18 +17,18 @@ describe('OauthController', () => {
   let controller: OauthController;
 
   const accessTokenRepo: AccessTokenRepoService = {
-    create: (value) => value,
-    createBearerToken: (value) => value,
+    create: (value: any) => value,
+    createBearerToken: (value: any) => value,
   } as any;
   const refreshTokenRepo: RefreshTokenRepoService = {
-    create: (value) => value,
-    createBearerToken: (value) => value,
-    consumeToken: (value) => value,
+    create: (value: any) => value,
+    createBearerToken: (value: any) => value,
+    consumeToken: (value: any) => value,
   } as any;
 
   const configService: ConfigService = {
-    get: (value) => value,
-    getOrThrow: (value) => value,
+    get: (value: any) => value,
+    getOrThrow: (value: any) => value,
   } as any;
 
   afterEach(() => {
@@ -77,7 +77,7 @@ describe('OauthController', () => {
     const user: UserModel = { id: 1 } as any;
     const client: ClientModel = { id: 'client' } as any;
     const authContent = { user, client };
-    const transaction = null;
+    const transaction = undefined;
 
     const accessToken: AccessTokenModel = { id: 'token' } as any;
     const refreshToken: RefreshTokenModel = { id: 'token' } as any;
@@ -153,7 +153,7 @@ describe('OauthController', () => {
       .spyOn(refreshTokenRepo, 'consumeToken')
       .mockReturnValue(Promise.resolve({ refreshToken, accessToken }));
 
-    const transaction = null;
+    const transaction = undefined;
 
     expect(
       await controller.refreshAccessToken(currentRefreshToken, transaction),

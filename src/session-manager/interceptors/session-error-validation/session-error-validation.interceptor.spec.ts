@@ -15,7 +15,7 @@ describe('SessionErrorValidationInterceptor', () => {
 
   it('should return original value if response is not type of object', async () => {
     const request: any = {
-      flash: (value) => value,
+      flash: (value: any) => value,
     };
 
     const flashSpy = vi.spyOn(request, 'flash').mockReturnValueOnce([]);
@@ -35,7 +35,7 @@ describe('SessionErrorValidationInterceptor', () => {
 
   it('should set empty object when flash message is empty', async () => {
     const request: any = {
-      flash: (value) => value,
+      flash: (value: any) => value,
     };
 
     const flashSpy = vi.spyOn(request, 'flash').mockReturnValueOnce([]);
@@ -59,7 +59,7 @@ describe('SessionErrorValidationInterceptor', () => {
 
   it('should map validation errors to error bag when session has errors', async () => {
     const request: any = {
-      flash: (value) => value,
+      flash: (value: any) => value,
     };
 
     const errors = {

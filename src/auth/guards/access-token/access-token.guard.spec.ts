@@ -9,7 +9,7 @@ describe('AccessTokenGuard', () => {
   let guard: AccessTokenGuard;
 
   const authService: AuthService = {
-    findUserByToken: (value) => value,
+    findUserByToken: (value: any) => value,
   } as any;
 
   beforeEach(() => {

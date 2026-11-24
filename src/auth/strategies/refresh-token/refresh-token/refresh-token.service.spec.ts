@@ -32,11 +32,11 @@ describe('RefreshTokenService', () => {
   let service: RefreshTokenService;
 
   const authService: AuthService = {
-    findRefreshToken: (value) => value,
+    findRefreshToken: (value: any) => value,
   } as any;
 
   const clientRepo: ClientRepoService = {
-    findForIdAndSecret: (value) => value,
+    findForIdAndSecret: (value: any) => value,
   } as any;
 
   afterEach(() => {
@@ -91,7 +91,7 @@ describe('RefreshTokenService', () => {
 
     const client: ClientModel = { id: 'client', secret: 'secret' } as any;
 
-    const dto = new RefreshTokenDto({
+    const dto = Object.assign(new RefreshTokenDto(), {
       refresh_token: 'token',
       client_id: client.id,
       client_secret: client.secret,
@@ -130,7 +130,9 @@ describe('RefreshTokenService', () => {
       body: { test: 'test' },
     } as any;
 
-    const dto = new RefreshTokenDto({ refresh_token: 'token' });
+    const dto = Object.assign(new RefreshTokenDto(), {
+      refresh_token: 'token',
+    });
     const validateContentSpy = vi
       .spyOn(service, 'validateContent')
       .mockReturnValue(Promise.resolve(dto));
@@ -184,7 +186,9 @@ describe('RefreshTokenService', () => {
       body: { test: 'test' },
     } as any;
 
-    const dto = new RefreshTokenDto({ refresh_token: 'token' });
+    const dto = Object.assign(new RefreshTokenDto(), {
+      refresh_token: 'token',
+    });
     const validateContentSpy = vi
       .spyOn(service, 'validateContent')
       .mockReturnValue(Promise.resolve(dto));
@@ -225,7 +229,7 @@ describe('RefreshTokenService', () => {
 
     const client: ClientModel = { id: 'client', secret: 'secret' } as any;
 
-    const dto = new RefreshTokenDto({
+    const dto = Object.assign(new RefreshTokenDto(), {
       refresh_token: 'token',
       client_id: client.id,
       client_secret: client.secret,

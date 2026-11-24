@@ -24,7 +24,7 @@ describe('EventRegisterCallbackService', () => {
     const callback = () => (callbackCalled = true) as any;
 
     const transaction = {
-      afterCommit: (handler) => {
+      afterCommit: (handler: any) => {
         afterCommitCalled = true;
         handler();
       },

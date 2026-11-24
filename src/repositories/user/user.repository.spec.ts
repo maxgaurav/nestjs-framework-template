@@ -8,8 +8,8 @@ describe('UserRepository', () => {
   let service: UserRepository;
 
   const model: typeof UserModel = {
-    findOne: (value) => value,
-    findByPk: (value) => value,
+    findOne: (value: any) => value,
+    findByPk: (value: any) => value,
   } as any;
 
   beforeEach(async () => {
@@ -36,7 +36,7 @@ describe('UserRepository', () => {
       .spyOn(model, 'findOne')
       .mockReturnValueOnce(Promise.resolve(userModel));
 
-    const transaction = null;
+    const transaction = undefined;
 
     expect(await service.findByEmail(userModel.email, transaction)).toEqual(
       userModel,
@@ -52,9 +52,9 @@ describe('UserRepository', () => {
     const userModel: UserModel = { id: 1, email: FakedEmail } as any;
     const findOneSpy = vi
       .spyOn(model, 'findOne')
-      .mockReturnValueOnce(Promise.resolve(undefined));
+      .mockReturnValueOnce(Promise.resolve(null));
 
-    const transaction = null;
+    const transaction = undefined;
 
     expect(await service.findByEmail(userModel.email, transaction)).toEqual(
       null,
@@ -72,7 +72,7 @@ describe('UserRepository', () => {
       .spyOn(model, 'findByPk')
       .mockReturnValueOnce(Promise.resolve(userModel));
 
-    const transaction = null;
+    const transaction = undefined;
 
     expect(await service.findOrFail(userModel.id, transaction)).toEqual(
       userModel,
@@ -87,7 +87,7 @@ describe('UserRepository', () => {
   it('should return user when find by email results in user', async () => {
     const userModel: UserModel = { id: 1, email: FakedEmail } as any;
 
-    const transaction = null;
+    const transaction = undefined;
 
     const findSpy = vi
       .spyOn(model, 'findOne')

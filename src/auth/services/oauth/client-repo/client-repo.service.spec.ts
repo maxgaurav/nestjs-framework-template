@@ -10,13 +10,13 @@ import { GrantTypes } from '../../../grant-types/grant-type-implementation.js';
 describe('ClientRepoService', () => {
   let service: ClientRepoService;
 
-  const randomByeGenerator: RandomByteGeneratorService = {
-    generateRandomByte: (value) => value,
-  };
+  const randomByeGenerator = {
+    generateRandomByte: (value: any) => value,
+  } as unknown as RandomByteGeneratorService;
   const model: typeof ClientModel = {
-    findByPk: (value) => value,
-    findOne: (value) => value,
-    build: (value) => value,
+    findByPk: (value: any) => value,
+    findOne: (value: any) => value,
+    build: (value: any) => value,
   } as any;
 
   beforeEach(async () => {
@@ -43,7 +43,7 @@ describe('ClientRepoService', () => {
 
   it('should find or fail', async () => {
     const client: ClientModel = { id: 'test' } as any;
-    const transaction = null;
+    const transaction = undefined;
     const findSpy = vi
       .spyOn(model, 'findByPk')
       .mockReturnValue(Promise.resolve(client));
@@ -57,11 +57,11 @@ describe('ClientRepoService', () => {
   it('should create new oauth client', async () => {
     const client: ClientModel = {
       id: 'test',
-      setAttributes: (value) => value,
-      save: (value) => value,
+      setAttributes: (value: any) => value,
+      save: (value: any) => value,
     } as any;
 
-    const transaction = null;
+    const transaction = undefined;
 
     const buildSpy = vi.spyOn(model, 'build').mockReturnValue(client);
     const setAttributeSpy = vi
@@ -91,8 +91,8 @@ describe('ClientRepoService', () => {
   it('should revoke client', async () => {
     const client: ClientModel = {
       id: 'test',
-      setAttributes: (value) => value,
-      save: (value) => value,
+      setAttributes: (value: any) => value,
+      save: (value: any) => value,
     } as any;
 
     const setAttributeSpy = vi
@@ -101,7 +101,7 @@ describe('ClientRepoService', () => {
     const saveSpy = vi
       .spyOn(client, 'save')
       .mockReturnValue(Promise.resolve(client));
-    const transaction = null;
+    const transaction = undefined;
 
     expect(await service.revoke(client, transaction)).toEqual(client);
     expect(setAttributeSpy).toHaveBeenCalledWith({ is_revoked: true });
@@ -113,7 +113,7 @@ describe('ClientRepoService', () => {
     const findSpy = vi
       .spyOn(model, 'findOne')
       .mockReturnValue(Promise.resolve(client));
-    const transaction = null;
+    const transaction = undefined;
 
     expect(
       await service.findForIdAndSecret(client.id, client.secret, transaction),
@@ -129,8 +129,8 @@ describe('ClientRepoService', () => {
     const client: ClientModel = { id: 'client', secret: 'secret' } as any;
     const findSpy = vi
       .spyOn(model, 'findOne')
-      .mockReturnValue(Promise.resolve(undefined));
-    const transaction = null;
+      .mockReturnValue(Promise.resolve(null));
+    const transaction = undefined;
 
     expect(
       await service.findForIdAndSecret(client.id, client.secret, transaction),

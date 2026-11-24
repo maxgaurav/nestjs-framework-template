@@ -29,7 +29,7 @@ describe('IntendManagerService', () => {
   });
 
   it('should update intend content in request session', () => {
-    const request = { flash: (value) => value };
+    const request = { flash: (value: any) => value };
     const flashSpy = vi.spyOn(request, 'flash');
     service.updateContent(request as any, service.getDefaultValue());
     expect(flashSpy).toHaveBeenCalledWith(
@@ -39,7 +39,7 @@ describe('IntendManagerService', () => {
   });
 
   it('should return current intend content', () => {
-    const request = { flash: (value) => value };
+    const request = { flash: (value: any) => value };
     const flashSpy = vi
       .spyOn(request, 'flash')
       .mockReturnValueOnce([JSON.stringify(service.getDefaultValue())]);
@@ -57,7 +57,7 @@ describe('IntendManagerService', () => {
   });
 
   it('should setup initial stage of intend when no intend value is set', () => {
-    const request = { flash: (value) => value };
+    const request = { flash: (value: any) => value };
     const updateSpy = vi
       .spyOn(service, 'updateContent')
       .mockImplementation(() => undefined);
@@ -69,7 +69,7 @@ describe('IntendManagerService', () => {
   });
 
   it('should skip initialization if request is already setup with intend content', () => {
-    const request = { flash: (value) => value };
+    const request = { flash: (value: any) => value };
     const updateSpy = vi.spyOn(service, 'updateContent');
     const flashValue = service.getDefaultValue();
     flashValue.url = 'changed';
@@ -115,7 +115,7 @@ describe('IntendManagerService', () => {
   it('should return null when intend is empty', () => {
     const getIntendSpy = vi
       .spyOn(service, 'getIntend')
-      .mockReturnValueOnce(null);
+      .mockReturnValueOnce(null as never);
     const request = {} as any;
     expect(service.getUrl(request)).toEqual(null);
     expect(getIntendSpy).toHaveBeenCalledWith(request);
@@ -123,7 +123,7 @@ describe('IntendManagerService', () => {
 
   it('should call setup intend if get action fails for some reason', () => {
     let isFailCalled = false;
-    const request = { flash: (value) => value };
+    const request = { flash: (value: any) => value };
     const flashSpy = vi.spyOn(request, 'flash').mockImplementation(() => {
       if (!isFailCalled) {
         isFailCalled = true;
