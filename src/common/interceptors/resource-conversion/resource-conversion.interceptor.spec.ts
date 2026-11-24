@@ -8,7 +8,7 @@ import { ResourceMap } from '../../decorators/resource-map.decorator.js';
 
 class SampleResource {
   @Expose()
-  public ok: string;
+  public ok!: string;
 }
 
 describe('ResourceConversionInterceptor', () => {

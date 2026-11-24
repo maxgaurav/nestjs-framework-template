@@ -27,9 +27,11 @@ export class AccessTokenModel extends DatesMapping<AccessTokenModel> {
   @Column(DataType.DATE)
   declare public expires_at: Date | null;
 
+  // `declare`, not a class field: a field would be re-initialised after Sequelize's
+  // constructor and wipe the eager-loaded association
   @BelongsTo(() => ClientModel)
-  public client: ClientModel | null;
+  declare public client: ClientModel | null;
 
   @BelongsTo(() => UserModel)
-  public user: UserModel | null;
+  declare public user: UserModel | null;
 }

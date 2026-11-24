@@ -16,12 +16,12 @@ export class AuthorizationDto {
   @IsNotEmpty()
   @IsEnum(GrantTypes)
   @IsNotIn([GrantTypes.ImplicitPassword])
-  public grant_type: GrantTypes;
+  public grant_type!: GrantTypes;
 
   @IsNotEmpty()
   @IsUUID()
   @ClientIdExists()
-  public client_id: string;
+  public client_id!: string;
 
   @ValidateIf((obj: AuthorizationDto) => obj?.grant_type === GrantTypes.PKCE)
   @IsNotEmpty()
@@ -38,7 +38,7 @@ export class AuthorizationDto {
   @IsUrl({
     require_tld: false,
   })
-  public redirect_url: string;
+  public redirect_url!: string;
 
   @Allow()
   public state?: any;

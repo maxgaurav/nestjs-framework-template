@@ -5,5 +5,5 @@ import { DateResource } from './date-resource.js';
 export class BaseResource extends DateResource {
   @ApiProperty()
   @Expose()
-  public id: number;
+  public id!: number;
 }

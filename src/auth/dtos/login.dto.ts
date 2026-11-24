@@ -6,13 +6,13 @@ export class LoginDto {
   @IsNotEmpty()
   @ValidateNested()
   @Type(() => AuthorizationDto)
-  public token: AuthorizationDto;
+  public token!: AuthorizationDto;
 
   @IsNotEmpty()
   @IsEmail()
-  public email: string;
+  public email!: string;
 
   @IsNotEmpty()
   @IsString()
-  public password: string;
+  public password!: string;
 }

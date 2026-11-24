@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import cluster from 'cluster';
 import { Cluster, Worker } from 'cluster';
@@ -43,8 +43,6 @@ export class SetupClusterService {
    */
   private workerAttemptCheck: WorkerConfig[] = [];
 
-  private bootstrapFunc: () => Promise<void>;
-
   constructor(
     private configService: ConfigService,
     private processMessaging: ProcessMessagingService,
@@ -53,14 +51,13 @@ export class SetupClusterService {
   public closeEvent: Subject<true> = new Subject<true>();
 
   public start(bootstrap: () => Promise<void>): void {
-    this.bootstrapFunc = bootstrap;
     if (
       this.configService.getOrThrow<ClusterConfig>('cluster').enable &&
       clusterManager.isPrimary
     ) {
       this.startInWorker();
     } else {
-      this.startInMain();
+      this.startInMain(bootstrap);
     }
   }
 
@@ -263,8 +260,15 @@ export class SetupClusterService {
    * Start process in main
    * @protected
    */
-  protected startInMain() {
-    this.bootstrapFunc();
+  protected startInMain(bootstrap: () => Promise<void>) {
+    // A failed bootstrap must stop the process with the reason, not leave an unhandled rejection
+    bootstrap().catch((error: unknown) => {
+      new Logger(SetupClusterService.name).error(
+        'Application bootstrap failed',
+        error instanceof Error ? error.stack : String(error),
+      );
+      process.exit(1);
+    });
   }
 
   /**

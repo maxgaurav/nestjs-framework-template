@@ -6,21 +6,21 @@ export abstract class PaginationResource<T> {
 
   @ApiProperty()
   @Expose()
-  page: number;
+  page!: number;
 
   @ApiProperty()
   @Expose()
-  itemCount: number;
+  itemCount!: number;
 
   @ApiProperty()
   @Expose()
-  totalItems: number;
+  totalItems!: number;
 
   @ApiProperty()
   @Expose()
-  totalPages: number;
+  totalPages!: number;
 
   @ApiProperty()
   @Expose()
-  offset: number;
+  offset!: number;
 }
