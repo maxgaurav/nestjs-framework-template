@@ -171,12 +171,13 @@ export class ProcessMessagingService implements OnApplicationBootstrap {
     commandReceived: InterProcessCommunication<unknown>,
   ): void {
     switch (commandReceived.command) {
-      case CommunicationCommands.HealthCheckRequest:
-        this.eventEmitter.emit(
-          CommandToSystemEvent[commandReceived.command],
-          commandReceived.message,
-        );
+      case CommunicationCommands.HealthCheckRequest: {
+        const systemEvent = CommandToSystemEvent[commandReceived.command];
+        if (systemEvent) {
+          this.eventEmitter.emit(systemEvent, commandReceived.message);
+        }
         break;
+      }
       case CommunicationCommands.BroadcastCommand: {
         const broadcastMessageCommand: BroadcastCommandMessage =
           commandReceived.message as never;

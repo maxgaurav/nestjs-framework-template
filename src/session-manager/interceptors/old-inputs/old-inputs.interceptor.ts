@@ -17,7 +17,7 @@ export class OldInputsInterceptor implements NestInterceptor {
     let oldInputs: string | undefined | { [key: string]: any } = {};
 
     if (flashMessage.length > 0) {
-      oldInputs = flashMessage[0];
+      oldInputs = flashMessage[0] ?? '';
       oldInputs = JSON.parse(oldInputs) as
         | string
         | undefined

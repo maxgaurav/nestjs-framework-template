@@ -18,6 +18,9 @@ export class GenerateClientCommand extends CommandRunner {
   }
 
   async run([name, grantType]: string[]): Promise<void> {
+    if (!name) {
+      throw new Error('A client name is required');
+    }
     if (!$enum(GrantTypes).isValue(grantType)) {
       throw new Error(
         `Invalid grant type "${grantType}". Allowed: ${$enum(GrantTypes).getValues().join(', ')}`,

@@ -11,7 +11,8 @@ export enum CommunicationCommands {
   BroadcastCommand = 'broadcast-command',
 }
 
-// @todo map keys to command enum names
-export const CommandToSystemEvent: { [k: string]: SystemEvents } = {};
-CommandToSystemEvent[CommunicationCommands.HealthCheckRequest] =
-  SystemEvents.SelfHealthStatus;
+export const CommandToSystemEvent: Partial<
+  Record<CommunicationCommands, SystemEvents>
+> = {
+  [CommunicationCommands.HealthCheckRequest]: SystemEvents.SelfHealthStatus,
+};

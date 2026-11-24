@@ -60,14 +60,9 @@ export class ErrorValidationFormatFilter implements ExceptionFilter {
     let formattedErrors: ValidationErrorsFormat = {};
 
     for (const error of errors) {
-      formattedErrors[`${propertyPrefix}${error.property}`] = [];
-      for (const constraintKey of Object.keys(error.constraints || [])) {
-        formattedErrors[`${propertyPrefix}${error.property}`].push(
-          (error.constraints as never as { [key: string]: unknown })[
-            constraintKey
-          ] as never,
-        );
-      }
+      formattedErrors[`${propertyPrefix}${error.property}`] = Object.values(
+        error.constraints ?? {},
+      );
 
       if ((error?.children || []).length > 0) {
         formattedErrors = {
@@ -86,8 +81,9 @@ export class ErrorValidationFormatFilter implements ExceptionFilter {
         continue;
       }
 
-      if (formattedErrors[errorKey].length > 0) {
-        finalFormattedErrors[errorKey] = formattedErrors[errorKey];
+      const messages = formattedErrors[errorKey];
+      if (messages && messages.length > 0) {
+        finalFormattedErrors[errorKey] = messages;
       }
     }
 

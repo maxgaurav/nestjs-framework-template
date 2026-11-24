@@ -21,11 +21,11 @@ export class RouteListService {
 
     router.stack
       .flatMap((layer) => {
-        if (!layer.route) {
+        const method = layer.route?.stack[0]?.method;
+        if (!layer.route || !method) {
           return [];
         }
         const path = (layer.route as IRoute).path;
-        const method = layer.route.stack[0].method;
         return [`${method.toUpperCase()} ${path}`];
       })
       .forEach((route) => this.logger.log('RouteListService', route));
