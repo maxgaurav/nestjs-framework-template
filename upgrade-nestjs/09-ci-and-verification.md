@@ -4,7 +4,7 @@
 
 ## CI (`.github/workflows/node.js.yml`)
 
-- [ ] Node `26.x`, `npm ci` (not `npm install`), and **re-enable tests**:
+- [x] Node `26.x` (from `.nvmrc`), `npm ci` (not `npm install`), and **re-enable tests**:
 
   ```yaml
   strategy:
@@ -22,8 +22,22 @@
     - run: npm run build
   ```
 
-- [ ] Optional: an `e2e` job with a `postgres` service container that runs
+- [x] An `e2e` job with a `postgres:17` service container that runs `oauth:generate-keys`,
       `npm run app:command -- migration:run`, then `npm run test:e2e`.
+
+**CI outcome:** both jobs were reproduced locally in a clean worktree (no `.env`, fresh
+PostgreSQL container, the workflow's env vars): all steps pass, e2e 43/43. The first reproduction
+failed 3 tests that passed locally, which exposed two real bugs, both fixed in `331ec31`:
+
+- **JWT signing was broken or meaningless.** Tokens were signed `HS256` with the private key file
+  as an HMAC secret. With generated RSA keys (CI, production) refresh failed with a 500; with the
+  empty key files the app created when keys were missing (every local checkout here), signatures
+  proved nothing. Now RS256 with the key pair, RS256-only verification, and missing/empty keys stop
+  the app at boot. `oauth:generate-keys` writes an unencrypted PKCS#8 key with mode 600, never logs
+  keys, refuses to overwrite without `--force`, and runs standalone.
+- **Separate session stores.** Every `SessionConfigService.session()` call created a new
+  `MemoryStore`, so `@UseSession()` routes never saw the web session with `SESSION_DRIVER=memory`.
+  The handler is now shared; e2e runs on the memory store, like CI.
 
 ## Fixes before final verification
 
