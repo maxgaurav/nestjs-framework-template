@@ -179,6 +179,14 @@
         "typescript/require-await": "off",
         "typescript/no-explicit-any": "off"
       }
+    },
+    {
+      "files": [
+        "src/databases/migrations/**/*.ts"
+      ],
+      "rules": {
+        "typescript/require-await": "off"
+      }
     }
   ]
 }

@@ -23,3 +23,11 @@ export const getEnvFileName = (envSuffix: string): string => {
 
   return defaultFile;
 };
+
+/**
+ * The env file the app loads: `.env.<OVERRIDE_ENV>` when set and present, otherwise `.env`
+ */
+export const resolveEnvFilePath = (): string => {
+  const overrideEnv = process.env['OVERRIDE_ENV'];
+  return getEnvFileName(overrideEnv ? `.${overrideEnv}` : '');
+};

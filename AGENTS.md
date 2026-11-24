@@ -220,6 +220,8 @@ API controllers must not return raw unshaped models to clients.
   * `migration:run` — pending
   * `migration:rollback` — roll back
   * `migration:refresh` — drop schema objects and re-run
+  * `migration:status` — list every migration as `up`, `pending` or `missing` (recorded in `SequelizeMeta`, file gone); read-only
+* `app:generate-secret` — generate `APP_SECRET` into the env file. Works without an existing secret (runs outside the app config). `--show` prints one without writing; replacing an existing secret needs `--force` and logs out all sessions, breaks values encrypted with it and invalidates derived signed links.
 * Also prefer CLI for create/drop database, seeders, oauth helpers, `route:list` — see that folder for `@Command` names rather than inventing scripts.
 
 ### Adding CLI commands / seeders

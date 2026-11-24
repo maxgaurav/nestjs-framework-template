@@ -83,6 +83,14 @@ export class MigratorFactoryService {
     });
   }
 
+  /**
+   * Every migration name recorded in SequelizeMeta, including ones whose file no longer exists
+   * (umzug's executed() leaves those out)
+   */
+  public executedNames(): Promise<string[]> {
+    return new SequelizeStorage({ sequelize: this.connection }).executed();
+  }
+
   private async load(
     path: string,
   ): Promise<{ up: MigrationStep; down?: MigrationStep }> {

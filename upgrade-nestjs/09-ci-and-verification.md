@@ -87,24 +87,24 @@
 
 ## New CLI commands
 
-- [ ] **`app:generate-secret`**: generate a new `APP_SECRET` (cryptographically random, 64 hex
+- [x] **`app:generate-secret`**: generate a new `APP_SECRET` (cryptographically random, 64 hex
       characters from `crypto.randomBytes(32)`) and write it to `.env`. The `app:` namespace marks
       an app-level configuration change; "generate" says it creates a new value (cf. the existing
       `oauth:generate-keys` / `oauth:generate-client`).
-  - [ ] `--show`: print the secret only, change nothing (for secret managers / CI variables).
-  - [ ] Refuses to replace an existing non-empty `APP_SECRET` unless `--force` is given, and then
+  - [x] `--show`: print the secret only, change nothing (for secret managers / CI variables).
+  - [x] Refuses to replace an existing non-empty `APP_SECRET` unless `--force` is given, and then
         prints what rotation breaks: **all sessions** are logged out, values encrypted with
         `HashEncryptService` can no longer be decrypted, and storage signing keys derived from
         `APP_SECRET` (when `STORAGE_SIGNING_KEYS` is empty) change, so outstanding signed links stop
         working.
-  - [ ] Writes the env file the app loads (`.env`, or `.env.<OVERRIDE_ENV>`), creating the key if
+  - [x] Writes the env file the app loads (`.env`, or `.env.<OVERRIDE_ENV>`), creating the key if
         it is missing and keeping every other line, comment and the file mode unchanged.
-  - [ ] Must run **without** a valid `APP_SECRET` (it creates the first one), so it cannot boot
-        the full app: `cli.ts` handles it before `HttpCommandFactory` (or a minimal command
-        context without `EnvironmentModule` validation).
-  - [ ] Unit test on a temp env file: adds the key, refuses without `--force`, replaces with
+  - [x] Must run **without** a valid `APP_SECRET` (it creates the first one), so it cannot boot
+        the full app: `cli.ts` routes it to `StandaloneCommandsModule` (no config, no DB) before
+        `HttpCommandFactory`. It is also registered in `CliCommandsModule` so `--help` lists it.
+  - [x] Unit test on a temp env file: adds the key, refuses without `--force`, replaces with
         `--force`, preserves other lines, `--show` writes nothing.
-- [ ] **`migration:status`**: list every migration with its state, e.g.
+- [x] **`migration:status`**: list every migration with its state, e.g.
 
   ```
   up       20210822104600-AddUUIDExtension.ts
@@ -113,12 +113,18 @@
   2 up, 1 pending
   ```
 
-  - [ ] Uses `MigratorFactoryService` (`umzug.executed()` / `umzug.pending()`), so names match
+  - [x] Uses `MigratorFactoryService` (`umzug.executed()` / `umzug.pending()`), so names match
         `SequelizeMeta` from `src` or `dist`.
-  - [ ] Also flags migrations recorded in `SequelizeMeta` whose file no longer exists
+  - [x] Also flags migrations recorded in `SequelizeMeta` whose file no longer exists
         (`missing`), which `migration:rollback` cannot undo.
-  - [ ] Read-only; exit code 0. e2e or unit test with a stubbed migrator for the three states.
-- [ ] AGENTS.md "Migrations & CLI": list both commands.
+  - [x] Read-only; exit code 0. Unit test of the state/format logic; verified against the real
+        DB (`6 up, 0 pending`, and `pending` for a freshly generated migration).
+  - [x] **Found while testing:** the migration stub did not compile after phase 10
+        (`noUnusedParameters` / `noUnusedLocals`) and an empty `async` step failed `require-await`,
+        so `migration:make` broke the next build. The stub now uses `_queryInterface` and drops the
+        unused import; `require-await` is off for `src/databases/migrations/**`. A generated stub
+        passes typecheck, lint and Prettier.
+- [x] AGENTS.md "Migrations & CLI": list both commands.
 
 ## AGENTS.md updates
 
