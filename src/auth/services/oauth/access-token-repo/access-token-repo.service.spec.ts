@@ -22,7 +22,7 @@ describe('AccessTokenRepoService', () => {
   } as any;
   const randomByteGenerate = {
     generateRandomByte: (value: any) => value,
-  } as unknown as RandomByteGeneratorService;
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({

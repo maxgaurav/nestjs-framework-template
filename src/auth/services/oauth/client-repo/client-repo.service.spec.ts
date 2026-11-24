@@ -12,7 +12,7 @@ describe('ClientRepoService', () => {
 
   const randomByeGenerator = {
     generateRandomByte: (value: any) => value,
-  } as unknown as RandomByteGeneratorService;
+  };
   const model: typeof ClientModel = {
     findByPk: (value: any) => value,
     findOne: (value: any) => value,

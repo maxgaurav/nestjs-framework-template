@@ -26,7 +26,7 @@ describe('RefreshTokenRepoService', () => {
   } as any;
   const randomByteGenerate = {
     generateRandomByte: (value: any) => value,
-  } as unknown as RandomByteGeneratorService;
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -144,8 +144,8 @@ describe('RefreshTokenRepoService', () => {
     const client: ClientModel = { id: 'client' } as any;
 
     const currentAccessTokenGetSpy = vi
-      .spyOn(currentAccessToken as any, '$get')
-      .mockImplementation((type: any) => {
+      .spyOn(currentAccessToken, '$get')
+      .mockImplementation(((type: string) => {
         if (type === 'user') {
           return Promise.resolve(mappedUser);
         }
@@ -155,7 +155,7 @@ describe('RefreshTokenRepoService', () => {
         }
 
         return Promise.reject(new Error(`incorrect type injected: ${type}`));
-      });
+      }) as never);
 
     const currentAccessTokenDestroySpy = vi
       .spyOn(currentAccessToken, 'destroy')
@@ -230,8 +230,8 @@ describe('RefreshTokenRepoService', () => {
     const client: ClientModel = { id: 'client' } as any;
 
     const currentAccessTokenGetSpy = vi
-      .spyOn(currentAccessToken as any, '$get')
-      .mockImplementation((type: any) => {
+      .spyOn(currentAccessToken, '$get')
+      .mockImplementation(((type: string) => {
         if (type === 'user') {
           return Promise.resolve(mappedUser);
         }
@@ -241,7 +241,7 @@ describe('RefreshTokenRepoService', () => {
         }
 
         return Promise.reject(new Error(`incorrect type injected: ${type}`));
-      });
+      }) as never);
 
     const currentAccessTokenDestroySpy = vi
       .spyOn(currentAccessToken, 'destroy')

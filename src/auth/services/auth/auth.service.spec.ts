@@ -141,13 +141,13 @@ describe('AuthService', () => {
     } as any;
 
     const regenerateSpy = vi
-      .spyOn(session as any, 'regenerate')
+      .spyOn(session, 'regenerate')
       .mockImplementation((callback: any) => {
         callback();
       });
 
     const saveSpy = vi
-      .spyOn(session as any, 'save')
+      .spyOn(session, 'save')
       .mockImplementation((callback: any) => {
         callback();
       });
@@ -170,13 +170,13 @@ describe('AuthService', () => {
     } as any;
 
     const saveSpy = vi
-      .spyOn(session as any, 'save')
+      .spyOn(session, 'save')
       .mockImplementation((callback: any) => {
         callback('errorPassed');
       });
 
     const regenerateSpy = vi
-      .spyOn(session as any, 'regenerate')
+      .spyOn(session, 'regenerate')
       .mockImplementation((callback: any) => {
         callback();
       });
