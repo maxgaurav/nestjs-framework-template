@@ -66,8 +66,8 @@ describe('AccessTokenService', () => {
   it('should throw error when validation fails', async () => {
     let errorThrown = false;
     try {
-      await service.validateContent({} as any, FailureClass as any);
-    } catch (err) {
+      await service.validateContent({}, FailureClass as any);
+    } catch {
       errorThrown = true;
     }
 

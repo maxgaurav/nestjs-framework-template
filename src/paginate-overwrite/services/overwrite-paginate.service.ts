@@ -17,7 +17,6 @@ export class OverwritePaginateService {
     private readonly sequelize: Sequelize,
   ) {}
 
-  // eslint-disable-next-line sonarjs/cognitive-complexity
   async findAllPaginate(
     options: PaginateOptions,
     optionsSequelize: FindAndCountOptions = {},

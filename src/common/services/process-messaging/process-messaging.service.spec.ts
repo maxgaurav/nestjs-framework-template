@@ -5,10 +5,7 @@ import { Logger } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { firstValueFrom, of, timer } from 'rxjs';
 import { InterProcessCommunication } from '../../../interfaces/inter-process-communication.js';
-import {
-  BroadcastCommandMessage,
-  CommunicationCommands,
-} from '../../../cluster/communication-commands.js';
+import { CommunicationCommands } from '../../../cluster/communication-commands.js';
 import { catchError, map } from 'rxjs/operators';
 import { Worker } from 'cluster';
 import { SystemEvents } from '../../../system-events/system-events.js';
@@ -16,7 +13,7 @@ import { SystemEvents } from '../../../system-events/system-events.js';
 describe('ProcessMessagingService', () => {
   let service: ProcessMessagingService;
   let processOnSpy: MockInstance;
-  let onHandler: any | ((event) => void);
+  let onHandler: any;
   let eventType: any;
 
   const eventEmitter = {
@@ -26,7 +23,7 @@ describe('ProcessMessagingService', () => {
   beforeEach(async () => {
     processOnSpy = vi
       .spyOn(process, 'on')
-      .mockImplementation((type: string, callback: any | ((event) => void)) => {
+      .mockImplementation((type: string, callback: any) => {
         eventType = type;
         onHandler = callback;
         return this;
@@ -325,7 +322,7 @@ describe('ProcessMessagingService', () => {
       message: {
         message: null,
         command: CommunicationCommands.HealthCheckRequest,
-      } as BroadcastCommandMessage,
+      },
     });
 
     expect(emitSpy).toHaveBeenCalledWith(SystemEvents.SelfHealthStatus, null);

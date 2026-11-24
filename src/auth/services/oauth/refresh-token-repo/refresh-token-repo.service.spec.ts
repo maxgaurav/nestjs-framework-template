@@ -26,7 +26,7 @@ describe('RefreshTokenRepoService', () => {
   } as any;
   const randomByteGenerate: RandomByteGeneratorService = {
     generateRandomByte: (value) => value,
-  } as any;
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
