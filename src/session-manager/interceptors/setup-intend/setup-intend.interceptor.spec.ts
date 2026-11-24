@@ -18,8 +18,10 @@ describe('SetupIntendInterceptor', () => {
   });
 
   it('should setup intend in session', async () => {
+    // A web request: the session middleware has attached a session
     const request = {
       url: '',
+      session: {},
     };
     const context = {
       switchToHttp: () => ({
@@ -37,5 +39,21 @@ describe('SetupIntendInterceptor', () => {
     );
 
     expect(setupIntendSpy).toHaveBeenCalledWith(request);
+  });
+
+  it('should skip stateless requests that have no session', async () => {
+    const request = { url: '/api/v1/users' };
+    const context = {
+      switchToHttp: () => ({
+        getRequest: () => request,
+      }),
+    } as any;
+    const next = { handle: () => of(true) };
+    const setupIntendSpy = vi.spyOn(intendManager, 'setupIntend');
+
+    expect(await firstValueFrom(interceptor.intercept(context, next))).toEqual(
+      true,
+    );
+    expect(setupIntendSpy).not.toHaveBeenCalled();
   });
 });

@@ -40,6 +40,9 @@ export class SessionConfigService {
       resave: sessionConfig.resave,
       cookie: {
         secure: sessionConfig.secureCookie,
+        httpOnly: true,
+        // Not sent on cross-site subrequests and POSTs: first line of CSRF defence
+        sameSite: 'lax',
         maxAge: 2 * 60 * 60 * 1000,
       },
       saveUninitialized: sessionConfig.saveUninitialized,

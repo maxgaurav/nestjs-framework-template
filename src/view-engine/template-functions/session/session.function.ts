@@ -16,6 +16,10 @@ export class SessionFunction implements ExtendFunction {
   handler<T = unknown>(sessionKey: string, defaultValue: unknown): T;
   handler<T = unknown>(sessionKey?: string, defaultValue = undefined): T {
     const request = this.clsService.get<Request>(CLS_REQ);
+    // Views rendered on a stateless route have no session
+    if (!request.session) {
+      return defaultValue as T;
+    }
     if (!sessionKey) {
       return request.session as never;
     }
