@@ -9,10 +9,12 @@ import {
   UseInterceptors,
   Session as SessionDecorator,
   Header,
+  UseFilters,
 } from '@nestjs/common';
 import { SessionErrorValidationInterceptor } from '../../../session-manager/interceptors/session-error-validation/session-error-validation.interceptor.js';
 import { OldInputsInterceptor } from '../../../session-manager/interceptors/old-inputs/old-inputs.interceptor.js';
 import { LoggingDecorator } from '../../../common/decorators/logging.decorator.js';
+import { AuthorizationRequestErrorFilter } from '../../filters/authorization-request-error/authorization-request-error.filter.js';
 import { AuthorizationDto } from '../../dtos/authorization.dto.js';
 import { RedirectGenerator } from '../../../common/decorators/redirect-generator.decorator.js';
 import { AuthorizationRedirector } from '../../redirections/authorization/authorization.redirector.js';
@@ -46,6 +48,7 @@ export class AuthorizationController {
     protected readonly authorizationChallengeRepo: AuthorizationChallengeRepoService,
   ) {}
 
+  @UseFilters(AuthorizationRequestErrorFilter)
   @UseInterceptors(SessionErrorValidationInterceptor, OldInputsInterceptor)
   @Render('authorization/login')
   @Get()

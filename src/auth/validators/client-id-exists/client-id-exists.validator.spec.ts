@@ -4,6 +4,8 @@ import { ClientRepoService } from '../../services/oauth/client-repo/client-repo.
 import { Test, TestingModule } from '@nestjs/testing';
 import { GrantTypes } from '../../grant-types/grant-type-implementation.js';
 
+const VALID_ID = '7d5f4c2a-1b3e-4f6a-9c8d-0e1f2a3b4c5d';
+
 describe('ClientIdExistsValidator', () => {
   let service: ClientIdExistsValidator;
 
@@ -93,8 +95,8 @@ describe('ClientIdExistsValidator', () => {
         .spyOn(clientRepo, 'find')
         .mockReturnValue(Promise.resolve(findResult as any));
 
-      expect(await service.validate('123', grantType as any)).toEqual(false);
-      expect(findSpy).toHaveBeenCalledWith('123');
+      expect(await service.validate(VALID_ID, grantType as any)).toEqual(false);
+      expect(findSpy).toHaveBeenCalledWith(VALID_ID);
     },
   );
 
@@ -107,11 +109,23 @@ describe('ClientIdExistsValidator', () => {
     );
 
     expect(
-      await service.validate('123', {
+      await service.validate(VALID_ID, {
         object: { grant_type: GrantTypes.AuthorizationCode },
       } as any),
     ).toEqual(true);
 
-    expect(findSpy).toHaveBeenCalledWith('123');
+    expect(findSpy).toHaveBeenCalledWith(VALID_ID);
+  });
+
+  // Regression: a non-UUID reached the database lookup and failed the request with a 500
+  it('skips the lookup for a malformed id (left to @IsUUID)', async () => {
+    const findSpy = vi.spyOn(clientRepo, 'find');
+
+    expect(
+      await service.validate('not-a-uuid', {
+        object: { grant_type: GrantTypes.AuthorizationCode },
+      } as any),
+    ).toEqual(true);
+    expect(findSpy).not.toHaveBeenCalled();
   });
 });

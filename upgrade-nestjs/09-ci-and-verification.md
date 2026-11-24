@@ -27,21 +27,27 @@
 
 ## Fixes before final verification
 
-- [ ] **Redirect loop on failed web GETs** (pre-existing, found in phase 03). A browser
+- [x] **Redirect loop on failed web GETs** (pre-existing, found in phase 03). A browser
       `GET /oauth/authorization` with missing or invalid parameters and no `Referer` redirects to
       itself until the browser gives up: `SessionMapPreviousUrlInterceptor` records the current GET
       URL as `_previous.url` before the validation pipe runs, and `ErrorValidationFormatFilter`
       then redirects the failed GET back to that same URL. Port wisekeep's fix:
-  - [ ] web **GET** requests that fail validation render `views/errors/invalid-request.twig`
+  - [x] web **GET** requests that fail validation render `views/errors/invalid-request.twig`
         (422) instead of redirecting. Form **POST**s keep flash-and-redirect-back; JSON is unchanged;
-  - [ ] `AuthorizationRequestErrorFilter` on `GET /oauth/authorization` renders
+  - [x] `AuthorizationRequestErrorFilter` on `GET /oauth/authorization` renders
         `views/authorization/invalid-request.twig` listing every problem, status 400, and never
         redirects (RFC 6749 §4.1.2.1: do not redirect to an unverified client);
-  - [ ] `ClientIdExistsValidator` only queries well-formed UUIDs; `@IsUUID` reports the rest.
+  - [x] `ClientIdExistsValidator` only queries well-formed UUIDs; `@IsUUID` reports the rest.
         Otherwise Postgres rejects the raw value and the request ends in a 500;
-  - [ ] e2e (`test/auth/authorization.e2e-spec.ts`): no `Location` header for a failed web GET,
+  - [x] e2e (`test/auth/authorization.e2e-spec.ts`): no `Location` header for a failed web GET,
         missing params, non-UUID client (500 before), unknown client, every problem listed, JSON
         422, valid request shows the login page; `curl -L` follows 0 redirects.
+  - [x] **Outcome:** the e2e tests were written first and reproduced all three bugs here (302 loop
+        for missing parameters and an unknown client, 500 for a non-UUID client). After the port:
+        5/5 e2e, unit cases for the filter branches (failed GET renders, POST flashes and
+        redirects, no session → JSON) and the validator's UUID skip. Against the built app,
+        `curl -L` follows 0 redirects and gets the 400 page. The validator spec used `'123'` as a
+        client id; its lookup cases now use a real UUID.
 
 - [x] **No sessions on API routes, unless a route opts in to cookie authentication.**
       Today `express-session` and the flash middleware run for every request, so API and token
