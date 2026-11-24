@@ -1,33 +1,62 @@
-# This workflow will do a clean install of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
-
 name: Node.js CI
 
 on:
   push:
-    branches: [ master, dev ]
+    branches: [master, dev]
   pull_request:
-    branches: [ master, dev ]
+    branches: [master, dev]
 
 jobs:
-  build:
-
+  checks:
+    name: Format, lint, typecheck, unit tests, build
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [ 24.x ]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
     steps:
-    - uses: actions/checkout@v6
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v6
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm install
-    - run: npm run lint
-#      need to re-introduce test after fixing the test
-#    - run: npm run test
-    - run: npm run build
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run format:check
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+
+  e2e:
+    name: E2E tests (PostgreSQL)
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: app
+          POSTGRES_PASSWORD: app
+          POSTGRES_DB: app_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U app -d app_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      # No .env file in CI: config loaders read these from the environment
+      APP_URL: http://localhost:3000
+      APP_SECRET: ci-only-secret-not-used-anywhere-else-0123456789
+      DB_HOST: localhost
+      DB_PORT: 5432
+      DB_NAME: app_test
+      DB_USERNAME: app
+      DB_PASSWORD: app
+      SESSION_DRIVER: memory
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run app:command -- oauth:generate-keys
+      - run: npm run app:command -- migration:run
+      - run: npm run test:e2e
