@@ -12,7 +12,7 @@
     "start:dev": "npm run build && concurrently -k -n tsc,app -c blue,green \"node node_modules/typescript-native/bin/tsc -p tsconfig.build.json --watch --preserveWatchOutput\" \"node --enable-source-maps --watch-path=./dist dist/main.js\"",
     "start:debug": "npm run build && concurrently -k -n tsc,app -c blue,green \"node node_modules/typescript-native/bin/tsc -p tsconfig.build.json --watch --preserveWatchOutput\" \"node --inspect --enable-source-maps --watch-path=./dist dist/main.js\"",
     "start:prod": "node --enable-source-maps dist/main.js",
-    "lint": "oxlint --type-aware --report-unused-disable-directives src test",
+    "lint": "npm run -s lint:code && npm run -s format:check",
     "test": "vitest run --project unit",
     "test:watch": "vitest --project unit",
     "test:cov": "vitest run --project unit --coverage",
@@ -24,8 +24,9 @@
     "tsgo": "node node_modules/typescript-native/bin/tsc",
     "prebuild": "rimraf dist",
     "typecheck": "node node_modules/typescript-native/bin/tsc -p tsconfig.json --noEmit",
-    "lint:fix": "oxlint --type-aware --fix src test",
-    "format:check": "prettier --check \"src/**/*.ts\" \"test/**/*.ts\""
+    "lint:fix": "oxlint --type-aware --fix src test && prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.ts\" \"test/**/*.ts\"",
+    "lint:code": "oxlint --type-aware --report-unused-disable-directives src test"
   },
   "dependencies": {
     "@nestjs/common": "^12.6.0",

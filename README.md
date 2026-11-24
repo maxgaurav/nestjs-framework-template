@@ -1,86 +1,97 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
-</p>
+# NestJS Framework Template
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A NestJS 12 application template: versioned JSON API with OAuth 2 (password, authorization code,
+PKCE, refresh), server-rendered Twig pages for the web login flow, Sequelize on PostgreSQL, mail,
+file storage, a CLI, and an end-to-end test setup with one rolled-back transaction per test.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Stack
 
-## Description
+| Area                     | Choice                                                                    |
+| ------------------------ | ------------------------------------------------------------------------- |
+| Runtime                  | Node.js 26 (`.nvmrc`), native ES modules                                  |
+| Framework                | NestJS 12 (Express 5)                                                     |
+| Language                 | TypeScript, fully strict; built with TypeScript 7 (`tsgo`)                |
+| Database                 | PostgreSQL via Sequelize / `sequelize-typescript`, CLS-bound transactions |
+| Views and mail templates | Twig 3                                                                    |
+| Mail                     | `@nestjs/mail` (SMTP, log, in-memory transports)                          |
+| File storage             | `@nestjs/storage` (local folders or any S3-compatible bucket)             |
+| CLI                      | `nest-commander`                                                          |
+| Tests                    | Vitest (unit + e2e against a real database)                               |
+| Lint / format            | oxlint (type-aware) / Prettier                                            |
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Installation
+## Getting started
 
 ```bash
-$ npm install
-or
-$ yarn install
+nvm use                                        # Node 26
+npm ci
+cp .env.example .env                           # then set the DB_* values
+npm run app:command -- app:generate-secret     # APP_SECRET (required at boot)
+npm run app:command -- oauth:generate-keys     # RS256 key pair for bearer tokens (required at boot)
+npm run app:command -- database:create
+npm run app:command -- migration:run
+npm run start:dev
 ```
 
-### Copy .env.example file
-```bash
-$ cp .env.example .env
-```
+The app listens on `APP_PORT` (default 3000). API documentation: `/api-documentation/v1`.
+Health: `/health`.
 
-## Running the app
-
-```bash
-# development
-$ npm run start
-$ yarn start
-
-# watch mode
-$ npm run start:dev
-$ yarn start:dev
-
-# production mode
-$ npm run start:prod
-$ yarn start:prod
-```
-
-## Test
+Create an OAuth client for your app:
 
 ```bash
-# unit tests
-$ npm run test
-$ yarn test
-
-# e2e tests
-$ npm run test:e2e
-$ yarn run test:e2e
-
-# test coverage
-$ npm run test:cov
-$ yarn run test:cov
+npm run app:command -- oauth:generate-client "My SPA" pkce
 ```
 
-## Support
+## Scripts
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+| Script                             | What it does                                               |
+| ---------------------------------- | ---------------------------------------------------------- |
+| `npm run build`                    | Compile to `dist/` with TypeScript 7 (well under a second) |
+| `npm run start:dev`                | Compile in watch mode and restart the app on change        |
+| `npm run start:prod`               | Run the compiled app (`dist/main.js`)                      |
+| `npm run typecheck`                | Type-check `src` and `test`                                |
+| `npm run lint` / `lint:fix`        | oxlint                                                     |
+| `npm run format` / `format:check`  | Prettier                                                   |
+| `npm test`                         | Unit tests                                                 |
+| `npm run test:e2e`                 | E2E tests (needs the database from `.env`)                 |
+| `npm run test:cov`                 | Unit tests with coverage                                   |
+| `npm run app:command -- <command>` | Compile, then run a CLI command                            |
+| `npm run tinker`                   | REPL with every provider (`await get(MailService)…`)       |
 
-## Stay in touch
+## CLI commands
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+Run with `npm run app:command -- <command>`; `--help` lists them all.
+
+| Command                                                                 | Purpose                                                                                                                |
+| ----------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `app:generate-secret [--show] [--force]`                                | Generate `APP_SECRET` into the env file. Replacing one logs out every session and invalidates values encrypted with it |
+| `oauth:generate-keys [--force]`                                         | Generate the RS256 key pair in `storage/`. Replacing it invalidates every issued token                                 |
+| `oauth:generate-client <name> <grantType>`                              | Create an OAuth client (`password`, `authorization-code`, `pkce`)                                                      |
+| `database:create` / `database:drop`                                     | Create or drop the configured database                                                                                 |
+| `migration:make <name>`                                                 | Create a migration in `src/databases/migrations/`                                                                      |
+| `migration:run` / `migration:rollback [--till N]` / `migration:refresh` | Apply, roll back or re-run migrations                                                                                  |
+| `migration:status`                                                      | List migrations as up, pending or missing                                                                              |
+| `route:list`                                                            | Print the registered HTTP routes                                                                                       |
+| `seeder:seed --all`                                                     | Run the seeders                                                                                                        |
+
+## Configuration
+
+All settings come from environment variables, documented in [`.env.example`](./.env.example) and
+loaded by `src/environment/configs/`. Required: `APP_SECRET` and the JWT keys in `storage/`
+(both generated by the commands above), and a valid `MAIL_FROM_ADDRESS`. Set `OVERRIDE_ENV=x` to
+load `.env.x` instead of `.env`.
+
+## Project conventions
+
+[`AGENTS.md`](./AGENTS.md) is the working guide for this codebase (for people and coding agents):
+layout, API vs web controllers, DTOs, auth, transactions, events, mail, storage, CLI, strict
+TypeScript rules and the testing strategy.
+
+## Editor setup
+
+- The IDE uses TypeScript 6 from `node_modules` (same `tsconfig.json`). For TypeScript 7 in VS Code,
+  install the "TypeScript (Native Preview)" extension.
+- Linting: install the oxc extension for oxlint; formatting: Prettier.
 
 ## License
 
-Nest is [MIT licensed](LICENSE).
+UNLICENSED (private template).

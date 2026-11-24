@@ -2,10 +2,21 @@
 
 ## Stack
 
-* NestJS + TypeScript
-* Sequelize models
-* Twig for server-rendered views and email templates
-* `@nestjs/event-emitter` for in-process events
+* Node.js 26 (`.nvmrc`), NestJS 12, native ES modules, strict TypeScript
+* TypeScript 7 (`typescript-native`, the Go compiler) builds and type-checks; TypeScript 6 (`typescript`) stays for the Nest schematics and the IDE
+* Sequelize (`sequelize-typescript`) on PostgreSQL, CLS-bound transactions (`cls-hooked`)
+* Twig 3 for server-rendered views and email templates
+* `@nestjs/mail` (Mailables), `@nestjs/storage` (disks), `nest-commander` (CLI), `@nestjs/event-emitter`
+* Vitest (unit + e2e), oxlint (type-aware), Prettier
+
+## Commands
+
+* `npm run build` — tsgo compile to `dist/` (about 0.4 s); `npm run typecheck` — TS 7, `src` + `test`
+* `npm run start:dev` — compile in watch mode and restart `dist/main.js`; `npm run start:prod`
+* `npm run lint` — oxlint **and** `prettier --check` (formatting fails lint, as with the old ESLint + Prettier plugin); `npm run lint:fix` — oxlint autofix + Prettier write; `npm run lint:code` — oxlint only
+* `npm test` — unit (`src/**/*.spec.ts`); `npm run test:e2e` — e2e (`test/**/*.e2e-spec.ts`, needs PostgreSQL); `npm run test:all`
+* `npm run app:command -- <command>` — compile, then run a CLI command (see "Migrations & CLI"); `npm run tinker` — REPL with every provider
+* Fresh checkout: copy `.env.example` to `.env`, then `app:generate-secret`, `oauth:generate-keys`, `database:create`, `migration:run`
 
 ## Layout
 
@@ -197,12 +208,30 @@ API controllers must not return raw unshaped models to clients.
 
 * Twig only (`.twig`) under `views/` (`layouts/`, `partials/`, `emails/`, feature folders).
 * Use `{% extends %}` / `{% include %}` / `{% block %}`.
-* Render via the view engine / `MailService` with template name + context.
+* Render web pages via the view engine (`@Render`); render mail via Mailables (see "Mail").
+
+## Mail
+
+* Send through `MailService.send(MailableClass, { to, data })` (thin facade over `@nestjs/mail`); `MailService.render(...)` builds a message without sending.
+* One Mailable class per email under `src/mail/mailables/<name>/<name>.mail.ts`, implementing `Mailable<TData>` and returning `{ subject, template: 'emails/<name>', context }`. Register it in `MailModule` providers.
+* Templates are Twig under `views/emails/`, rendered by `TwigTemplateEngine`, so template functions such as `url()` work. The text part is derived from the HTML.
+* `MAIL_DRIVER`: `smtp` | `log` (prints, delivers nothing) | `memory` (tests). `MAIL_FROM_ADDRESS` must be a full address (validated at boot).
+* Mail that must only go out after a commit is sent from a listener scheduled with `EventRegisterCallbackService.registerEventCallBacks(callback, transaction)`. No outbox/queue.
+* Tests assert on `InMemoryMailTransport` (`app.get(MailTransport)`, `assertSent({ to, subject })`).
+
+## File storage
+
+* `@nestjs/storage` disks, named by the `StorageDisks` enum (never bare strings): `private` (default; reachable only through signed, expiring links) and `public` (`disk.url(key)`). Inject with `StorageDisk` (default), `@InjectDisk(StorageDisks.Public)` or `Storage.disk(name)`.
+* `STORAGE_DRIVER=local` (folders under `storage/app`, private links served by `GET /files/:disk`, public files under `/storage` with a sandbox CSP) or `s3` (one S3-compatible bucket with `private/` and `public/` prefixes; links are presigned).
+* Uploads: validate in the DTO with `nestjs-form-data` (`@FormDataRequest()`, `@IsFile()`, `@MaxFileSize()`, `@HasMimeType(types, MetaSource.bufferMagicNumber)` — magic bytes, not the client's content type), then `await FileStorageService.store(dto.file, { disk, prefix })` inside the request (the temp file is deleted when the handler ends). Keys are UUIDs; never use the client's file name as a path. Import `FileManagementModule` for `FileStorageService`.
+* Storage errors are mapped to HTTP statuses by the global `StorageErrorFilter`.
+* Tests get `InMemoryDisk`s with the same names (`STORAGE_MODULE_OPTIONS` override in `basicE2eSetup`).
 
 ## Models
 
 * Place under `src/databases/models/` (domain subfolders allowed, e.g. `oauth/`).
-* Extend `BaseModel`; register in `src/databases/model-bootstrap/default-connection-models.ts` (or the correct connection list).
+* Extend `BaseModel`; register in `src/databases/model-bootstrap/default-connection-models.ts` (or the correct connection list). **Registration is required**: models are not loaded from a folder glob (that loads with `require()`, which cannot load ES modules).
+* Columns and associations use `declare` (see "TypeScript strictness"). Keep association thunks (`@BelongsTo(() => X)`); if two models import each other, type the property with a type-only alias so decorator metadata does not reference a class that is not initialised yet under ESM.
 
 ## Repositories
 
@@ -254,6 +283,14 @@ API controllers must not return raw unshaped models to clients.
 * **Never change or remove an existing test merely to make a new implementation pass.** If expected behavior has intentionally changed, verify the requirement first and update the test accordingly.
 * After making changes, run the **most relevant tests first**, then the broader test suite when practical.
 * Do not optimize for test count or coverage percentage; optimize for **regression protection, confidence, and maintainability**.
+
+### Test setup (Vitest)
+
+* Globals (`describe`, `it`, `expect`) are on; import `vi` from `vitest` explicitly. Spies on named ESM imports of Node built-ins do not work: assert real behaviour or inject the dependency.
+* E2E: `const [app] = await basicE2eSetup()` (mirrors `main.ts`); close it in `afterAll`. Pass `rootModule` to add test-only controllers (see `test/*/…-probe.module.ts`) instead of adding endpoints to the app for tests.
+* Wrap DB work in `managedTransaction(app, async () => …)`: one transaction per test, always rolled back. Requests made inside it, factories and direct model calls all join it through cls-hooked; no `transaction` argument needed.
+* Factories live in `test/factories/` (`userFactory(app, { password })` hashes the password, `clientFactory(app, grantType)`).
+* `test/e2e-env.ts` forces the in-memory mail transport, a valid sender and the memory session store; `basicE2eSetup` uses in-memory storage disks and a throwaway RS256 key pair. Tests never touch real mail, `storage/` or the developer's keys.
 
 ## API Implementation Workflow
 

@@ -8,7 +8,7 @@ on:
 
 jobs:
   checks:
-    name: Format, lint, typecheck, unit tests, build
+    name: Lint (oxlint + Prettier), typecheck, unit tests, build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -17,7 +17,7 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
-      - run: npm run format:check
+      # lint = oxlint + prettier --check
       - run: npm run lint
       - run: npm run typecheck
       - run: npm test
