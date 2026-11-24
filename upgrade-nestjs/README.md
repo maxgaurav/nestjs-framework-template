@@ -1,6 +1,6 @@
 # Upgrade plan: NestJS 11 → 12, ESM, Vitest, TypeScript 7, oxlint, `@nestjs/mail`, `@nestjs/storage`
 
-Status: **in progress** on branch `feature/upgrade-nestjs`: phases 01–08 and 10 done, 09 next. Plan written 2026-11-24 against `master` @ `f62f6cf`.
+Status: **in progress** on branch `feature/upgrade-nestjs`: **all phases done** (01–10). Plan written 2026-11-24 against `master` @ `f62f6cf`.
 
 Reference implementation: `wisekeep-backend/upgrade-nestjs/` (same template lineage, upgraded
 10 → 12 on 2026-11-20…23). Its findings are reused here. This plan goes further than wisekeep in two
@@ -67,7 +67,7 @@ Each phase leaves the app building, booting and passing tests, so each one can b
 | 07 | [Mail → `@nestjs/mail`](./07-mail.md)                                    | 03         | ✅ done |
 | 08 | [File storage → `@nestjs/storage`](./08-file-storage.md)                 | 03         | ✅ done |
 | 10 | [Full strict TypeScript](./10-strict-typescript.md)                      | 05 (runs before 09) | ✅ done |
-| 09 | [CI, AGENTS.md, final verification](./09-ci-and-verification.md)         | all        | ⬜ not started |
+| 09 | [CI, AGENTS.md, final verification](./09-ci-and-verification.md)         | all        | ✅ done |
 
 **Why Vitest comes before Nest 12.** Nest 12 packages are ESM-only. Jest loads them only on Node
 24.9+, and only with `--experimental-vm-modules` (wisekeep needed this). Moving to Vitest first
@@ -142,6 +142,9 @@ and before 09, so CI enforces the strict flags.
 | `MemoryStore` per session middleware (opt-in routes could not see the web session) | ✅ fixed in phase 09 |
 | Refresh: lifetimes swapped on rotation; refresh token usable by any client | ✅ fixed in phase 09 (refresh_token grant) |
 | `LoggingService` logged errors as `{}` | ✅ fixed in phase 09 |
+| Authorization-code / PKCE code exchange always 500; `client_secret` unchecked; OAuth `state` lost | ✅ fixed in phase 09 (final checklist) |
+| `migration:status` failed on an empty database | ✅ fixed in phase 09 |
+| `.env.example` placeholder `APP_SECRET` blocked `app:generate-secret` | ✅ fixed in phase 09 |
 | Swagger operation ids duplicated as `OauthController_` (`LoggingDecorator` dropped the method name) | ✅ fixed in phase 04 |
 
 ## Follow-ups (out of scope)
