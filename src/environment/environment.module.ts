@@ -8,7 +8,7 @@ import { mailConfig } from './configs/mail.js';
 import { sessionConfig } from './configs/session.js';
 import { jwtConfig } from './configs/jwt.js';
 import { viewConfig } from './configs/view.js';
-import { filesystemConfig } from './configs/filesystemConfig.js';
+import { storageConfig } from './configs/storage.js';
 import { corsConfig } from './configs/cors.js';
 
 const envSuffix = process.env.OVERRIDE_ENV
@@ -28,7 +28,7 @@ const envFileName = getEnvFileName(envSuffix);
         sessionConfig,
         jwtConfig,
         viewConfig,
-        filesystemConfig,
+        storageConfig,
         corsConfig,
       ],
       envFilePath: envFileName,

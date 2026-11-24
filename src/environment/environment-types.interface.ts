@@ -58,9 +58,26 @@ export interface ViewConfig {
   templateCaching: boolean;
 }
 
-export type FilesystemNames = 'local';
-export interface FilesystemConfig {
-  defaultDriver: FilesystemNames;
+export interface S3StorageConfig {
+  bucket: string;
+  region: string;
+  endpoint?: string;
+  forcePathStyle: boolean;
+  /** Unset to fall back to the AWS_* environment credentials */
+  credentials?: { accessKeyId: string; secretAccessKey: string };
+}
+
+export interface StorageConfig {
+  driver: 'local' | 's3';
+  /** Local: folder holding the private/ and public/ disks. S3: key prefix in the bucket */
+  root: string;
+  /** First key signs, every key verifies (rotation); each at least 32 characters */
+  signingKeys: string[];
+  /** Absolute URL of the route that serves signed links of local disks */
+  signedUrlBase: string;
+  /** Base URL of the public disk (static route, public bucket or CDN) */
+  publicUrl: string;
+  s3: S3StorageConfig;
 }
 
 export interface CorsConfig {

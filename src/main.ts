@@ -1,8 +1,9 @@
-import { NestFactory } from '@nestjs/core';
+import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module.js';
 import { ConfigService } from '@nestjs/config';
 import {
   CorsConfig,
+  StorageConfig,
   SystemConfig,
   ViewConfig,
 } from './environment/environment-types.interface.js';
@@ -20,6 +21,8 @@ import { ContextInterceptor } from './helpers/interceptors/context/context.inter
 import { NotFoundConverterInterceptor } from './helpers/interceptors/not-found-converter/not-found-converter.interceptor.js';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ErrorValidationFormatFilter } from './helpers/filters/error-validation-format/error-validation-format.filter.js';
+import { StorageErrorFilter } from './helpers/filters/storage-error/storage-error.filter.js';
+import { serveLocalPublicDisk } from './file-management/serve-local-public-disk/serve-local-public-disk.js';
 import { LoggingService } from './services/logging/logging.service.js';
 import helmet from 'helmet';
 import { NestExpressApplication } from '@nestjs/platform-express';
@@ -76,6 +79,9 @@ async function bootstrap() {
   );
 
   app.useGlobalFilters(new ErrorValidationFormatFilter());
+  app.useGlobalFilters(
+    new StorageErrorFilter(app.get(HttpAdapterHost).httpAdapter),
+  );
   app.useGlobalFilters(app.get(RedirectFromLoginFilter));
   app.enableVersioning({ type: VersioningType.URI, prefix: 'api/v' });
   setupApiDocumentation(app);
@@ -92,6 +98,7 @@ async function bootstrap() {
 
   const viewConfig = config.getOrThrow<ViewConfig>('view');
   app.useStaticAssets(viewConfig.publicPath);
+  serveLocalPublicDisk(app, config.getOrThrow<StorageConfig>('storage'));
   app.setBaseViewsDir(viewConfig.viewPath);
   app.setViewEngine('twig');
 
