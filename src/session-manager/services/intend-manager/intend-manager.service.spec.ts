@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { IntendManagerService } from './intend-manager.service';
 import { SESSION_FLASH_INTENDS_KEY } from '../../constants';
@@ -29,7 +30,7 @@ describe('IntendManagerService', () => {
 
   it('should update intend content in request session', () => {
     const request = { flash: (value) => value };
-    const flashSpy = jest.spyOn(request, 'flash');
+    const flashSpy = vi.spyOn(request, 'flash');
     service.updateContent(request as any, service.getDefaultValue());
     expect(flashSpy).toHaveBeenCalledWith(
       service.intendFlashKey(),
@@ -39,7 +40,7 @@ describe('IntendManagerService', () => {
 
   it('should return current intend content', () => {
     const request = { flash: (value) => value };
-    const flashSpy = jest
+    const flashSpy = vi
       .spyOn(request, 'flash')
       .mockReturnValueOnce([JSON.stringify(service.getDefaultValue())]);
 
@@ -57,8 +58,10 @@ describe('IntendManagerService', () => {
 
   it('should setup initial stage of intend when no intend value is set', () => {
     const request = { flash: (value) => value };
-    const updateSpy = jest.spyOn(service, 'updateContent').mockImplementation();
-    const flashSpy = jest.spyOn(request, 'flash').mockReturnValueOnce([]);
+    const updateSpy = vi
+      .spyOn(service, 'updateContent')
+      .mockImplementation(() => undefined);
+    const flashSpy = vi.spyOn(request, 'flash').mockReturnValueOnce([]);
     service.setupIntend(request as any);
     expect(flashSpy).toHaveBeenCalledWith(service.intendFlashKey());
     expect(updateSpy).toHaveBeenCalledWith(request, service.getDefaultValue());
@@ -67,10 +70,10 @@ describe('IntendManagerService', () => {
 
   it('should skip initialization if request is already setup with intend content', () => {
     const request = { flash: (value) => value };
-    const updateSpy = jest.spyOn(service, 'updateContent');
+    const updateSpy = vi.spyOn(service, 'updateContent');
     const flashValue = service.getDefaultValue();
     flashValue.url = 'changed';
-    const flashSpy = jest
+    const flashSpy = vi
       .spyOn(request, 'flash')
       .mockReturnValueOnce([JSON.stringify(flashValue)]);
     service.setupIntend(request as any);
@@ -80,12 +83,12 @@ describe('IntendManagerService', () => {
   });
 
   it('should set url in intend', () => {
-    const getIntendSpy = jest
+    const getIntendSpy = vi
       .spyOn(service, 'getIntend')
       .mockReturnValueOnce(service.getDefaultValue());
-    const updateIntendSpy = jest
+    const updateIntendSpy = vi
       .spyOn(service, 'updateContent')
-      .mockImplementation();
+      .mockImplementation(() => undefined);
     const request = {};
     service.setUrl(request as any, 'testUrl');
     expect(getIntendSpy).toHaveBeenCalled();
@@ -98,7 +101,7 @@ describe('IntendManagerService', () => {
   });
 
   it('should get url in intend', () => {
-    const getIntendSpy = jest
+    const getIntendSpy = vi
       .spyOn(service, 'getIntend')
       .mockReturnValueOnce({ url: 'test' });
     const request = {};
@@ -110,7 +113,7 @@ describe('IntendManagerService', () => {
   });
 
   it('should return null when intend is empty', () => {
-    const getIntendSpy = jest
+    const getIntendSpy = vi
       .spyOn(service, 'getIntend')
       .mockReturnValueOnce(null);
     const request = {} as any;
@@ -121,7 +124,7 @@ describe('IntendManagerService', () => {
   it('should call setup intend if get action fails for some reason', () => {
     let isFailCalled = false;
     const request = { flash: (value) => value };
-    const flashSpy = jest.spyOn(request, 'flash').mockImplementation(() => {
+    const flashSpy = vi.spyOn(request, 'flash').mockImplementation(() => {
       if (!isFailCalled) {
         isFailCalled = true;
         return ['should fail'];
@@ -130,8 +133,12 @@ describe('IntendManagerService', () => {
       return [JSON.stringify(service.getDefaultValue())];
     });
 
-    const updateSpy = jest.spyOn(service, 'updateContent').mockImplementation();
-    const setupIntend = jest.spyOn(service, 'setupIntend').mockImplementation();
+    const updateSpy = vi
+      .spyOn(service, 'updateContent')
+      .mockImplementation(() => undefined);
+    const setupIntend = vi
+      .spyOn(service, 'setupIntend')
+      .mockImplementation(() => undefined);
 
     expect(service.getIntend(request as any)).toEqual(
       service.getDefaultValue(),

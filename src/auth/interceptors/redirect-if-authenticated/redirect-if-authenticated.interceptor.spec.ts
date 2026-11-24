@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { RedirectIfAuthenticatedInterceptor } from './redirect-if-authenticated.interceptor';
 import { WebGuard } from '../../guards/web/web.guard';
 import { firstValueFrom, of, race, switchMap, throwError, timer } from 'rxjs';
@@ -21,7 +22,7 @@ describe('RedirectIfAuthenticatedInterceptor', () => {
 
   it('should allow passing when context returns false', async () => {
     const response = {};
-    const canActivateSpy = jest
+    const canActivateSpy = vi
       .spyOn(webGuard, 'canActivate')
       .mockReturnValueOnce(of(false));
     const context = { switchToHttp: () => ({ getResponse: () => response }) };
@@ -35,7 +36,7 @@ describe('RedirectIfAuthenticatedInterceptor', () => {
 
   it('should allow passing when context throws unauthorized', async () => {
     const response = {};
-    const canActivateSpy = jest
+    const canActivateSpy = vi
       .spyOn(webGuard, 'canActivate')
       .mockReturnValueOnce(
         of(true).pipe(
@@ -53,7 +54,7 @@ describe('RedirectIfAuthenticatedInterceptor', () => {
 
   it('should propogate error without stopping is error is not unauthorized', async () => {
     const response = {};
-    const canActivateSpy = jest
+    const canActivateSpy = vi
       .spyOn(webGuard, 'canActivate')
       .mockReturnValueOnce(
         of(true).pipe(switchMap(() => throwError(() => new Error()))),
@@ -78,11 +79,13 @@ describe('RedirectIfAuthenticatedInterceptor', () => {
     const context = { switchToHttp: () => ({ getResponse: () => response }) };
     const next = { handle: () => of(true) };
 
-    const canActivateSpy = jest
+    const canActivateSpy = vi
       .spyOn(webGuard, 'canActivate')
       .mockReturnValueOnce(of(true));
 
-    const redirectSpy = jest.spyOn(response, 'redirect').mockImplementation();
+    const redirectSpy = vi
+      .spyOn(response, 'redirect')
+      .mockImplementation(() => undefined);
 
     expect(
       await firstValueFrom(

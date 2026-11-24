@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { UrlBuilderService } from './url-builder.service';
 import { ConfigService } from '@nestjs/config';
@@ -21,7 +22,7 @@ describe('UrlBuilderService', () => {
   it('should return correct url without path and query params', () => {
     const config = module.get(ConfigService);
 
-    const getSpy = jest.spyOn(config, 'get').mockReturnValue({
+    const getSpy = vi.spyOn(config, 'getOrThrow').mockReturnValue({
       url: 'http://localhost',
     });
 
@@ -32,7 +33,7 @@ describe('UrlBuilderService', () => {
   it('should return correct url with path and query params', () => {
     const config = module.get(ConfigService);
 
-    const getSpy = jest.spyOn(config, 'get').mockReturnValue({
+    const getSpy = vi.spyOn(config, 'getOrThrow').mockReturnValue({
       url: 'http://localhost',
     });
 

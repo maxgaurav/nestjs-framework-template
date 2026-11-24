@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AccessTokenRepoService } from './access-token-repo.service';
 import { AccessTokenModel } from '../../../../databases/models/oauth/access-token.model';
@@ -51,7 +52,7 @@ describe('AccessTokenRepoService', () => {
 
   it('should find or fail', async () => {
     const token: AccessTokenModel = { id: 'test' } as any;
-    const findSpy = jest
+    const findSpy = vi
       .spyOn(model, 'findByPk')
       .mockReturnValue(Promise.resolve(token));
     const transaction = null;
@@ -64,7 +65,7 @@ describe('AccessTokenRepoService', () => {
 
   it('should create bearer token', async () => {
     const testContent = 'testContent';
-    const signSpy = jest
+    const signSpy = vi
       .spyOn(jwtService, 'signAsync')
       .mockReturnValue(Promise.resolve(testContent));
 
@@ -83,20 +84,20 @@ describe('AccessTokenRepoService', () => {
       setAttributes: (value) => value,
     } as any;
 
-    const buildSpy = jest.spyOn(model, 'build').mockReturnValue(accessToken);
+    const buildSpy = vi.spyOn(model, 'build').mockReturnValue(accessToken);
 
     const user: UserModel = { id: 1 } as any;
     const client: ClientModel = { id: 'test' } as any;
 
-    const setAttributeSpy = jest
+    const setAttributeSpy = vi
       .spyOn(accessToken, 'setAttributes')
       .mockReturnValue(accessToken);
-    const saveSpy = jest
+    const saveSpy = vi
       .spyOn(accessToken, 'save')
       .mockReturnValue(Promise.resolve(accessToken));
 
     const sample = 'sample';
-    const randomSpy = jest
+    const randomSpy = vi
       .spyOn(randomByteGenerate, 'generateRandomByte')
       .mockReturnValue(Buffer.from(sample));
 
@@ -126,20 +127,20 @@ describe('AccessTokenRepoService', () => {
       setAttributes: (value) => value,
     } as any;
 
-    const buildSpy = jest.spyOn(model, 'build').mockReturnValue(accessToken);
+    const buildSpy = vi.spyOn(model, 'build').mockReturnValue(accessToken);
 
     const user: UserModel = { id: 1 } as any;
     const client: ClientModel = { id: 'test' } as any;
 
-    const setAttributeSpy = jest
+    const setAttributeSpy = vi
       .spyOn(accessToken, 'setAttributes')
       .mockReturnValue(accessToken);
-    const saveSpy = jest
+    const saveSpy = vi
       .spyOn(accessToken, 'save')
       .mockReturnValue(Promise.resolve(accessToken));
 
     const sample = 'sample';
-    const randomSpy = jest
+    const randomSpy = vi
       .spyOn(randomByteGenerate, 'generateRandomByte')
       .mockReturnValue(Buffer.from(sample));
 
@@ -167,20 +168,20 @@ describe('AccessTokenRepoService', () => {
       setAttributes: (value) => value,
     } as any;
 
-    const buildSpy = jest.spyOn(model, 'build').mockReturnValue(accessToken);
+    const buildSpy = vi.spyOn(model, 'build').mockReturnValue(accessToken);
 
     const user = null;
     const client: ClientModel = { id: 'test' } as any;
 
-    const setAttributeSpy = jest
+    const setAttributeSpy = vi
       .spyOn(accessToken, 'setAttributes')
       .mockReturnValue(accessToken);
-    const saveSpy = jest
+    const saveSpy = vi
       .spyOn(accessToken, 'save')
       .mockReturnValue(Promise.resolve(accessToken));
 
     const sample = 'sample';
-    const randomSpy = jest
+    const randomSpy = vi
       .spyOn(randomByteGenerate, 'generateRandomByte')
       .mockReturnValue(Buffer.from(sample));
 
@@ -205,7 +206,7 @@ describe('AccessTokenRepoService', () => {
 
   it('should return active access token when found', async () => {
     const token: AccessTokenModel = { id: 'test' } as any;
-    const findSpy = jest
+    const findSpy = vi
       .spyOn(model, 'findOne')
       .mockReturnValue(Promise.resolve(token));
     expect(await service.findForActiveState(token.id, null)).toEqual(token);
@@ -213,7 +214,7 @@ describe('AccessTokenRepoService', () => {
   });
 
   it('should return null when active token not found', async () => {
-    const findSpy = jest
+    const findSpy = vi
       .spyOn(model, 'findOne')
       .mockReturnValue(Promise.resolve(undefined));
     expect(await service.findForActiveState('test', null)).toEqual(null);

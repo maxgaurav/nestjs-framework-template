@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { OldInputsInterceptor } from './old-inputs.interceptor';
 import { firstValueFrom, of } from 'rxjs';
 
@@ -22,7 +23,7 @@ describe('OldInputsInterceptor', () => {
 
     const next = { handle: () => of({}) };
 
-    const flashSpy = jest.spyOn(request, 'flash').mockReturnValueOnce([]);
+    const flashSpy = vi.spyOn(request, 'flash').mockReturnValueOnce([]);
 
     expect(
       await firstValueFrom(interceptor.intercept(context as any, next)),
@@ -45,7 +46,7 @@ describe('OldInputsInterceptor', () => {
 
     const next = { handle: () => of(true) };
 
-    const flashSpy = jest.spyOn(request, 'flash').mockReturnValueOnce([]);
+    const flashSpy = vi.spyOn(request, 'flash').mockReturnValueOnce([]);
 
     expect(
       await firstValueFrom(interceptor.intercept(context as any, next)),
@@ -67,7 +68,7 @@ describe('OldInputsInterceptor', () => {
 
     const next = { handle: () => of({}) };
 
-    const flashSpy = jest
+    const flashSpy = vi
       .spyOn(request, 'flash')
       .mockReturnValueOnce([JSON.stringify(oldInput)]);
 
@@ -95,7 +96,7 @@ describe('OldInputsInterceptor', () => {
 
     const next = { handle: () => of({}) };
 
-    const flashSpy = jest
+    const flashSpy = vi
       .spyOn(request, 'flash')
       .mockReturnValueOnce([JSON.stringify(oldInput)]);
 
@@ -123,7 +124,7 @@ describe('OldInputsInterceptor', () => {
 
     const next = { handle: () => of(null) };
 
-    const flashSpy = jest
+    const flashSpy = vi
       .spyOn(request, 'flash')
       .mockReturnValueOnce([JSON.stringify(oldInput)]);
 

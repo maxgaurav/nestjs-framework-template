@@ -32,7 +32,7 @@ describe('UrlBuilderFunction', () => {
 
   it('should create url using url builder service', () => {
     const builderService = module.get(UrlBuilderService);
-    const urlFunctionSpy = jest
+    const urlFunctionSpy = vi
       .spyOn(builderService, 'url')
       .mockReturnValue('http://sample.com/url');
 

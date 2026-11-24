@@ -16,7 +16,7 @@ describe('MailService', () => {
     renderFile: (value) => value,
   } as any;
   const configService: ConfigService = {
-    get: (value) => value,
+    getOrThrow: (value) => value,
   } as any;
 
   beforeEach(async () => {
@@ -46,10 +46,10 @@ describe('MailService', () => {
   });
 
   it('should return file content as string', async () => {
-    const configGetSpy = jest
-      .spyOn(configService, 'get')
+    const configGetSpy = vi
+      .spyOn(configService, 'getOrThrow')
       .mockReturnValue({ viewPath: 'path' });
-    const renderSpy = jest
+    const renderSpy = vi
       .spyOn(twigTemplateEngine, 'renderFile')
       .mockImplementation((...params: any[]) => {
         if (params.length !== 3) {
@@ -72,10 +72,10 @@ describe('MailService', () => {
   });
 
   it('should render template and send mail', async () => {
-    const fileContentSpy = jest
+    const fileContentSpy = vi
       .spyOn(service, 'fileContent')
       .mockReturnValue(Promise.resolve('sample'));
-    const sendMailSpy = jest
+    const sendMailSpy = vi
       .spyOn(mailer, 'sendMail')
       .mockReturnValue(Promise.resolve(true));
 

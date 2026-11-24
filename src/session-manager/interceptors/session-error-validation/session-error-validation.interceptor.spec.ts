@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { SessionErrorValidationInterceptor } from './session-error-validation.interceptor';
 import { firstValueFrom, of } from 'rxjs';
 
@@ -17,7 +18,7 @@ describe('SessionErrorValidationInterceptor', () => {
       flash: (value) => value,
     };
 
-    const flashSpy = jest.spyOn(request, 'flash').mockReturnValueOnce([]);
+    const flashSpy = vi.spyOn(request, 'flash').mockReturnValueOnce([]);
 
     const context = {
       switchToHttp: () => ({ getRequest: () => request }),
@@ -37,7 +38,7 @@ describe('SessionErrorValidationInterceptor', () => {
       flash: (value) => value,
     };
 
-    const flashSpy = jest.spyOn(request, 'flash').mockReturnValueOnce([]);
+    const flashSpy = vi.spyOn(request, 'flash').mockReturnValueOnce([]);
 
     const context = {
       switchToHttp: () => ({ getRequest: () => request }),
@@ -65,7 +66,7 @@ describe('SessionErrorValidationInterceptor', () => {
       error: ['error value'],
     };
 
-    const flashSpy = jest
+    const flashSpy = vi
       .spyOn(request, 'flash')
       .mockReturnValueOnce([JSON.stringify(errors)]);
 

@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { JwtTokenManagerService } from './jwt-token-manager.service';
 import { join } from 'path';
@@ -20,22 +21,21 @@ describe('JwtTokenManagerService', () => {
   });
 
   it('should return correct key path', () => {
-    const cwdSpy = jest.spyOn(process, 'cwd').mockReturnValue('/test');
+    // `cwd` is a named ESM import of node:process and cannot be spied on
     expect(service.keyPath('test.pem')).toEqual(
-      join('/test', 'storage', 'test.pem'),
+      join(process.cwd(), 'storage', 'test.pem'),
     );
-    expect(cwdSpy).toHaveBeenCalled();
   });
 
   it('should return public key content', async () => {
-    const keyPathSpy = jest
+    const keyPathSpy = vi
       .spyOn(service, 'keyPath')
       .mockReturnValue('/test/public-key.pem');
     const content = 'content';
-    const readFileSpy = jest
+    const readFileSpy = vi
       .spyOn(fsPromises, 'readFile')
       .mockReturnValue(Promise.resolve(Buffer.from(content)));
-    const existsFileSpy = jest
+    const existsFileSpy = vi
       .spyOn(service, 'createFileIfNotExists')
       .mockReturnValue(Promise.resolve(true));
 
@@ -46,15 +46,15 @@ describe('JwtTokenManagerService', () => {
   });
 
   it('should return private key content', async () => {
-    const keyPathSpy = jest
+    const keyPathSpy = vi
       .spyOn(service, 'keyPath')
       .mockReturnValue('/test/private-key.pem');
     const content = 'content';
-    const readFileSpy = jest
+    const readFileSpy = vi
       .spyOn(fsPromises, 'readFile')
       .mockReturnValue(Promise.resolve(Buffer.from(content)));
 
-    const existsFileSpy = jest
+    const existsFileSpy = vi
       .spyOn(service, 'createFileIfNotExists')
       .mockReturnValue(Promise.resolve(true));
 
@@ -66,11 +66,11 @@ describe('JwtTokenManagerService', () => {
 
   it('should return correct jwt options', async () => {
     const content = 'content';
-    const publicKeySpy = jest
+    const publicKeySpy = vi
       .spyOn(service, 'publicKey')
       .mockReturnValue(Promise.resolve(Buffer.from(content)));
 
-    const privateKeySpy = jest
+    const privateKeySpy = vi
       .spyOn(service, 'privateKey')
       .mockReturnValue(Promise.resolve(Buffer.from(content)));
 
@@ -84,7 +84,7 @@ describe('JwtTokenManagerService', () => {
   });
 
   it('should return true if file exists', async () => {
-    const accessSpy = jest
+    const accessSpy = vi
       .spyOn(fsPromises, 'access')
       .mockReturnValue(Promise.resolve());
 
@@ -93,11 +93,11 @@ describe('JwtTokenManagerService', () => {
   });
 
   it('should return false and create file if file does not exists', async () => {
-    const accessSpy = jest
+    const accessSpy = vi
       .spyOn(fsPromises, 'access')
       .mockReturnValue(Promise.reject());
 
-    const writeSpy = jest
+    const writeSpy = vi
       .spyOn(fsPromises, 'writeFile')
       .mockReturnValue(Promise.resolve());
 

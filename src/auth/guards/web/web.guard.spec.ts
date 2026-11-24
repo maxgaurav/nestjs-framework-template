@@ -117,7 +117,7 @@ describe('WebGuard', () => {
 
     const user = { id: 1 } as any;
 
-    const findUserSpy = jest
+    const findUserSpy = vi
       .spyOn(authService, 'getLoggedInUser')
       .mockReturnValueOnce(Promise.resolve(user));
 
@@ -140,7 +140,7 @@ describe('WebGuard', () => {
       }),
     };
 
-    const findUserSpy = jest
+    const findUserSpy = vi
       .spyOn(authService, 'getLoggedInUser')
       .mockReturnValueOnce(Promise.reject(new NotFoundException()));
 
@@ -162,7 +162,7 @@ describe('WebGuard', () => {
 
     const user = { id: 1 } as any;
 
-    const findUserSpy = jest
+    const findUserSpy = vi
       .spyOn(authService, 'getLoggedInUser')
       .mockReturnValueOnce(Promise.resolve(user));
 
@@ -187,7 +187,7 @@ describe('WebGuard', () => {
 
     let errorThrown = false;
 
-    const findUserSpy = jest
+    const findUserSpy = vi
       .spyOn(authService, 'getLoggedInUser')
       .mockReturnValueOnce(Promise.reject(new Error()));
 

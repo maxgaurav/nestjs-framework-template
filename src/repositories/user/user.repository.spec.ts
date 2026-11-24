@@ -32,7 +32,7 @@ describe('UserRepository', () => {
 
   it('should return user model by email when found', async () => {
     const userModel: UserModel = { id: 1, email: FakedEmail } as any;
-    const findOneSpy = jest
+    const findOneSpy = vi
       .spyOn(model, 'findOne')
       .mockReturnValueOnce(Promise.resolve(userModel));
 
@@ -50,7 +50,7 @@ describe('UserRepository', () => {
 
   it('should return null when find by email fails to find user', async () => {
     const userModel: UserModel = { id: 1, email: FakedEmail } as any;
-    const findOneSpy = jest
+    const findOneSpy = vi
       .spyOn(model, 'findOne')
       .mockReturnValueOnce(Promise.resolve(undefined));
 
@@ -68,7 +68,7 @@ describe('UserRepository', () => {
 
   it('should find the user by id', async () => {
     const userModel: UserModel = { id: 1, email: FakedEmail } as any;
-    const findSpy = jest
+    const findSpy = vi
       .spyOn(model, 'findByPk')
       .mockReturnValueOnce(Promise.resolve(userModel));
 
@@ -89,7 +89,7 @@ describe('UserRepository', () => {
 
     const transaction = null;
 
-    const findSpy = jest
+    const findSpy = vi
       .spyOn(model, 'findOne')
       .mockReturnValueOnce(Promise.resolve(userModel));
 

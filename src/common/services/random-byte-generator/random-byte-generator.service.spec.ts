@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { RandomByteGeneratorService } from './random-byte-generator.service';
-import crypto from 'node:crypto';
 import { Buffer } from 'node:buffer';
 
 describe('RandomByteGeneratorService', () => {
@@ -20,25 +19,20 @@ describe('RandomByteGeneratorService', () => {
     expect(service).toBeDefined();
   });
 
-  it('should generate random byte', () => {
-    const stringContent = 'sample';
-
-    const randomSpy = jest
-      .spyOn(crypto, 'randomBytes')
-      .mockReturnValue(Buffer.from(stringContent) as any);
+  // Named ESM imports of node built-ins cannot be spied on, so assert the observable result
+  it('should generate random bytes of the requested size', () => {
     const result = service.generateRandomByte(50);
-    expect(result.toString()).toEqual(stringContent);
-    expect(randomSpy).toHaveBeenCalledWith(50);
+    expect(Buffer.isBuffer(result)).toBe(true);
+    expect(result).toHaveLength(50);
   });
 
-  it('should generate random byte with default', () => {
-    const stringContent = 'sample';
+  it('should generate 40 random bytes by default', () => {
+    expect(service.generateRandomByte()).toHaveLength(40);
+  });
 
-    const randomSpy = jest
-      .spyOn(crypto, 'randomBytes')
-      .mockReturnValue(Buffer.from(stringContent) as any);
-    const result = service.generateRandomByte();
-    expect(result.toString()).toEqual(stringContent);
-    expect(randomSpy).toHaveBeenCalledWith(40);
+  it('should generate different bytes on each call', () => {
+    expect(
+      service.generateRandomByte().equals(service.generateRandomByte()),
+    ).toBe(false);
   });
 });

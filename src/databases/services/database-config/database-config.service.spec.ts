@@ -8,7 +8,7 @@ describe('DatabaseConfigService', () => {
   let service: DatabaseConfigService;
 
   const configService = {
-    get: (value: any) => ({ passes: value, debug: true }),
+    getOrThrow: (value: any) => ({ passes: value, debug: true }),
   };
 
   beforeEach(async () => {
@@ -29,7 +29,7 @@ describe('DatabaseConfigService', () => {
     expect(service).toBeDefined();
   });
 
-  it('should return correct config value', (done) => {
+  it('should return correct config value', () => {
     expect(service.createSequelizeOptions()).toEqual(
       expect.objectContaining({
         passes: `databases.${ConnectionNames.DefaultConnection}`,
@@ -41,19 +41,16 @@ describe('DatabaseConfigService', () => {
         passes: `databases.sample`,
       }) as any,
     );
-
-    done();
   });
 
-  it('should return correct config value and setup logger', (done) => {
-    const getSpy = jest
-      .spyOn(configService, 'get')
+  it('should return correct config value and setup logger', () => {
+    const getSpy = vi
+      .spyOn(configService, 'getOrThrow')
       .mockReturnValue({ logging: true } as any);
     const result = service.createSequelizeOptions() as SequelizeModuleOptions;
     expect(typeof result.logging).toEqual('function');
 
     expect(getSpy).toHaveBeenCalled();
-    done();
   });
 
   it('should trigger log action', () => {

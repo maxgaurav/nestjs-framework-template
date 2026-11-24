@@ -75,7 +75,7 @@ describe('AuthService', () => {
       email: FakedEmail,
       password: await hashService.createHash('password'),
     } as any;
-    const findByEmailSpy = jest
+    const findByEmailSpy = vi
       .spyOn(userRepo, 'findByEmail')
       .mockReturnValueOnce(Promise.resolve(user));
 
@@ -92,7 +92,7 @@ describe('AuthService', () => {
       password: await hashService.createHash('password'),
     } as any;
 
-    const findByEmailSpy = jest
+    const findByEmailSpy = vi
       .spyOn(userRepo, 'findByEmail')
       .mockReturnValueOnce(Promise.resolve(null));
 
@@ -109,7 +109,7 @@ describe('AuthService', () => {
       password: await hashService.createHash('passwordNotMatch'),
     } as any;
 
-    const findByEmailSpy = jest
+    const findByEmailSpy = vi
       .spyOn(userRepo, 'findByEmail')
       .mockReturnValueOnce(Promise.resolve(user));
 
@@ -126,7 +126,7 @@ describe('AuthService', () => {
       password: 'passwordHash',
     } as any;
 
-    const findByIdOrFailSpy = jest
+    const findByIdOrFailSpy = vi
       .spyOn(userRepo, 'findOrFail')
       .mockReturnValueOnce(Promise.resolve(user));
 
@@ -140,13 +140,13 @@ describe('AuthService', () => {
       regenerate: (value) => value,
     } as any;
 
-    const regenerateSpy = jest
+    const regenerateSpy = vi
       .spyOn(session, 'regenerate')
       .mockImplementation((callback: () => void) => {
         callback();
       });
 
-    const saveSpy = jest
+    const saveSpy = vi
       .spyOn(session, 'save')
       .mockImplementation((callback: () => void) => {
         callback();
@@ -169,13 +169,13 @@ describe('AuthService', () => {
       regenerate: (value) => value,
     } as any;
 
-    const saveSpy = jest
+    const saveSpy = vi
       .spyOn(session, 'save')
       .mockImplementation((callback: (err: string) => void) => {
         callback('errorPassed');
       });
 
-    const regenerateSpy = jest
+    const regenerateSpy = vi
       .spyOn(session, 'regenerate')
       .mockImplementation((callback: () => void) => {
         callback();
@@ -196,16 +196,16 @@ describe('AuthService', () => {
   });
 
   it('should return user when searching for user by token', async () => {
-    const decodeSpy = jest
+    const decodeSpy = vi
       .spyOn(jwtService, 'verifyAsync')
       .mockReturnValue(Promise.resolve('decoded') as any);
     const token: AccessTokenModel = { id: 'id', user_id: 1 } as any;
     const user: UserModel = { id: 1 } as any;
-    const findActiveToken = jest
+    const findActiveToken = vi
       .spyOn(accessTokenRepo, 'findForActiveState')
       .mockReturnValue(Promise.resolve(token));
 
-    const loggedInUserSpy = jest
+    const loggedInUserSpy = vi
       .spyOn(service, 'getLoggedInUser')
       .mockReturnValue(Promise.resolve(user));
 
@@ -216,15 +216,15 @@ describe('AuthService', () => {
   });
 
   it('should return null when searching for user by token returns no result for user', async () => {
-    const decodeSpy = jest
+    const decodeSpy = vi
       .spyOn(jwtService, 'verifyAsync')
       .mockReturnValue(Promise.resolve('decoded') as any);
     const token: AccessTokenModel = { id: 'id', user_id: 1 } as any;
-    const findActiveToken = jest
+    const findActiveToken = vi
       .spyOn(accessTokenRepo, 'findForActiveState')
       .mockReturnValue(Promise.resolve(token));
 
-    const loggedInUserSpy = jest
+    const loggedInUserSpy = vi
       .spyOn(service, 'getLoggedInUser')
       .mockReturnValue(Promise.resolve(null));
 
@@ -235,11 +235,11 @@ describe('AuthService', () => {
   });
 
   it('should return null when access token is not mapped to user', async () => {
-    const decodeSpy = jest
+    const decodeSpy = vi
       .spyOn(jwtService, 'verifyAsync')
       .mockReturnValue(Promise.resolve('decoded') as any);
     const token: AccessTokenModel = { id: 'id', user_id: null } as any;
-    const findActiveToken = jest
+    const findActiveToken = vi
       .spyOn(accessTokenRepo, 'findForActiveState')
       .mockReturnValue(Promise.resolve(token));
 
@@ -249,11 +249,11 @@ describe('AuthService', () => {
   });
 
   it('should return refresh token from hashed token', async () => {
-    const decodeSpy = jest
+    const decodeSpy = vi
       .spyOn(jwtService, 'verifyAsync')
       .mockReturnValue(Promise.resolve('token') as any);
     const refreshToken: RefreshTokenModel = { id: 'token' } as any;
-    const findSpy = jest
+    const findSpy = vi
       .spyOn(refreshTokenRepo, 'find')
       .mockReturnValue(Promise.resolve(refreshToken));
 

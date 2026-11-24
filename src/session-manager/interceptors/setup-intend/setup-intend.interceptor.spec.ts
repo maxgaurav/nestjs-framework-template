@@ -28,9 +28,9 @@ describe('SetupIntendInterceptor', () => {
     } as any;
     const next = { handle: () => of(true) };
 
-    const setupIntendSpy = jest
+    const setupIntendSpy = vi
       .spyOn(intendManager, 'setupIntend')
-      .mockImplementation();
+      .mockImplementation(() => undefined);
 
     expect(await firstValueFrom(interceptor.intercept(context, next))).toEqual(
       true,

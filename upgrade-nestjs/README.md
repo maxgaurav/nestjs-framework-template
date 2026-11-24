@@ -43,7 +43,7 @@ Docs:
 | `typescript`                                                | `^6`, the compiler API for the Nest CLI/schematics and the IDE |
 | `typescript-native`                                         | `npm:typescript@^7.0.2`, the Go compiler used by the build scripts |
 | `vitest`                                                    | `^5.1` (+ `@vitest/coverage-v8`)                           |
-| `unplugin-swc` + `@swc/core`                                | `^2` / latest. Only if the Vite/oxc transform cannot emit decorator metadata (spike in phase 02) |
+| `unplugin-swc`                                              | **Not needed**: Vite 8's oxc transform emits decorator metadata (phase 02) |
 | `oxlint` + `oxlint-tsgolint`                                | `^1.95` / `^7.0.2008`                                      |
 | `nest-commander`                                            | `^3.21` (replaces `nestjs-command`)                        |
 | `nestjs-cls`                                                | `^7`, moved to `dependencies`                              |
@@ -120,6 +120,16 @@ and before 09, so CI enforces the strict flags.
 | Lifecycle hooks now run in component-hierarchy order | Smoke-test cluster start/stop (phase 03) |
 | `@Optional()` is no longer inherited (wisekeep: `LoggingService` in the cluster primary, caught only by a real boot) | Boot `dist/main.js` in cluster mode in phase 03, not only e2e |
 | Existing unit specs may already be failing (CI has them disabled) | Phase 01 records the baseline. Phase 02 fixes or deletes them, following the AGENTS.md test rules |
+
+## Known issues found during the upgrade
+
+| Issue | Status |
+| ----- | ------ |
+| `MethodChangeMiddleware` crashed (500) on a non-string `_method` | ✅ fixed in phase 02 |
+| `ClientRepoService.revoke()` set `is_revoked: false` | ✅ fixed in phase 02 |
+| Password grant (`POST /oauth/token`) does not check `is_revoked` / `grant_type` of the client | ❗ open; needs a decision (security) |
+| `registerEventCallBacks` without a transaction does not fire immediately (AGENTS.md says it does) | open; decide in phase 09 |
+| `tsconfig.json` includes only `src`, so `test/` is never type-checked | phase 10 |
 
 ## Follow-ups (out of scope)
 

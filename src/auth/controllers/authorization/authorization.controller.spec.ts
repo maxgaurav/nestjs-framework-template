@@ -52,7 +52,7 @@ describe('AuthorizationController', () => {
   it('should show login form using encrypted token', async () => {
     const token = plainToInstance(AuthorizationDto, {});
     const hashEncryptService = module.get(HashEncryptService);
-    const encryptSpy = jest
+    const encryptSpy = vi
       .spyOn(hashEncryptService, 'encrypt')
       .mockReturnValue(Promise.resolve('sample'));
 
@@ -75,7 +75,7 @@ describe('AuthorizationController', () => {
     const transaction = null;
 
     const repo = module.get(AuthorizationChallengeRepoService);
-    const createChallengeSpy = jest
+    const createChallengeSpy = vi
       .spyOn(repo, 'createWithPkceCodeChallenge')
       .mockReturnValue(Promise.resolve(authorization));
 
@@ -110,7 +110,7 @@ describe('AuthorizationController', () => {
     const transaction = null;
 
     const repo = module.get(AuthorizationChallengeRepoService);
-    const createChallengeSpy = jest
+    const createChallengeSpy = vi
       .spyOn(repo, 'createForAuthorizationCode')
       .mockReturnValue(Promise.resolve(authorization));
 

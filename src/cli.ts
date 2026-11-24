@@ -3,6 +3,11 @@ import { CommandService } from 'nestjs-command';
 import { AppModule } from './app.module';
 import { LoggingService } from './services/logging/logging.service';
 import * as process from 'process';
+import { registerPgTypeParsers } from './helpers/pg-type-parsers/pg-type-parsers';
+import { registerSequelizeCls } from './helpers/sequelize-namespace/sequelize-namespace';
+
+registerPgTypeParsers();
+registerSequelizeCls();
 
 (async () => {
   const app = await NestFactory.create(AppModule);

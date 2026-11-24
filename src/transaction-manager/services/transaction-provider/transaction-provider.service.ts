@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectConnection } from '@nestjs/sequelize';
 import { Sequelize, Transaction, TransactionOptions } from 'sequelize';
+import { sequelizeNamespace } from '../../../helpers/sequelize-namespace/sequelize-namespace';
 
 @Injectable()
 export class TransactionProviderService {
@@ -40,5 +41,14 @@ export class TransactionProviderService {
 
   public getParentTransaction(): Transaction | null {
     return this.parentTransaction;
+  }
+
+  /**
+   * Returns the transaction active in the current cls-hooked context, which is the
+   * one Sequelize queries join automatically, or null outside a managed transaction
+   */
+  public getCurrentTransactionFromNamespace(): Transaction | null {
+    const transaction: unknown = sequelizeNamespace.get('transaction');
+    return transaction instanceof Transaction ? transaction : null;
   }
 }

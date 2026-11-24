@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { RedirectRouteInterceptor } from './redirect-route.interceptor';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ExecutionContext, Injectable, Scope } from '@nestjs/common';
@@ -60,15 +61,17 @@ describe('RedirectRouteInterceptor', () => {
       },
     } as any;
 
-    const sessionSaveSpy = jest
+    const sessionSaveSpy = vi
       .spyOn(interceptor, 'saveSession')
       .mockReturnValue(Promise.resolve(true));
 
     const reflector = module.get(Reflector);
-    const getOverrideAllSpy = jest
+    const getOverrideAllSpy = vi
       .spyOn(reflector, 'getAllAndOverride')
       .mockReturnValue(SampleRedirect);
-    const redirectSpy = jest.spyOn(response, 'redirect').mockImplementation();
+    const redirectSpy = vi
+      .spyOn(response, 'redirect')
+      .mockImplementation(() => undefined);
 
     expect(
       await firstValueFrom(
@@ -105,15 +108,17 @@ describe('RedirectRouteInterceptor', () => {
       },
     } as any;
 
-    const sessionSaveSpy = jest
+    const sessionSaveSpy = vi
       .spyOn(interceptor, 'saveSession')
       .mockReturnValue(Promise.resolve(true));
 
     const reflector = module.get(Reflector);
-    const getOverrideAllSpy = jest
+    const getOverrideAllSpy = vi
       .spyOn(reflector, 'getAllAndOverride')
       .mockReturnValue(SampleRedirectPromise);
-    const redirectSpy = jest.spyOn(response, 'redirect').mockImplementation();
+    const redirectSpy = vi
+      .spyOn(response, 'redirect')
+      .mockImplementation(() => undefined);
 
     expect(
       await firstValueFrom(
@@ -136,7 +141,7 @@ describe('RedirectRouteInterceptor', () => {
   it('should resolve promise when session is saved', async () => {
     const request = { session: { save: (value) => value } };
 
-    const saveSpy = jest
+    const saveSpy = vi
       .spyOn(request.session, 'save')
       .mockImplementation((callback: () => void) => {
         callback();
@@ -149,7 +154,7 @@ describe('RedirectRouteInterceptor', () => {
   it('should reject promise with session save error', async () => {
     const request = { session: { save: (value) => value } };
 
-    const saveSpy = jest
+    const saveSpy = vi
       .spyOn(request.session, 'save')
       .mockImplementation((callback: (err: string) => void) => {
         callback('error');

@@ -45,7 +45,7 @@ describe('LoginAccessTokenGuard', () => {
   });
 
   it('should continue to process with normal flow if all things are correct', () => {
-    const superHandleSpy = jest
+    const superHandleSpy = vi
       .spyOn(AuthGuard('accessToken').prototype, 'handleRequest')
       .mockReturnValueOnce(true);
 

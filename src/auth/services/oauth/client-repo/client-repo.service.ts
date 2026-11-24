@@ -86,6 +86,6 @@ export class ClientRepoService {
     client: ClientModel,
     transaction?: Transaction,
   ): Promise<ClientModel> {
-    return client.setAttributes({ is_revoked: false }).save({ transaction });
+    return client.setAttributes({ is_revoked: true }).save({ transaction });
   }
 }

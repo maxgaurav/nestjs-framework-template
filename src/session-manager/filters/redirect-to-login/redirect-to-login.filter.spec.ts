@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { RedirectFromLoginFilter } from './redirect-to-login.filter';
 import { HttpStatus, UnauthorizedException } from '@nestjs/common';
 import { IntendManagerService } from '../../services/intend-manager/intend-manager.service';
@@ -37,12 +38,14 @@ describe('RedirectToLoginFilter', () => {
     };
     const exception = new UnauthorizedException();
 
-    const redirectSpy = jest.spyOn(response, 'redirect');
-    const getUrlSpy = jest
+    const redirectSpy = vi.spyOn(response, 'redirect');
+    const getUrlSpy = vi
       .spyOn(intendManager, 'getUrl')
       .mockReturnValueOnce('currentIntend');
-    const setUrlSpy = jest.spyOn(intendManager, 'setUrl').mockImplementation();
-    const saveSpy = jest
+    const setUrlSpy = vi
+      .spyOn(intendManager, 'setUrl')
+      .mockImplementation(() => undefined);
+    const saveSpy = vi
       .spyOn(request.session, 'save')
       .mockImplementation((callback: () => void) => callback());
 
@@ -72,12 +75,14 @@ describe('RedirectToLoginFilter', () => {
     };
     const exception = new UnauthorizedException();
 
-    const redirectSpy = jest.spyOn(response, 'redirect');
-    const getUrlSpy = jest
+    const redirectSpy = vi.spyOn(response, 'redirect');
+    const getUrlSpy = vi
       .spyOn(intendManager, 'getUrl')
       .mockReturnValueOnce('currentIntend');
-    const setUrlSpy = jest.spyOn(intendManager, 'setUrl').mockImplementation();
-    const saveSpy = jest
+    const setUrlSpy = vi
+      .spyOn(intendManager, 'setUrl')
+      .mockImplementation(() => undefined);
+    const saveSpy = vi
       .spyOn(request.session, 'save')
       .mockImplementation((callback: () => void) => callback());
 
@@ -104,8 +109,8 @@ describe('RedirectToLoginFilter', () => {
       }),
     };
     const exception = new UnauthorizedException();
-    const statusSpy = jest.spyOn(response, 'status').mockReturnValue(response);
-    const jsonSpy = jest.spyOn(response, 'json');
+    const statusSpy = vi.spyOn(response, 'status').mockReturnValue(response);
+    const jsonSpy = vi.spyOn(response, 'json');
 
     filter.catch(exception, host as any);
     expect(statusSpy).toHaveBeenCalledWith(HttpStatus.UNAUTHORIZED);
@@ -128,8 +133,8 @@ describe('RedirectToLoginFilter', () => {
       }),
     };
     const exception = new UnauthorizedException();
-    const statusSpy = jest.spyOn(response, 'status').mockReturnValue(response);
-    const jsonSpy = jest.spyOn(response, 'json');
+    const statusSpy = vi.spyOn(response, 'status').mockReturnValue(response);
+    const jsonSpy = vi.spyOn(response, 'json');
 
     filter.catch(exception, host as any);
     expect(statusSpy).toHaveBeenCalledWith(HttpStatus.UNAUTHORIZED);

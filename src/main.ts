@@ -30,18 +30,11 @@ import { RedirectFromLoginFilter } from './session-manager/filters/redirect-to-l
 import { SetupIntendInterceptor } from './session-manager/interceptors/setup-intend/setup-intend.interceptor';
 import { KillForApiInterceptor } from './session-manager/interceptors/kill-for-api/kill-for-api.interceptor';
 import { registerApplicationContext } from './common/application-context';
+import { registerPgTypeParsers } from './helpers/pg-type-parsers/pg-type-parsers';
+import { registerSequelizeCls } from './helpers/sequelize-namespace/sequelize-namespace';
 
-import { types } from 'pg';
-import { createNamespace } from 'cls-hooked';
-import { Sequelize } from 'sequelize';
-
-types.setTypeParser(types.builtins.INT8, function (val: string) {
-  return parseInt(val, 10);
-});
-
-const sequelizeNamespace = createNamespace('sequelize-cls-hooks');
-
-Sequelize.useCLS(sequelizeNamespace);
+registerPgTypeParsers();
+registerSequelizeCls();
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {});

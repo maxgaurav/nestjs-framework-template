@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { RefreshTokenService } from './refresh-token.service';
 import { AuthService } from '../../../services/auth/auth.service';
@@ -10,13 +11,13 @@ import { Request } from 'express';
 import { RefreshTokenDto } from '../../../dtos/refresh-token.dto';
 import { RefreshTokenModel } from '../../../../databases/models/oauth/refresh-token.model';
 import { IsNotEmpty } from 'class-validator';
-import mockdate from 'mockdate';
 import moment from 'moment';
 import { ClientRepoService } from '../../../services/oauth/client-repo/client-repo.service';
 import { ClientModel } from '../../../../databases/models/oauth/client.model';
 
 class PassValidation {
-  constructor(public content: any) {}
+  @IsNotEmpty()
+  public refresh_token: string;
 }
 
 class FailValidation {
@@ -37,6 +38,10 @@ describe('RefreshTokenService', () => {
   const clientRepo: ClientRepoService = {
     findForIdAndSecret: (value) => value,
   } as any;
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -92,17 +97,17 @@ describe('RefreshTokenService', () => {
       client_secret: client.secret,
     });
 
-    const validateContentSpy = jest
+    const validateContentSpy = vi
       .spyOn(service, 'validateContent')
       .mockReturnValue(Promise.resolve(dto));
 
-    const findClientSpy = jest
+    const findClientSpy = vi
       .spyOn(clientRepo, 'findForIdAndSecret')
       .mockReturnValue(Promise.resolve(client));
 
     const token: RefreshTokenModel = { id: 1 } as any;
 
-    const findTokenSpy = jest
+    const findTokenSpy = vi
       .spyOn(authService, 'findRefreshToken')
       .mockReturnValue(Promise.resolve(token));
 
@@ -126,11 +131,11 @@ describe('RefreshTokenService', () => {
     } as any;
 
     const dto = new RefreshTokenDto({ refresh_token: 'token' });
-    const validateContentSpy = jest
+    const validateContentSpy = vi
       .spyOn(service, 'validateContent')
       .mockReturnValue(Promise.resolve(dto));
 
-    const findTokenSpy = jest
+    const findTokenSpy = vi
       .spyOn(authService, 'findRefreshToken')
       .mockReturnValue(Promise.resolve(null));
 
@@ -153,9 +158,12 @@ describe('RefreshTokenService', () => {
   });
 
   it('should pass validation when valid body is passed', async () => {
-    const result = await service.validateContent({}, PassValidation as any);
+    const result = await service.validateContent(
+      { refresh_token: 'token' },
+      PassValidation as any,
+    );
     expect(result instanceof PassValidation).toEqual(true);
-    expect((result as any).content).toEqual({});
+    expect(result.refresh_token).toEqual('token');
   });
 
   it('should throw validation error when content is incorrect', async () => {
@@ -170,14 +178,14 @@ describe('RefreshTokenService', () => {
   });
 
   it('should throw unauthorized exception when date has expired', async () => {
-    mockdate.set('2021-01-01 00:00:00');
+    vi.setSystemTime(new Date('2021-01-01 00:00:00'));
     const request: Request = {
       headers: { accept: AcceptApplicationJson },
       body: { test: 'test' },
     } as any;
 
     const dto = new RefreshTokenDto({ refresh_token: 'token' });
-    const validateContentSpy = jest
+    const validateContentSpy = vi
       .spyOn(service, 'validateContent')
       .mockReturnValue(Promise.resolve(dto));
 
@@ -186,7 +194,7 @@ describe('RefreshTokenService', () => {
       expires_at: moment().subtract(1, 'day'),
     } as any;
 
-    const findTokenSpy = jest
+    const findTokenSpy = vi
       .spyOn(authService, 'findRefreshToken')
       .mockReturnValue(Promise.resolve(token));
 
@@ -223,11 +231,11 @@ describe('RefreshTokenService', () => {
       client_secret: client.secret,
     });
 
-    const validateContentSpy = jest
+    const validateContentSpy = vi
       .spyOn(service, 'validateContent')
       .mockReturnValue(Promise.resolve(dto));
 
-    const findClientSpy = jest
+    const findClientSpy = vi
       .spyOn(clientRepo, 'findForIdAndSecret')
       .mockReturnValue(Promise.resolve(null));
 
