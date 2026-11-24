@@ -23,8 +23,8 @@ export class AppendFormActionHeaderInterceptor implements NestInterceptor {
 
     return from(
       this.hashEncrypt.decrypt(
-        (request.session as never as { passwordContent: { token: string } })
-          .passwordContent.token,
+        // CheckShowPasswordGuard only lets requests with a pending password step through
+        request.session.passwordContent?.token ?? '',
       ),
     )
       .pipe(

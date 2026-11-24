@@ -14,7 +14,7 @@ export class CanRestartLoginGuard implements CanActivate {
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest<Request>();
     const session: { passwordContent?: { email?: string; token?: string } } =
-      request.session as never;
+      request.session;
 
     return !!session.passwordContent?.email && !!session.passwordContent?.token;
   }

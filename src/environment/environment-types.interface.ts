@@ -44,6 +44,7 @@ export interface MailConfig {
 
 export interface SessionConfig extends Partial<SessionOptions> {
   driver: 'memory' | 'file';
+  secret: string;
   secureCookie: boolean;
 }
 

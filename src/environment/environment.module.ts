@@ -11,8 +11,8 @@ import { viewConfig } from './configs/view.js';
 import { storageConfig } from './configs/storage.js';
 import { corsConfig } from './configs/cors.js';
 
-const envSuffix = process.env.OVERRIDE_ENV
-  ? `.${process.env.OVERRIDE_ENV}`
+const envSuffix = process.env['OVERRIDE_ENV']
+  ? `.${process.env['OVERRIDE_ENV']}`
   : '';
 
 const envFileName = getEnvFileName(envSuffix);

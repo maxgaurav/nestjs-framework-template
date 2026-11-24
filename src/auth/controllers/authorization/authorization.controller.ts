@@ -30,7 +30,7 @@ import { ApiExcludeController } from '@nestjs/swagger';
 import { PasswordDto } from '../../dtos/password.dto.js';
 import { randomUUID } from 'node:crypto';
 import { PasswordRedirector } from '../../redirections/password/password.redirector.js';
-import { Session } from 'express-session';
+import type { Session, SessionData } from 'express-session';
 import { CheckShowPasswordGuard } from '../../guards/check-show-password/check-show-password.guard.js';
 import { CanRestartLoginGuard } from '../../guards/can-restart-login/can-restart-login.guard.js';
 import { RestartLoginRedirector } from '../../redirectors/restart-login/restart-login.redirector.js';
@@ -71,15 +71,12 @@ export class AuthorizationController {
   })
   public async registerEmailForPasswordFlow(
     @Body() passwordDto: PasswordDto,
-    @SessionDecorator() session: Session,
+    @SessionDecorator() session: Session & Partial<SessionData>,
   ) {
     const passwordId = randomUUID();
-    (session as never as { passwordContent: unknown }).passwordContent = {
-      ...passwordDto,
-      passwordId,
-    };
+    session.passwordContent = { ...passwordDto, passwordId };
     await new Promise((res) => session.save(() => res(true)));
-    return (session as never as { passwordContent: unknown }).passwordContent;
+    return session.passwordContent;
   }
 
   @Header('Cache-Control', 'no-cache, no-store, must-revalidate')
@@ -110,11 +107,11 @@ export class AuthorizationController {
     messageBefore:
       'Oauth2: Clearing password form state and redirecting back to login for restart process',
   })
-  public restartLoginFlow(@SessionDecorator() session: Session) {
-    const passwordContent = (session as never as { passwordContent: unknown })
-      .passwordContent;
-    (session as never as { passwordContent: unknown }).passwordContent =
-      undefined;
+  public restartLoginFlow(
+    @SessionDecorator() session: Session & Partial<SessionData>,
+  ) {
+    const passwordContent = session.passwordContent;
+    session.passwordContent = undefined;
 
     return passwordContent;
   }

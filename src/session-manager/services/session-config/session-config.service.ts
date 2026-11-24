@@ -35,7 +35,7 @@ export class SessionConfigService {
 
     return session({
       store: sessionStore,
-      secret: sessionConfig.secret || '',
+      secret: sessionConfig.secret,
       name: sessionConfig.name,
       resave: sessionConfig.resave,
       cookie: {

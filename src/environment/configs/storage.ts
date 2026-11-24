@@ -13,14 +13,14 @@ const csv = (value: string | undefined): string[] =>
  * is derived from APP_SECRET, so a fresh environment works without another secret.
  */
 const signingKeys = (): string[] => {
-  const keys = csv(process.env.STORAGE_SIGNING_KEYS);
-  if (keys.length > 0 || !process.env.APP_SECRET) {
+  const keys = csv(process.env['STORAGE_SIGNING_KEYS']);
+  if (keys.length > 0 || !process.env['APP_SECRET']) {
     return keys;
   }
 
   return [
     createHash('sha256')
-      .update(`storage-signing:${process.env.APP_SECRET}`)
+      .update(`storage-signing:${process.env['APP_SECRET']}`)
       .digest('hex'),
   ];
 };
@@ -37,8 +37,8 @@ const publicUrl = (
   root: string,
   s3: StorageConfig['s3'],
 ): string => {
-  if (process.env.STORAGE_PUBLIC_URL) {
-    return process.env.STORAGE_PUBLIC_URL;
+  if (process.env['STORAGE_PUBLIC_URL']) {
+    return process.env['STORAGE_PUBLIC_URL'];
   }
   if (driver === 'local') {
     return `${appUrl}/storage`;
@@ -51,21 +51,24 @@ const publicUrl = (
 };
 
 export const storageConfig = () => {
-  const appUrl = (process.env.APP_URL || 'http://localhost').replace(/\/$/, '');
-  const driver = process.env.STORAGE_DRIVER === 's3' ? 's3' : 'local';
+  const appUrl = (process.env['APP_URL'] || 'http://localhost').replace(
+    /\/$/,
+    '',
+  );
+  const driver = process.env['STORAGE_DRIVER'] === 's3' ? 's3' : 'local';
   const root =
-    process.env.STORAGE_ROOT ||
+    process.env['STORAGE_ROOT'] ||
     (driver === 's3' ? '' : join(process.cwd(), 'storage', 'app'));
   const s3: StorageConfig['s3'] = {
-    bucket: process.env.S3_BUCKET ?? '',
-    region: process.env.S3_REGION || 'auto',
-    endpoint: process.env.S3_ENDPOINT || undefined,
-    forcePathStyle: process.env.S3_FORCE_PATH_STYLE === 'true',
+    bucket: process.env['S3_BUCKET'] ?? '',
+    region: process.env['S3_REGION'] || 'auto',
+    endpoint: process.env['S3_ENDPOINT'] || undefined,
+    forcePathStyle: process.env['S3_FORCE_PATH_STYLE'] === 'true',
     // Unset: the S3 disk falls back to the AWS_* environment credentials
-    credentials: process.env.S3_ACCESS_KEY_ID
+    credentials: process.env['S3_ACCESS_KEY_ID']
       ? {
-          accessKeyId: process.env.S3_ACCESS_KEY_ID,
-          secretAccessKey: process.env.S3_SECRET_ACCESS_KEY ?? '',
+          accessKeyId: process.env['S3_ACCESS_KEY_ID'],
+          secretAccessKey: process.env['S3_SECRET_ACCESS_KEY'] ?? '',
         }
       : undefined,
   };
@@ -75,7 +78,7 @@ export const storageConfig = () => {
     // Local: folder holding private/ and public/. S3: key prefix inside the bucket.
     root,
     signingKeys: signingKeys(),
-    signedUrlBase: process.env.STORAGE_SIGNED_URL_BASE || `${appUrl}/files`,
+    signedUrlBase: process.env['STORAGE_SIGNED_URL_BASE'] || `${appUrl}/files`,
     publicUrl: publicUrl(driver, appUrl, root, s3),
     s3,
   };
