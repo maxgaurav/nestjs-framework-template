@@ -1,18 +1,19 @@
 import { Global, Module } from '@nestjs/common';
-import { MailerModule } from '@nestjs-modules/mailer';
+import { MailModule as NestMailModule } from '@nestjs/mail';
 import { MailConfigService } from './services/mail-config/mail-config.service.js';
-import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MailService } from './services/mail/mail.service.js';
+import { TwigTemplateEngine } from './template-engines/twig-template-engine/twig-template-engine.js';
+import { WelcomeMail } from './mailables/welcome/welcome.mail.js';
 
 @Global()
 @Module({
   imports: [
-    MailerModule.forRootAsync({
+    NestMailModule.forRootAsync({
       useClass: MailConfigService,
-      imports: [ConfigModule],
+      templates: TwigTemplateEngine,
     }),
   ],
-  providers: [MailConfigService, ConfigService, MailService],
+  providers: [MailService, WelcomeMail],
   exports: [MailService],
 })
 export class MailModule {}

@@ -48,13 +48,13 @@
 - [ ] **Stack**: Nest 12, native ESM (`.js` import extensions, `import.meta.dirname`), Node 26.
 - [ ] **Build/run**: `npm run build` (tsgo), `typecheck`, `start:dev`; `app:command` compiles and
       then runs `dist/cli.js`.
-- [ ] **CLI commands**: `nest-commander` (`@Command` + `CommandRunner`, `@Option`), thin command +
+- [x] **CLI commands** (done in phase 03): `nest-commander` (`@Command` + `CommandRunner`, `@Option`), thin command +
       service, registration in `CliCommandsModule`.
 - [ ] **Lint/format**: oxlint (`npm run lint`), prettier (`format`, `format:check`).
 - [ ] **Testing**: Vitest (`npm test`, `npm run test:e2e`), `basicE2eSetup` +
       `managedTransaction` (one rolled-back transaction per test, joined via cls-hooked), and the
       in-memory mail/storage overrides.
-- [ ] **Mail**: Mailable classes + `MailService.send`, Twig templates in `views/emails/`.
+- [ ] **Mail**: Mailable classes + `MailService.send`, Twig templates in `views/emails/` (also update the AGENTS.md "Templates" section, deferred from phase 07).
 - [ ] **Storage**: `@nestjs/storage` disks (`StorageDisks` constants, `@InjectDisk`),
       `StorageErrorFilter`, and uploads validated by `nestjs-form-data` DTOs and persisted through
       `FileStorageService`.
@@ -62,7 +62,7 @@
       resource fields, `satisfies` in config loaders).
 - [ ] **Models**: ESM circular-import rule (the `Relation<T>` alias on association properties), and
       registration in `DefaultConnectionModels` is required (there is no glob any more).
-- [ ] **Migrations**: ESM migration shape.
+- [x] **Migrations**: ESM migration shape (done in phase 04, AGENTS.md "ES modules").
 
 ## Project README
 

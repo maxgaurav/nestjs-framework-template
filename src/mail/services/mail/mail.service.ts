@@ -1,61 +1,39 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { ISendMailOptions } from '@nestjs-modules/mailer/dist/interfaces/send-mail-options.interface.js';
-import { VIEW_RENDER_ENGINE } from '../../../view-engine/constants.js';
-import { MailerService } from '@nestjs-modules/mailer';
-import { ConfigService } from '@nestjs/config';
-import { join } from 'path';
-import { ViewConfig } from '../../../environment/environment-types.interface.js';
-import Twig from 'twig';
-import { RenderOptions } from 'twig';
-import { SentMessageInfo } from 'nodemailer';
+import { Injectable, Type } from '@nestjs/common';
+import {
+  type Mailable,
+  type MailableRenderOptions,
+  type MailableSendOptions,
+  Mailer,
+  MailMessage,
+  type MailSendResult,
+} from '@nestjs/mail';
 
+/**
+ * The app's entry point for sending mail. Feature code sends a Mailable class with its
+ * recipients and data, and stays independent of the pre-1.0 @nestjs/mail API.
+ *
+ * Errors are not caught: `MailError.permanent` tells callers whether retrying is pointless.
+ * To send only after a DB commit, send from a listener scheduled through
+ * `EventRegisterCallbackService.registerEventCallBacks(callback, transaction)`.
+ */
 @Injectable()
 export class MailService {
-  constructor(
-    @Inject(VIEW_RENDER_ENGINE) private twig: typeof Twig,
-    private mailer: MailerService,
-    private configService: ConfigService,
-  ) {}
+  constructor(private readonly mailer: Mailer) {}
 
-  /**
-   * Sends mail by compiling the template and sending it as body
-   * @param sendMailOptions
-   */
-  public async sendMail(
-    sendMailOptions: Omit<ISendMailOptions, 'template' | 'context'> &
-      Required<Pick<ISendMailOptions, 'template' | 'context'>>,
-  ): Promise<SentMessageInfo> {
-    sendMailOptions.html = await this.fileContent(
-      sendMailOptions.template,
-      sendMailOptions.context,
-    );
-    sendMailOptions.template = undefined as never;
-    return this.mailer.sendMail(sendMailOptions);
+  public send<M extends Mailable<any>>(
+    mail: Type<M>,
+    options: MailableSendOptions<Parameters<M['render']>[0]>,
+  ): Promise<MailSendResult> {
+    return this.mailer.send(mail, options);
   }
 
   /**
-   * Returns content of file
-   * @param fileName
-   * @param contexts
+   * Builds the message without sending it, e.g. for previews
    */
-  public async fileContent(
-    fileName: string,
-    contexts: RenderOptions,
-  ): Promise<string> {
-    const viewPath = this.configService.getOrThrow<ViewConfig>('view');
-    return new Promise<string>((res, rej) => {
-      this.twig.renderFile(
-        join(viewPath.viewPath, `${fileName}.twig`),
-        contexts,
-        (err, result) => {
-          if (err) {
-            rej(err);
-            return;
-          }
-
-          res(result as string);
-        },
-      );
-    });
+  public render<M extends Mailable<any>>(
+    mail: Type<M>,
+    options: MailableRenderOptions<Parameters<M['render']>[0]>,
+  ): Promise<MailMessage> {
+    return this.mailer.render(mail, options);
   }
 }
