@@ -20,7 +20,7 @@ export class AuthorizationGuard
    * @param context
    * @param status
    */
-  public handleRequest(
+  public override handleRequest(
     err: any,
     user: any,
     info: any,

@@ -19,7 +19,7 @@ export class AccessTokenGuard extends AuthGuard() implements CanActivate {
     super();
   }
 
-  canActivate(context: ExecutionContext): Observable<boolean> {
+  override canActivate(context: ExecutionContext): Observable<boolean> {
     const request = context.switchToHttp().getRequest<Request>();
 
     return from(

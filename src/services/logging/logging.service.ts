@@ -14,7 +14,7 @@ export class LoggingService extends ConsoleLogger {
     super();
   }
 
-  public debug(message: unknown, context?: string) {
+  public override debug(message: unknown, context?: string) {
     if (this.configService.getOrThrow<SystemConfig>('system').debug) {
       super.debug(this.generateMessage(message), context);
     }
@@ -24,11 +24,11 @@ export class LoggingService extends ConsoleLogger {
     return this.log(message, context);
   }
 
-  public log(message: unknown, context?: string) {
+  public override log(message: unknown, context?: string) {
     super.log(this.generateMessage(message), context);
   }
 
-  public error(message: unknown, stackOrContext?: string) {
+  public override error(message: unknown, stackOrContext?: string) {
     super.error(
       this.generateMessage(message),
       stackOrContext,
@@ -36,7 +36,7 @@ export class LoggingService extends ConsoleLogger {
     );
   }
 
-  public warn(message: unknown, context?: string) {
+  public override warn(message: unknown, context?: string) {
     super.warn(this.generateMessage(message), context);
   }
 

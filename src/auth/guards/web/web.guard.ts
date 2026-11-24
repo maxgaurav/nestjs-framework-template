@@ -23,7 +23,7 @@ export class WebGuard extends AuthGuard('local') {
    * Checks for session authentication
    * @param context
    */
-  canActivate(context: ExecutionContext): Observable<boolean> {
+  override canActivate(context: ExecutionContext): Observable<boolean> {
     const request = context.switchToHttp().getRequest<Request>();
 
     const session: Session & {
