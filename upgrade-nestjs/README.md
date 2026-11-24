@@ -138,6 +138,8 @@ and before 09, so CI enforces the strict flags.
 | migration run/rollback used different module shapes (`default.up` vs `down`) | ✅ fixed in phase 04 |
 | `AccessTokenModel` associations were class fields (eager-loaded `client` always `undefined`) | ✅ fixed in phase 10 |
 | Missing `APP_SECRET` left the session/encryption secret `undefined` | ✅ fixed in phase 10 (required at boot) |
+| JWT signed HS256 with the key file as secret (RSA keys: refresh 500; empty keys: no real signature) | ✅ fixed in phase 09 (RS256, keys required at boot) |
+| `MemoryStore` per session middleware (opt-in routes could not see the web session) | ✅ fixed in phase 09 |
 | Swagger operation ids duplicated as `OauthController_` (`LoggingDecorator` dropped the method name) | ✅ fixed in phase 04 |
 
 ## Follow-ups (out of scope)
