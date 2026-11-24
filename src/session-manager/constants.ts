@@ -12,7 +12,6 @@ export const USE_SESSION = 'session-manager:use-session';
 export const STATELESS_ROUTES: readonly string[] = [
   'api/{*splat}',
   'oauth/token',
-  'oauth/refresh',
   'health',
   'files/{*splat}',
   'storage/{*splat}',

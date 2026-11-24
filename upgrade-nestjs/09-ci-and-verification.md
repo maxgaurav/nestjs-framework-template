@@ -112,30 +112,42 @@ failed 3 tests that passed locally, which exposed two real bugs, both fixed in `
         `HttpOnly; SameSite=Lax`. Found on the way: `SetupIntendInterceptor` skipped a route that
         does not exist (`oauth/login`); URL matching is gone from all session code.
 
-- [ ] **Refresh tokens as a grant type on the token endpoint (RFC 6749 §6).** Today refresh is a
+- [x] **Refresh tokens as a grant type on the token endpoint (RFC 6749 §6).** Today refresh is a
       separate `POST /oauth/refresh` with its own DTO, guard (`RefreshAccessTokenGuard`) and
       strategy. Standard OAuth 2 clients send `grant_type=refresh_token` to the token endpoint.
-  - [ ] Add `RefreshTokenGrantType` next to the password / authorization-code / PKCE grant types
+  - [x] Add `RefreshTokenGrantType` next to the password / authorization-code / PKCE grant types
         and register it in `GrantTypeMappings` for `GrantTypes.RefreshToken = 'refresh_token'`.
         It validates `refresh_token`, `client_id`, `client_secret` (active client only, as fixed
         for the other grants), checks that the refresh token belongs to that client and is not
         expired, and **rotates** it (`consumeToken`: old refresh + access token revoked, new pair
         issued) inside the request transaction.
-  - [ ] `AccessTokenDto` gets `refresh_token` (required only for that grant, `@ValidateIf`), with
+  - [x] `AccessTokenDto` gets `refresh_token` (required only for that grant, `@ValidateIf`), with
         accurate `@ApiProperty` docs; Swagger documents the grant on `POST /oauth/token`.
-  - [ ] Response: the same `BearerTokenResponse` as the other grants (and `201`, matching today's
+  - [x] Response: the same `BearerTokenResponse` as the other grants (and `201`, matching today's
         token endpoint). Errors follow RFC 6749 §5.2 where the project's 422 format allows
         (`invalid_grant` for an unknown, expired or foreign refresh token).
-  - [ ] **API compatibility:** `POST /oauth/refresh` is an existing contract. Keep it as a thin,
+  - [x] **API compatibility (decided: remove).** `POST /oauth/refresh` is an existing contract. Keep it as a thin,
         `@ApiOperation({ deprecated: true })` alias that delegates to the same grant for one
         release, or remove it outright if no client depends on it (the project owner decides;
         template default: deprecate first). Then delete `RefreshAccessTokenGuard`,
         `RefreshTokenService` (strategy) and `RefreshTokenDto` when the alias goes.
-  - [ ] `oauth/refresh` stays in `STATELESS_ROUTES` while the alias exists.
-  - [ ] e2e: refresh via `grant_type=refresh_token` issues a new pair; the old refresh token is
+  - [x] `oauth/refresh` removed from `STATELESS_ROUTES` (no alias).
+  - [x] e2e: refresh via `grant_type=refresh_token` issues a new pair; the old refresh token is
         rejected afterwards (rotation); a refresh token used with another client is rejected; a
-        revoked client is rejected; the deprecated alias still works and returns the same shape.
+        revoked client is rejected; `POST /oauth/refresh` now returns 404.
         Existing `oauth-token.e2e-spec.ts` refresh cases move to the grant.
+  - [x] **Outcome:** the project owner chose to remove the endpoint outright. 9 e2e tests for the
+        grant (16 in `oauth-token.e2e-spec.ts`). Removed: the `/oauth/refresh` handler,
+        `RefreshAccessTokenGuard`, the `RefreshTokenService` strategy, `RefreshTokenDto` and their
+        specs. OpenAPI now has only `POST /oauth/token`, with `refresh_token` in the grant enum.
+        Found on the way:
+    - **Bug:** `consumeToken` swapped the lifetimes (new access token got the 60-day refresh
+          lifetime, the new refresh token 30 days). The lifetime test fails with the swap put back.
+    - **Bug:** a refresh token could be redeemed with any client's credentials; it is now bound
+          to the client it was issued to.
+    - A malformed refresh token is a 422, not a 500.
+    - **Bug:** `LoggingService` logged every `Error` as `{}` (JSON of an object with no enumerable
+          fields), hiding every unhandled exception's cause; it now logs the stack.
 
 ## New CLI commands
 

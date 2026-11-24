@@ -128,53 +128,6 @@ describe('OauthController', () => {
     expect(getRefreshDateSpy).toHaveBeenCalled();
   });
 
-  it('should generate new tokens on refresh', async () => {
-    const currentRefreshToken: RefreshTokenModel = { id: 'current' } as any;
-    const refreshToken: RefreshTokenModel = { id: 'new' } as any;
-    const accessToken: AccessTokenModel = { id: 'new' } as any;
-
-    const getAccessDateSpy = vi
-      .spyOn(controller, 'accessTokenExpiration')
-      .mockReturnValue(null);
-    const getRefreshDateSpy = vi
-      .spyOn(controller, 'refreshTokenExpiration')
-      .mockReturnValue(null);
-
-    const createAccessTokenBearerSpy = vi
-      .spyOn(accessTokenRepo, 'createBearerToken')
-      .mockReturnValue(Promise.resolve('accessBearer'));
-
-    const createRefreshTokenBearerSpy = vi
-      .spyOn(refreshTokenRepo, 'createBearerToken')
-      .mockReturnValue(Promise.resolve('refreshBearer'));
-
-    const consumerRefreshTokenSpy = vi
-      .spyOn(refreshTokenRepo, 'consumeToken')
-      .mockReturnValue(Promise.resolve({ refreshToken, accessToken }));
-
-    const transaction = undefined;
-
-    expect(
-      await controller.refreshAccessToken(currentRefreshToken, transaction),
-    ).toEqual({
-      type: 'Bearer',
-      expires_at: null,
-      access_token: 'accessBearer',
-      refresh_token: 'refreshBearer',
-    });
-
-    expect(consumerRefreshTokenSpy).toHaveBeenCalledWith(
-      currentRefreshToken,
-      null,
-      null,
-      transaction,
-    );
-    expect(createAccessTokenBearerSpy).toHaveBeenCalledWith(accessToken);
-    expect(createRefreshTokenBearerSpy).toHaveBeenCalledWith(refreshToken);
-    expect(getAccessDateSpy).toHaveBeenCalled();
-    expect(getRefreshDateSpy).toHaveBeenCalled();
-  });
-
   it('should return null when expiration time for access token is null', () => {
     const getSpy = vi
       .spyOn(configService, 'getOrThrow')

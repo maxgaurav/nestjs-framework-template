@@ -107,10 +107,10 @@ export class RefreshTokenRepoService {
     })) as UserModel;
 
     return this.accessTokenRepo
-      .create(client, user, refreshTokenExpiresAt, transaction)
+      .create(client, user, accessTokenExpiresAt, transaction)
       .then(async (newAccessToken) => {
         const [result] = await Promise.all([
-          this.create(newAccessToken, accessTokenExpiresAt, transaction).then(
+          this.create(newAccessToken, refreshTokenExpiresAt, transaction).then(
             (newRefreshToken) => ({
               refreshToken: newRefreshToken,
               accessToken: newAccessToken,

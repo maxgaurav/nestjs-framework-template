@@ -46,8 +46,19 @@ export class LoggingService extends ConsoleLogger {
       return message;
     }
 
-    return `[${cls.get<string | undefined>('type') || 'Default'}-${cls.getId()}] ${
-      typeof message === 'string' ? message : JSON.stringify(message)
-    }`;
+    return `[${cls.get<string | undefined>('type') || 'Default'}-${cls.getId()}] ${this.stringify(message)}`;
+  }
+
+  /**
+   * Errors have no enumerable fields, so JSON.stringify(error) is "{}": log their stack
+   */
+  protected stringify(message: unknown): string {
+    if (typeof message === 'string') {
+      return message;
+    }
+    if (message instanceof Error) {
+      return message.stack ?? `${message.name}: ${message.message}`;
+    }
+    return JSON.stringify(message);
   }
 }

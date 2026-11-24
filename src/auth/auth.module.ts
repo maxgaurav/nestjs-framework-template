@@ -6,7 +6,6 @@ import { IntendManagerService } from '../session-manager/services/intend-manager
 import { JwtTokenManagerService } from './services/jwt-token-manager/jwt-token-manager.service.js';
 import { JwtModule } from '@nestjs/jwt';
 import { AccessTokenService } from './strategies/access-token/access-token.service.js';
-import { RefreshTokenService } from './strategies/refresh-token/refresh-token/refresh-token.service.js';
 import { OauthController } from './controllers/oauth/oauth.controller.js';
 import { ClientRepoService } from './services/oauth/client-repo/client-repo.service.js';
 import { AccessTokenRepoService } from './services/oauth/access-token-repo/access-token-repo.service.js';
@@ -17,6 +16,7 @@ import { AuthorizationChallengeRepoService } from './services/authorization-chal
 import { ImplicitPasswordGrantType } from './grant-types/implicit-password/implicit-password.grant-type.js';
 import { ClientIdExistsValidator } from './validators/client-id-exists/client-id-exists.validator.js';
 import { ProofKeyExchangeGrantType } from './grant-types/proof-key-exchage/proof-key-exchange.grant-type.js';
+import { RefreshTokenGrantType } from './grant-types/refresh-token/refresh-token.grant-type.js';
 import { AuthorizationCodeGrantType } from './grant-types/authorization-code/authorization-code.grant-type.js';
 import { AuthorizationController } from './controllers/authorization/authorization.controller.js';
 import { PasswordRedirector } from './redirections/password/password.redirector.js';
@@ -36,7 +36,6 @@ import { RestartLoginRedirector } from './redirectors/restart-login/restart-logi
     IntendManagerService,
     JwtTokenManagerService,
     AccessTokenService,
-    RefreshTokenService,
     ClientRepoService,
     AccessTokenRepoService,
     RefreshTokenRepoService,
@@ -47,6 +46,7 @@ import { RestartLoginRedirector } from './redirectors/restart-login/restart-logi
     ClientIdExistsValidator,
     ProofKeyExchangeGrantType,
     AuthorizationCodeGrantType,
+    RefreshTokenGrantType,
     PasswordRedirector,
     RestartLoginRedirector,
   ],
