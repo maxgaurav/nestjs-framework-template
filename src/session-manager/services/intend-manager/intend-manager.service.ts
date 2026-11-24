@@ -36,9 +36,7 @@ export class IntendManagerService {
 
     this.updateContent(
       request,
-      JSON.parse(
-        intendFlashContent[intendFlashContent.length - 1],
-      ) as IntendContent,
+      JSON.parse(intendFlashContent.at(-1) ?? '') as IntendContent,
     );
   }
 
@@ -50,14 +48,14 @@ export class IntendManagerService {
     let intendContent: IntendContent;
     try {
       intendContent = JSON.parse(
-        request.flash(this.intendFlashKey())[0],
+        request.flash(this.intendFlashKey())[0] ?? '',
       ) as IntendContent;
     } catch {
       // if for any case the get action fails the intend action should be re initialized
       // also sine a flash action to get value has been created the value will auto result in blank
       this.setupIntend(request);
       intendContent = JSON.parse(
-        request.flash(this.intendFlashKey())[0],
+        request.flash(this.intendFlashKey())[0] ?? '',
       ) as IntendContent;
     }
 

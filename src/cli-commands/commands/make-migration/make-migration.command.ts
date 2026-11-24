@@ -13,6 +13,10 @@ export class MakeMigrationCommand extends CommandRunner {
   }
 
   async run([name]: string[]): Promise<void> {
+    // commander enforces the required <name>; the guard keeps the type honest
+    if (!name) {
+      throw new Error('A migration name is required');
+    }
     await this.service.generateStub(name);
   }
 }
