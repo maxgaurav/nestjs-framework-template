@@ -31,7 +31,7 @@ export const LoggingDecorator = (message: {
 }) => {
   return (
     target: object,
-    propertyKey: string,
+    _propertyKey: string,
     propertyDescriptor: PropertyDescriptor,
   ) => {
     // @todo parallelize and allow logging to be on separate thread somehow so that there is no impact in performance

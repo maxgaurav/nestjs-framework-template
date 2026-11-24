@@ -5,7 +5,7 @@ import { Request } from 'express';
 export class MethodChangeMiddleware implements NestMiddleware {
   protected allowedMethods = ['put', 'get', 'delete', 'post', 'patch', 'head'];
 
-  use(req: Request, res: any, next: () => void) {
+  use(req: Request, _res: unknown, next: () => void) {
     let overrideMethod = req.method;
     const requestedMethod: unknown = (
       req.body as { _method?: unknown } | null | undefined

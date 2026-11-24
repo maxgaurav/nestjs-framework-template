@@ -4,7 +4,6 @@ import type {
   PaginateModuleOptions,
   PaginateOptions,
 } from 'nestjs-sequelize-paginate';
-import { Sequelize } from 'sequelize-typescript';
 import { Model, ModelCtor } from 'sequelize';
 
 class FindAndCountOptions {}
@@ -14,7 +13,6 @@ export class OverwritePaginateService {
   constructor(
     @Inject(PAGINATE_OPTIONS)
     private options: PaginateModuleOptions,
-    private readonly sequelize: Sequelize,
   ) {}
 
   async findAllPaginate(

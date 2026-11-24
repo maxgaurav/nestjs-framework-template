@@ -20,14 +20,14 @@ export class RouteListService {
     );
 
     router.stack
-      .map((layer) => {
-        if (layer.route) {
-          const path = (layer.route as IRoute)?.path;
-          const method = layer.route?.stack[0].method;
-          return `${method.toUpperCase()} ${path}`;
+      .flatMap((layer) => {
+        if (!layer.route) {
+          return [];
         }
+        const path = (layer.route as IRoute).path;
+        const method = layer.route.stack[0].method;
+        return [`${method.toUpperCase()} ${path}`];
       })
-      .filter((item) => item !== undefined)
       .forEach((route) => this.logger.log('RouteListService', route));
     this.logger.log(
       'RouteListService',
