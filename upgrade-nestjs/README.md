@@ -1,6 +1,6 @@
 # Upgrade plan: NestJS 11 → 12, ESM, Vitest, TypeScript 7, oxlint, `@nestjs/mail`, `@nestjs/storage`
 
-Status: **plan only, not started**. Written 2026-11-24 against `master` @ `f62f6cf`.
+Status: **in progress** on branch `feature/upgrade-nestjs`: phases 01–07 done, 08 next. Plan written 2026-11-24 against `master` @ `f62f6cf`.
 
 Reference implementation: `wisekeep-backend/upgrade-nestjs/` (same template lineage, upgraded
 10 → 12 on 2026-11-20…23). Its findings are reused here. This plan goes further than wisekeep in two
@@ -56,18 +56,18 @@ Docs:
 
 Each phase leaves the app building, booting and passing tests, so each one can be its own commit.
 
-| #  | Phase                                                                    | Depends on |
-| -- | ------------------------------------------------------------------------ | ---------- |
-| 01 | [Baseline, Node 26, tsconfig cleanup](./01-baseline-and-toolchain.md)    | –          |
-| 02 | [Jest → Vitest, e2e setup with cls-hooked transactions](./02-vitest-and-e2e-setup.md) | 01 |
-| 03 | [NestJS 12 core + ecosystem packages](./03-nestjs-12-core.md)            | 02         |
-| 04 | [CommonJS → native ESM](./04-esm-migration.md)                           | 03         |
-| 05 | [TypeScript 7 build and direct run (gated)](./05-typescript-7-build-and-run.md) | 04  |
-| 06 | [ESLint → oxlint](./06-oxlint.md)                                        | 01 (05 for type-aware rules) |
-| 07 | [Mail → `@nestjs/mail`](./07-mail.md)                                    | 03         |
-| 08 | [File storage → `@nestjs/storage`](./08-file-storage.md)                 | 03         |
-| 10 | [Full strict TypeScript](./10-strict-typescript.md)                      | 05 (runs before 09) |
-| 09 | [CI, AGENTS.md, final verification](./09-ci-and-verification.md)         | all        |
+| #  | Phase                                                                    | Depends on | Status |
+| -- | ------------------------------------------------------------------------ | ---------- | ------ |
+| 01 | [Baseline, Node 26, tsconfig cleanup](./01-baseline-and-toolchain.md)    | –          | ✅ done |
+| 02 | [Jest → Vitest, e2e setup with cls-hooked transactions](./02-vitest-and-e2e-setup.md) | 01 | ✅ done |
+| 03 | [NestJS 12 core + ecosystem packages](./03-nestjs-12-core.md)            | 02         | ✅ done |
+| 04 | [CommonJS → native ESM](./04-esm-migration.md)                           | 03         | ✅ done |
+| 05 | [TypeScript 7 build and direct run (gated)](./05-typescript-7-build-and-run.md) | 04  | ✅ done (GO) |
+| 06 | [ESLint → oxlint](./06-oxlint.md)                                        | 01 (05 for type-aware rules) | ✅ done |
+| 07 | [Mail → `@nestjs/mail`](./07-mail.md)                                    | 03         | ✅ done |
+| 08 | [File storage → `@nestjs/storage`](./08-file-storage.md)                 | 03         | ⬜ not started |
+| 10 | [Full strict TypeScript](./10-strict-typescript.md)                      | 05 (runs before 09) | ⬜ not started |
+| 09 | [CI, AGENTS.md, final verification](./09-ci-and-verification.md)         | all        | ⬜ not started |
 
 **Why Vitest comes before Nest 12.** Nest 12 packages are ESM-only. Jest loads them only on Node
 24.9+, and only with `--experimental-vm-modules` (wisekeep needed this). Moving to Vitest first

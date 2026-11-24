@@ -1,63 +1,41 @@
 import { Injectable } from '@nestjs/common';
-import { MailerOptions, MailerOptionsFactory } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
+import {
+  InMemoryMailTransport,
+  LogMailTransport,
+  type MailModuleOptions,
+  type MailOptionsFactory,
+  type MailTransport,
+  SmtpTransport,
+} from '@nestjs/mail';
 import { MailConfig } from '../../../environment/environment-types.interface.js';
-import type MailMessage from 'nodemailer/lib/mailer/mail-message.js';
-import { ConnectionOptions } from 'node:tls';
 
+/**
+ * Builds the @nestjs/mail options from the `mail` config (MAIL_* env vars)
+ */
 @Injectable()
-export class MailConfigService implements MailerOptionsFactory {
-  constructor(private configService: ConfigService) {}
+export class MailConfigService implements MailOptionsFactory {
+  constructor(private readonly configService: ConfigService) {}
 
-  /**
-   * @inheritDoc
-   */
-  createMailerOptions(): Promise<MailerOptions> | MailerOptions {
-    const mailConfig = this.configService.getOrThrow<MailConfig>('mail');
+  createMailOptions(): MailModuleOptions {
+    const mail = this.configService.getOrThrow<MailConfig>('mail');
+    return {
+      transport: this.createTransport(mail),
+      from: mail.from,
+      retry: mail.retry,
+    };
+  }
 
-    switch (mailConfig.driver) {
+  protected createTransport(mail: MailConfig): MailTransport {
+    switch (mail.driver) {
       case 'smtp':
-        mailConfig.transport = {
-          host: this.configService.get('MAIL_SMTP_HOST', 'localhost'),
-          port: this.configService.get('MAIL_SMTP_PORT', 1025),
-          tls: JSON.parse(
-            this.configService.get('MAIL_SMTP_TLS', JSON.stringify(undefined)),
-          ) as ConnectionOptions | undefined,
-          secure:
-            this.configService.get('MAIL_SMTP_SECURE', 'false') === 'true',
-          auth: {
-            user: this.configService.get('MAIL_USERNAME'),
-            pass: this.configService.get('MAIL_PASSWORD'),
-          },
-        };
-        break;
-
+        return new SmtpTransport(mail.smtp);
+      case 'memory':
+        // Tests: inspect sent mail with assertSent()/find()
+        return new InMemoryMailTransport();
       case 'log':
-      default:
-        mailConfig.transport = {
-          name: 'log',
-          version: '1.0.0',
-          verify: () => {
-            return Promise.resolve(true);
-          },
-          send(
-            mail: MailMessage<any>,
-            callback: (err: Error | null, info: any) => void,
-          ) {
-            const input = mail.message.createReadStream();
-            const envelope = mail.message.getEnvelope();
-            const messageId = mail.message.messageId();
-            input.pipe(process.stdout);
-            input.on('end', function () {
-              callback(null, {
-                envelope,
-                messageId,
-              });
-            });
-          },
-        };
+        // Local development: prints the rendered message, delivers nothing
+        return new LogMailTransport({ body: true });
     }
-
-    return mailConfig;
   }
 }
