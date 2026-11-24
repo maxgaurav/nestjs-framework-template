@@ -4,30 +4,30 @@ import {
   Module,
   NestModule,
 } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { EnvironmentModule } from './environment/environment.module';
-import { DatabasesModule } from './databases/databases.module';
-import { HealthModule } from './health/health.module';
-import { NotFoundConverterInterceptor } from './helpers/interceptors/not-found-converter/not-found-converter.interceptor';
-import { DocumentationHelperModule } from './documentation-helper/documentation-helper.module';
-import { CommonModule } from './common/common.module';
-import { TransactionManagerModule } from './transaction-manager/transaction-manager.module';
-import { CliCommandsModule } from './cli-commands/cli-commands.module';
-import { MailModule } from './mail/mail.module';
-import { ViewEngineModule } from './view-engine/view-engine.module';
-import { SessionManagerModule } from './session-manager/session-manager.module';
-import { AuthModule } from './auth/auth.module';
-import { UserModule } from './user/user.module';
+import { AppController } from './app.controller.js';
+import { AppService } from './app.service.js';
+import { EnvironmentModule } from './environment/environment.module.js';
+import { DatabasesModule } from './databases/databases.module.js';
+import { HealthModule } from './health/health.module.js';
+import { NotFoundConverterInterceptor } from './helpers/interceptors/not-found-converter/not-found-converter.interceptor.js';
+import { DocumentationHelperModule } from './documentation-helper/documentation-helper.module.js';
+import { CommonModule } from './common/common.module.js';
+import { TransactionManagerModule } from './transaction-manager/transaction-manager.module.js';
+import { CliCommandsModule } from './cli-commands/cli-commands.module.js';
+import { MailModule } from './mail/mail.module.js';
+import { ViewEngineModule } from './view-engine/view-engine.module.js';
+import { SessionManagerModule } from './session-manager/session-manager.module.js';
+import { AuthModule } from './auth/auth.module.js';
+import { UserModule } from './user/user.module.js';
 import { PassportModule } from '@nestjs/passport';
-import { MethodChangeMiddleware } from './helpers/middlewares/method-change/method-change.middleware';
-import { ModelBootstrapModule } from './databases/model-bootstrap/model-bootstrap.module';
-import { FileManagementModule } from './file-management/file-management.module';
-import { PaginateOverwriteModule } from './paginate-overwrite/paginate-overwrite.module';
-import { UrlManagementModule } from './url-management/url-management.module';
+import { MethodChangeMiddleware } from './helpers/middlewares/method-change/method-change.middleware.js';
+import { ModelBootstrapModule } from './databases/model-bootstrap/model-bootstrap.module.js';
+import { FileManagementModule } from './file-management/file-management.module.js';
+import { PaginateOverwriteModule } from './paginate-overwrite/paginate-overwrite.module.js';
+import { UrlManagementModule } from './url-management/url-management.module.js';
 import { ClsModule } from 'nestjs-cls';
 import { Request, Response } from 'express';
-import { RepositoriesModule } from './repositories/repositories.module';
+import { RepositoriesModule } from './repositories/repositories.module.js';
 
 @Module({
   imports: [

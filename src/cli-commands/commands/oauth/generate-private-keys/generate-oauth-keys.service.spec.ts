@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { GenerateOauthKeysService } from './generate-oauth-keys.service';
+import { GenerateOauthKeysService } from './generate-oauth-keys.service.js';
 import { Logger } from '@nestjs/common';
 
 describe('GenerateJwtKeysService', () => {

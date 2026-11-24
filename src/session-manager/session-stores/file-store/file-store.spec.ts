@@ -1,4 +1,4 @@
-import { FileStore } from './file-store';
+import { FileStore } from './file-store.js';
 import { Store } from 'express-session';
 
 describe('FileStore', () => {

@@ -1,15 +1,15 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { systemConfig } from './configs/system';
-import { databaseConfig } from './configs/databases';
-import { clusterConfig } from './configs/cluster';
-import { getEnvFileName } from '../helpers/utils/check-env-file';
-import { mailConfig } from './configs/mail';
-import { sessionConfig } from './configs/session';
-import { jwtConfig } from './configs/jwt';
-import { viewConfig } from './configs/view';
-import { filesystemConfig } from './configs/filesystemConfig';
-import { corsConfig } from './configs/cors';
+import { systemConfig } from './configs/system.js';
+import { databaseConfig } from './configs/databases.js';
+import { clusterConfig } from './configs/cluster.js';
+import { getEnvFileName } from '../helpers/utils/check-env-file.js';
+import { mailConfig } from './configs/mail.js';
+import { sessionConfig } from './configs/session.js';
+import { jwtConfig } from './configs/jwt.js';
+import { viewConfig } from './configs/view.js';
+import { filesystemConfig } from './configs/filesystemConfig.js';
+import { corsConfig } from './configs/cors.js';
 
 const envSuffix = process.env.OVERRIDE_ENV
   ? `.${process.env.OVERRIDE_ENV}`

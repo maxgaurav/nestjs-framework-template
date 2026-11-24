@@ -1,5 +1,5 @@
-import { SetupIntendInterceptor } from './setup-intend.interceptor';
-import { IntendManagerService } from '../../services/intend-manager/intend-manager.service';
+import { SetupIntendInterceptor } from './setup-intend.interceptor.js';
+import { IntendManagerService } from '../../services/intend-manager/intend-manager.service.js';
 import { firstValueFrom, of } from 'rxjs';
 
 describe('SetupIntendInterceptor', () => {

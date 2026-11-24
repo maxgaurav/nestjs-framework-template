@@ -8,10 +8,10 @@ import { AuthGuard } from '@nestjs/passport';
 import { from, Observable, of, throwError } from 'rxjs';
 import { Session } from 'express-session';
 import { Request } from 'express';
-import { AuthService } from '../../services/auth/auth.service';
+import { AuthService } from '../../services/auth/auth.service.js';
 import { catchError, map } from 'rxjs/operators';
-import { notFoundPipe } from '../../../helpers/not-found-pipe';
-import { UserModel } from '../../../databases/models/user.model';
+import { notFoundPipe } from '../../../helpers/not-found-pipe.js';
+import { UserModel } from '../../../databases/models/user.model.js';
 
 @Injectable()
 export class WebGuard extends AuthGuard('local') {

@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { PAGINATE_OPTIONS } from 'nestjs-sequelize-paginate/dist/lib/paginate.constans';
+import { PAGINATE_OPTIONS } from 'nestjs-sequelize-paginate/dist/lib/paginate.constans.js';
 import type {
   PaginateModuleOptions,
   PaginateOptions,

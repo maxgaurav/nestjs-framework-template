@@ -1,4 +1,4 @@
-import { PathParamFunction } from './path-param.function';
+import { PathParamFunction } from './path-param.function.js';
 import { ClsModule } from 'nestjs-cls';
 import { Test, TestingModule } from '@nestjs/testing';
 

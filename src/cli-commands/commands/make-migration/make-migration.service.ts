@@ -3,8 +3,8 @@ import { join } from 'path';
 import { Umzug } from 'umzug';
 import { readFileSync } from 'fs';
 import { ConfigService } from '@nestjs/config';
-import { ConnectionNames } from '../../../databases/connection-names';
-import { DatabaseConnectionConfig } from '../../../environment/environment-types.interface';
+import { ConnectionNames } from '../../../databases/connection-names.js';
+import { DatabaseConnectionConfig } from '../../../environment/environment-types.interface.js';
 
 @Injectable()
 export class MakeMigrationService {
@@ -28,9 +28,7 @@ export class MakeMigrationService {
         'databases',
       )[ConnectionNames.DefaultConnection];
     const umzug = new Umzug({
-      migrations: {
-        glob: `${connectionConfig.migrationDirectory}/*.ts`,
-      },
+      migrations: [],
       create: {
         template: (filepath) => [[filepath, stubFileContents]],
       },
@@ -75,6 +73,13 @@ export class MakeMigrationService {
       }, new Array(6))
       .join('');
 
-    return umzug.create({ name: `${prefix}-${name}.ts`, prefix: 'NONE' });
+    return umzug.create({
+      name: `${prefix}-${name}.ts`,
+      prefix: 'NONE',
+      // Always write TypeScript sources, even when the CLI runs from dist/
+      folder: connectionConfig.migrationSourceDirectory,
+      // The CLI runs from dist/; the new source file is only picked up after the next build
+      skipVerify: true,
+    });
   }
 }

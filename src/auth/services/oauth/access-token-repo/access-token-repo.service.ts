@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { AccessTokenModel } from '../../../../databases/models/oauth/access-token.model';
-import { RandomByteGeneratorService } from '../../../../common/services/random-byte-generator/random-byte-generator.service';
-import { ClientModel } from '../../../../databases/models/oauth/client.model';
+import { AccessTokenModel } from '../../../../databases/models/oauth/access-token.model.js';
+import { RandomByteGeneratorService } from '../../../../common/services/random-byte-generator/random-byte-generator.service.js';
+import { ClientModel } from '../../../../databases/models/oauth/client.model.js';
 import { Op, Transaction } from 'sequelize';
-import { UserModel } from '../../../../databases/models/user.model';
+import { UserModel } from '../../../../databases/models/user.model.js';
 import { JwtService } from '@nestjs/jwt';
-import { LoggingDecorator } from '../../../../common/decorators/logging.decorator';
+import { LoggingDecorator } from '../../../../common/decorators/logging.decorator.js';
 
 @Injectable()
 export class AccessTokenRepoService {

@@ -1,4 +1,4 @@
-import { JwtConfig } from '../environment-types.interface';
+import { JwtConfig } from '../environment-types.interface.js';
 
 export const jwtConfig = () => ({
   jwt: {

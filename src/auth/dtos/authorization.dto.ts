@@ -9,8 +9,8 @@ import {
   IsUUID,
   ValidateIf,
 } from 'class-validator';
-import { GrantTypes } from '../grant-types/grant-type-implementation';
-import { ClientIdExists } from '../validators/client-id-exists/client-id-exists.validator';
+import { GrantTypes } from '../grant-types/grant-type-implementation.js';
+import { ClientIdExists } from '../validators/client-id-exists/client-id-exists.validator.js';
 
 export class AuthorizationDto {
   @IsNotEmpty()

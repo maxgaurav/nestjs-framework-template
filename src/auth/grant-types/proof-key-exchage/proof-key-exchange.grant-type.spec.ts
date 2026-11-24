@@ -1,8 +1,8 @@
 import { UnprocessableEntityException } from '@nestjs/common';
 import { vi } from 'vitest';
-import { ProofKeyExchangeGrantType } from './proof-key-exchange.grant-type';
+import { ProofKeyExchangeGrantType } from './proof-key-exchange.grant-type.js';
 import { Test, TestingModule } from '@nestjs/testing';
-import { AuthorizationChallengeRepoService } from '../../services/authorization-challenge-repo/authorization-challenge-repo.service';
+import { AuthorizationChallengeRepoService } from '../../services/authorization-challenge-repo/authorization-challenge-repo.service.js';
 
 describe('ProofKeyExchangeGrantType', () => {
   let service: ProofKeyExchangeGrantType;

@@ -1,15 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AuthorizationController } from './authorization.controller';
-import { TransactionProviderService } from '../../../transaction-manager/services/transaction-provider/transaction-provider.service';
-import { HashEncryptService } from '../../services/hash-encrypt/hash-encrypt.service';
-import { AuthorizationChallengeRepoService } from '../../services/authorization-challenge-repo/authorization-challenge-repo.service';
+import { AuthorizationController } from './authorization.controller.js';
+import { TransactionProviderService } from '../../../transaction-manager/services/transaction-provider/transaction-provider.service.js';
+import { HashEncryptService } from '../../services/hash-encrypt/hash-encrypt.service.js';
+import { AuthorizationChallengeRepoService } from '../../services/authorization-challenge-repo/authorization-challenge-repo.service.js';
 import { ConfigService } from '@nestjs/config';
 import { plainToInstance } from 'class-transformer';
-import { AuthorizationDto } from '../../dtos/authorization.dto';
-import { UserModel } from '../../../databases/models/user.model';
-import { GrantTypes } from '../../grant-types/grant-type-implementation';
-import { AuthorizationChallengeModel } from '../../../databases/models/oauth/authorization-challenge.model';
-import { AuthService } from '../../services/auth/auth.service';
+import { AuthorizationDto } from '../../dtos/authorization.dto.js';
+import { UserModel } from '../../../databases/models/user.model.js';
+import { GrantTypes } from '../../grant-types/grant-type-implementation.js';
+import { AuthorizationChallengeModel } from '../../../databases/models/oauth/authorization-challenge.model.js';
+import { AuthService } from '../../services/auth/auth.service.js';
 
 describe('AuthorizationController', () => {
   let controller: AuthorizationController;

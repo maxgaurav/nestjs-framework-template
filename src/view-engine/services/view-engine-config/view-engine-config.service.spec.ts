@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ViewEngineConfigService } from './view-engine-config.service';
-import { TEMPLATE_FUNCTIONS, VIEW_RENDER_ENGINE } from '../../constants';
+import { ViewEngineConfigService } from './view-engine-config.service.js';
+import { TEMPLATE_FUNCTIONS, VIEW_RENDER_ENGINE } from '../../constants.js';
 import { ConfigService } from '@nestjs/config';
 
 describe('ViewEngineConfigService', () => {

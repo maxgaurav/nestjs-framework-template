@@ -1,7 +1,7 @@
 import { CanActivate, type ExecutionContext, Injectable } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { Request } from 'express';
-import { LoggingDecorator } from '../../../common/decorators/logging.decorator';
+import { LoggingDecorator } from '../../../common/decorators/logging.decorator.js';
 
 @Injectable()
 export class CheckShowPasswordGuard implements CanActivate {

@@ -4,10 +4,10 @@ import {
   ValidatorConstraint,
   ValidatorConstraintInterface,
 } from 'class-validator';
-import { ValidatorDecorator } from '../../../helpers/base-validator/base-validator';
-import { ClientRepoService } from '../../services/oauth/client-repo/client-repo.service';
-import { LoggingDecorator } from '../../../common/decorators/logging.decorator';
-import { GrantTypes } from '../../grant-types/grant-type-implementation';
+import { ValidatorDecorator } from '../../../helpers/base-validator/base-validator.js';
+import { ClientRepoService } from '../../services/oauth/client-repo/client-repo.service.js';
+import { LoggingDecorator } from '../../../common/decorators/logging.decorator.js';
+import { GrantTypes } from '../../grant-types/grant-type-implementation.js';
 
 @ValidatorConstraint({ async: true, name: 'ClientIdExists' })
 @Injectable()

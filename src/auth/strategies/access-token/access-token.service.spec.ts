@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AccessTokenService } from './access-token.service';
-import { AuthService } from '../../services/auth/auth.service';
-import { ClientRepoService } from '../../services/oauth/client-repo/client-repo.service';
+import { AccessTokenService } from './access-token.service.js';
+import { AuthService } from '../../services/auth/auth.service.js';
+import { ClientRepoService } from '../../services/oauth/client-repo/client-repo.service.js';
 import { Request } from 'express';
 import { NotFoundException } from '@nestjs/common';
 import { IsNotEmpty } from 'class-validator';

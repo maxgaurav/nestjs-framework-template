@@ -1,4 +1,4 @@
-import { LoginAccessTokenGuard } from './login-access-token.guard';
+import { LoginAccessTokenGuard } from './login-access-token.guard.js';
 import {
   UnauthorizedException,
   UnprocessableEntityException,

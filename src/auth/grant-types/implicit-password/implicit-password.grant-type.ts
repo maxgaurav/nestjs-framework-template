@@ -8,13 +8,13 @@ import {
 import {
   GrantTypeImplementation,
   GrantTypes,
-} from '../grant-type-implementation';
-import { ClientModel } from '../../../databases/models/oauth/client.model';
-import { UserModel } from '../../../databases/models/user.model';
-import { AuthService } from '../../services/auth/auth.service';
-import { ClientRepoService } from '../../services/oauth/client-repo/client-repo.service';
-import { AccessTokenDto } from '../../dtos/access-token.dto';
-import { LoggingDecorator } from '../../../common/decorators/logging.decorator';
+} from '../grant-type-implementation.js';
+import { ClientModel } from '../../../databases/models/oauth/client.model.js';
+import { UserModel } from '../../../databases/models/user.model.js';
+import { AuthService } from '../../services/auth/auth.service.js';
+import { ClientRepoService } from '../../services/oauth/client-repo/client-repo.service.js';
+import { AccessTokenDto } from '../../dtos/access-token.dto.js';
+import { LoggingDecorator } from '../../../common/decorators/logging.decorator.js';
 
 @Injectable({ scope: Scope.TRANSIENT })
 export class ImplicitPasswordGrantType implements GrantTypeImplementation {

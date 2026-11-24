@@ -1,4 +1,4 @@
-import { SessionMapPreviousUrlInterceptor } from './session-map-previous-url-interceptor.service';
+import { SessionMapPreviousUrlInterceptor } from './session-map-previous-url-interceptor.service.js';
 import { firstValueFrom, of } from 'rxjs';
 
 describe('SessionIntendedUrlInterceptor', () => {

@@ -1,4 +1,4 @@
-import { ErrorValidationFormatFilter } from './error-validation-format.filter';
+import { ErrorValidationFormatFilter } from './error-validation-format.filter.js';
 
 describe('ErrorValidationFormatFilter', () => {
   it('should be defined', () => {

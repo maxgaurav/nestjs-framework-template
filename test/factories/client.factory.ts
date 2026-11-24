@@ -1,9 +1,9 @@
 import { INestApplication } from '@nestjs/common';
 import { Transaction } from 'sequelize';
 import { faker } from '@faker-js/faker';
-import { ClientModel } from '../../src/databases/models/oauth/client.model';
-import { ClientRepoService } from '../../src/auth/services/oauth/client-repo/client-repo.service';
-import { GrantTypes } from '../../src/auth/grant-types/grant-type-implementation';
+import { ClientModel } from '../../src/databases/models/oauth/client.model.js';
+import { ClientRepoService } from '../../src/auth/services/oauth/client-repo/client-repo.service.js';
+import { GrantTypes } from '../../src/auth/grant-types/grant-type-implementation.js';
 
 /**
  * Creates an OAuth client through the app's own repository (random secret).

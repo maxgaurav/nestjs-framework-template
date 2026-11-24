@@ -1,4 +1,4 @@
-import type { UserModel } from './databases/models/user.model';
+import type { UserModel } from './databases/models/user.model.js';
 import { Transaction } from 'sequelize';
 
 declare global {

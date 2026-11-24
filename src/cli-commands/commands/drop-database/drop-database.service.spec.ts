@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { DropDatabaseService } from './drop-database.service';
+import { DropDatabaseService } from './drop-database.service.js';
 import { getConnectionToken } from '@nestjs/sequelize';
 
 describe('DropDatabaseService', () => {

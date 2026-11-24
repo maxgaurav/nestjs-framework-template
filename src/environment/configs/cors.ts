@@ -1,4 +1,4 @@
-import { CorsConfig } from '../environment-types.interface';
+import { CorsConfig } from '../environment-types.interface.js';
 
 export const corsConfig = () => ({
   cors: {

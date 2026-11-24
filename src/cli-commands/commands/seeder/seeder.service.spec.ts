@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { SeederService } from './seeder.service';
+import { SeederService } from './seeder.service.js';
 import { ModuleRef } from '@nestjs/core';
 import { Logger } from '@nestjs/common';
 

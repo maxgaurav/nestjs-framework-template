@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { RefreshMigrationService } from './refresh-migration.service';
-import { RunMigrationService } from '../run-migration/run-migration.service';
+import { RefreshMigrationService } from './refresh-migration.service.js';
+import { RunMigrationService } from '../run-migration/run-migration.service.js';
 import { getConnectionToken } from '@nestjs/sequelize';
 
 describe('RefreshMigrationService', () => {

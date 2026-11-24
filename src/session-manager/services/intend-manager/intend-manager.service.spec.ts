@@ -1,7 +1,7 @@
 import { vi } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
-import { IntendManagerService } from './intend-manager.service';
-import { SESSION_FLASH_INTENDS_KEY } from '../../constants';
+import { IntendManagerService } from './intend-manager.service.js';
+import { SESSION_FLASH_INTENDS_KEY } from '../../constants.js';
 
 describe('IntendManagerService', () => {
   let service: IntendManagerService;

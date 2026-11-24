@@ -1,7 +1,7 @@
 import { UnprocessableEntityException } from '@nestjs/common';
 import { vi } from 'vitest';
-import { AuthorizationCodeGrantType } from './authorization-code.grant-type';
-import { AuthorizationChallengeRepoService } from '../../services/authorization-challenge-repo/authorization-challenge-repo.service';
+import { AuthorizationCodeGrantType } from './authorization-code.grant-type.js';
+import { AuthorizationChallengeRepoService } from '../../services/authorization-challenge-repo/authorization-challenge-repo.service.js';
 import { Test, TestingModule } from '@nestjs/testing';
 
 describe('AuthorizationCodeGrantType', () => {

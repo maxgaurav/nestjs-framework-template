@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Request } from 'express';
-import { SESSION_FLASH_INTENDS_KEY } from '../../constants';
+import { SESSION_FLASH_INTENDS_KEY } from '../../constants.js';
 
 export interface IntendContent {
   url: string | null;

@@ -9,11 +9,11 @@ import {
 } from '@nestjs/common';
 import { IsBoolean, IsEmail, IsOptional } from 'class-validator';
 import { Transaction } from 'sequelize';
-import { AppModule } from '../../src/app.module';
-import { TransactionInterceptor } from '../../src/transaction-manager/interceptors/transaction/transaction.interceptor';
-import { ReqTransaction } from '../../src/transaction-manager/decorators/transaction.decorator';
-import { EventRegisterCallbackService } from '../../src/common/services/event-register-callback/event-register-callback.service';
-import { UserRepository } from '../../src/repositories/user/user.repository';
+import { AppModule } from '../../src/app.module.js';
+import { TransactionInterceptor } from '../../src/transaction-manager/interceptors/transaction/transaction.interceptor.js';
+import { ReqTransaction } from '../../src/transaction-manager/decorators/transaction.decorator.js';
+import { EventRegisterCallbackService } from '../../src/common/services/event-register-callback/event-register-callback.service.js';
+import { UserRepository } from '../../src/repositories/user/user.repository.js';
 
 /**
  * Test-only state: records which after-commit callbacks fired.

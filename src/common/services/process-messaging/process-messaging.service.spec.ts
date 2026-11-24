@@ -1,17 +1,17 @@
 import { MockInstance, onTestFinished, vi } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
-import { ProcessMessagingService } from './process-messaging.service';
+import { ProcessMessagingService } from './process-messaging.service.js';
 import { Logger } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { firstValueFrom, of, timer } from 'rxjs';
-import { InterProcessCommunication } from '../../../interfaces/inter-process-communication';
+import { InterProcessCommunication } from '../../../interfaces/inter-process-communication.js';
 import {
   BroadcastCommandMessage,
   CommunicationCommands,
-} from '../../../cluster/communication-commands';
+} from '../../../cluster/communication-commands.js';
 import { catchError, map } from 'rxjs/operators';
 import { Worker } from 'cluster';
-import { SystemEvents } from '../../../system-events/system-events';
+import { SystemEvents } from '../../../system-events/system-events.js';
 
 describe('ProcessMessagingService', () => {
   let service: ProcessMessagingService;

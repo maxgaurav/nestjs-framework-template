@@ -1,6 +1,6 @@
-import { AppendFormActionHeaderInterceptor } from './append-form-action-header.interceptor';
+import { AppendFormActionHeaderInterceptor } from './append-form-action-header.interceptor.js';
 import { Test, TestingModule } from '@nestjs/testing';
-import { HashEncryptService } from '../../services/hash-encrypt/hash-encrypt.service';
+import { HashEncryptService } from '../../services/hash-encrypt/hash-encrypt.service.js';
 import { ConfigService } from '@nestjs/config';
 
 describe('AppendFormActionHeaderInterceptor', () => {

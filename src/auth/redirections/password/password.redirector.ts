@@ -1,7 +1,7 @@
-import { RedirectRouteExecutorInterface } from '../../../interfaces/redirect-route-executor.interface';
+import { RedirectRouteExecutorInterface } from '../../../interfaces/redirect-route-executor.interface.js';
 import { Injectable, Scope } from '@nestjs/common';
-import { UrlBuilderService } from '../../../url-management/services/url-builder/url-builder.service';
-import { LoggingDecorator } from '../../../common/decorators/logging.decorator';
+import { UrlBuilderService } from '../../../url-management/services/url-builder/url-builder.service.js';
+import { LoggingDecorator } from '../../../common/decorators/logging.decorator.js';
 
 @Injectable({ scope: Scope.TRANSIENT })
 export class PasswordRedirector implements RedirectRouteExecutorInterface {

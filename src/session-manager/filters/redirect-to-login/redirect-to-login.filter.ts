@@ -6,7 +6,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { IntendManagerService } from '../../services/intend-manager/intend-manager.service';
+import { IntendManagerService } from '../../services/intend-manager/intend-manager.service.js';
 
 @Catch(UnauthorizedException)
 export class RedirectFromLoginFilter implements ExceptionFilter {

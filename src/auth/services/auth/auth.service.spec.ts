@@ -1,14 +1,14 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AuthService } from './auth.service';
-import { UserRepository } from '../../../repositories/user/user.repository';
-import { HashEncryptService } from '../hash-encrypt/hash-encrypt.service';
-import { UserModel } from '../../../databases/models/user.model';
+import { AuthService } from './auth.service.js';
+import { UserRepository } from '../../../repositories/user/user.repository.js';
+import { HashEncryptService } from '../hash-encrypt/hash-encrypt.service.js';
+import { UserModel } from '../../../databases/models/user.model.js';
 import { ConfigService } from '@nestjs/config';
-import { AccessTokenRepoService } from '../oauth/access-token-repo/access-token-repo.service';
+import { AccessTokenRepoService } from '../oauth/access-token-repo/access-token-repo.service.js';
 import { JwtService } from '@nestjs/jwt';
-import { AccessTokenModel } from '../../../databases/models/oauth/access-token.model';
-import { RefreshTokenRepoService } from '../oauth/refresh-token-repo/refresh-token-repo.service';
-import { RefreshTokenModel } from '../../../databases/models/oauth/refresh-token.model';
+import { AccessTokenModel } from '../../../databases/models/oauth/access-token.model.js';
+import { RefreshTokenRepoService } from '../oauth/refresh-token-repo/refresh-token-repo.service.js';
+import { RefreshTokenModel } from '../../../databases/models/oauth/refresh-token.model.js';
 
 const FakedEmail = 'email@email.com';
 describe('AuthService', () => {

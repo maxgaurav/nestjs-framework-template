@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { SessionConfigService } from './session-config.service';
+import { SessionConfigService } from './session-config.service.js';
 import { ConfigService } from '@nestjs/config';
 import { Logger } from '@nestjs/common';
 

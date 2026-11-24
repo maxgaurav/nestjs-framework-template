@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
-import { Seeder, SeederConstruct } from '../../seeders/seeder';
+import { Seeder, SeederConstruct } from '../../seeders/seeder.js';
 
 export interface ToSeedActions {
   all: boolean;

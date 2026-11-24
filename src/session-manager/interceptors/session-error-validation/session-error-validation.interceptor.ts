@@ -7,8 +7,8 @@ import {
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Request } from 'express';
-import { SESSION_VALIDATION_ERROR_KEY } from '../../constants';
-import { ValidationErrorsFormat } from '../../../interfaces/validation-errors-format';
+import { SESSION_VALIDATION_ERROR_KEY } from '../../constants.js';
+import { ValidationErrorsFormat } from '../../../interfaces/validation-errors-format.js';
 
 @Injectable()
 export class SessionErrorValidationInterceptor implements NestInterceptor {

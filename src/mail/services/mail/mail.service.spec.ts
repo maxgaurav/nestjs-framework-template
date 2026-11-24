@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { MailService } from './mail.service';
+import { MailService } from './mail.service.js';
 import { MailerService } from '@nestjs-modules/mailer';
 import * as Twig from 'twig';
 import { ConfigService } from '@nestjs/config';
-import { VIEW_RENDER_ENGINE } from '../../../view-engine/constants';
-import { ISendMailOptions } from '@nestjs-modules/mailer/dist/interfaces/send-mail-options.interface';
+import { VIEW_RENDER_ENGINE } from '../../../view-engine/constants.js';
+import { ISendMailOptions } from '@nestjs-modules/mailer/dist/interfaces/send-mail-options.interface.js';
 
 describe('MailService', () => {
   let service: MailService;

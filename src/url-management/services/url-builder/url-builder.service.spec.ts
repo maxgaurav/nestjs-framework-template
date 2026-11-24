@@ -1,6 +1,6 @@
 import { vi } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
-import { UrlBuilderService } from './url-builder.service';
+import { UrlBuilderService } from './url-builder.service.js';
 import { ConfigService } from '@nestjs/config';
 
 describe('UrlBuilderService', () => {

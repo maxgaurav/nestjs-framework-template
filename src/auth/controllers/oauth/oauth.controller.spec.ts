@@ -1,17 +1,17 @@
 import { vi } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
-import { OauthController } from './oauth.controller';
-import { TransactionProviderService } from '../../../transaction-manager/services/transaction-provider/transaction-provider.service';
-import { AccessTokenRepoService } from '../../services/oauth/access-token-repo/access-token-repo.service';
-import { RefreshTokenRepoService } from '../../services/oauth/refresh-token-repo/refresh-token-repo.service';
-import { UserModel } from '../../../databases/models/user.model';
-import { ClientModel } from '../../../databases/models/oauth/client.model';
-import { AccessTokenModel } from '../../../databases/models/oauth/access-token.model';
-import { RefreshTokenModel } from '../../../databases/models/oauth/refresh-token.model';
+import { OauthController } from './oauth.controller.js';
+import { TransactionProviderService } from '../../../transaction-manager/services/transaction-provider/transaction-provider.service.js';
+import { AccessTokenRepoService } from '../../services/oauth/access-token-repo/access-token-repo.service.js';
+import { RefreshTokenRepoService } from '../../services/oauth/refresh-token-repo/refresh-token-repo.service.js';
+import { UserModel } from '../../../databases/models/user.model.js';
+import { ClientModel } from '../../../databases/models/oauth/client.model.js';
+import { AccessTokenModel } from '../../../databases/models/oauth/access-token.model.js';
+import { RefreshTokenModel } from '../../../databases/models/oauth/refresh-token.model.js';
 import { ConfigService } from '@nestjs/config';
 import moment from 'moment';
-import { HashEncryptService } from '../../services/hash-encrypt/hash-encrypt.service';
-import { AuthorizationChallengeRepoService } from '../../services/authorization-challenge-repo/authorization-challenge-repo.service';
+import { HashEncryptService } from '../../services/hash-encrypt/hash-encrypt.service.js';
+import { AuthorizationChallengeRepoService } from '../../services/authorization-challenge-repo/authorization-challenge-repo.service.js';
 
 describe('OauthController', () => {
   let controller: OauthController;

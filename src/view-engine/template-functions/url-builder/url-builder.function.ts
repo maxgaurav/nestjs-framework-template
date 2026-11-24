@@ -1,7 +1,7 @@
 import { Injectable, Scope } from '@nestjs/common';
-import { ExtendFunction } from '../extend-function';
-import { TemplateRegister } from '../template-function-registration';
-import { UrlBuilderService } from '../../../url-management/services/url-builder/url-builder.service';
+import { ExtendFunction } from '../extend-function.js';
+import { TemplateRegister } from '../template-function-registration.js';
+import { UrlBuilderService } from '../../../url-management/services/url-builder/url-builder.service.js';
 
 @TemplateRegister()
 @Injectable({ scope: Scope.TRANSIENT })

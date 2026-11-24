@@ -1,8 +1,8 @@
 import { AutoIncrement, Column, PrimaryKey, Table } from 'sequelize-typescript';
-import { DatesMapping } from './dates-mapping';
+import { DatesMapping } from './dates-mapping.js';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { EventRegisterCallbackService } from '../../common/services/event-register-callback/event-register-callback.service';
-import { UrlBuilderService } from '../../url-management/services/url-builder/url-builder.service';
+import { EventRegisterCallbackService } from '../../common/services/event-register-callback/event-register-callback.service.js';
+import { UrlBuilderService } from '../../url-management/services/url-builder/url-builder.service.js';
 
 @Table({})
 export class BaseModel<T extends object> extends DatesMapping<T> {

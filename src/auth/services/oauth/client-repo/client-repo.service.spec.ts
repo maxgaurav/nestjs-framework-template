@@ -1,11 +1,11 @@
 import { vi } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
-import { ClientRepoService } from './client-repo.service';
-import { RandomByteGeneratorService } from '../../../../common/services/random-byte-generator/random-byte-generator.service';
-import { ClientModel } from '../../../../databases/models/oauth/client.model';
+import { ClientRepoService } from './client-repo.service.js';
+import { RandomByteGeneratorService } from '../../../../common/services/random-byte-generator/random-byte-generator.service.js';
+import { ClientModel } from '../../../../databases/models/oauth/client.model.js';
 import { getModelToken } from '@nestjs/sequelize';
 import { Buffer } from 'buffer';
-import { GrantTypes } from '../../../grant-types/grant-type-implementation';
+import { GrantTypes } from '../../../grant-types/grant-type-implementation.js';
 
 describe('ClientRepoService', () => {
   let service: ClientRepoService;

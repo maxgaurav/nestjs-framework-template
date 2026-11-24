@@ -5,8 +5,8 @@ import {
   Table,
   Default,
 } from 'sequelize-typescript';
-import { DatesMapping } from '../dates-mapping';
-import { GrantTypes } from '../../../auth/grant-types/grant-type-implementation';
+import { DatesMapping } from '../dates-mapping.js';
+import { GrantTypes } from '../../../auth/grant-types/grant-type-implementation.js';
 
 @Table({ tableName: 'oauth_clients' })
 export class ClientModel extends DatesMapping<ClientModel> {

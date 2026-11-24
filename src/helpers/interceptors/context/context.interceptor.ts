@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { Request } from 'express';
-import { UserModel } from '../../../databases/models/user.model';
+import { UserModel } from '../../../databases/models/user.model.js';
 import { randomUUID } from 'node:crypto';
 
 @Injectable()

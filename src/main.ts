@@ -1,11 +1,11 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import { AppModule } from './app.module.js';
 import { ConfigService } from '@nestjs/config';
 import {
   CorsConfig,
   SystemConfig,
   ViewConfig,
-} from './environment/environment-types.interface';
+} from './environment/environment-types.interface.js';
 import {
   INestApplication,
   UnprocessableEntityException,
@@ -13,25 +13,25 @@ import {
   ValidationPipe,
   VersioningType,
 } from '@nestjs/common';
-import { ClusterModule } from './cluster/cluster.module';
-import { SetupClusterService } from './cluster/services/setup-cluster/setup-cluster.service';
+import { ClusterModule } from './cluster/cluster.module.js';
+import { SetupClusterService } from './cluster/services/setup-cluster/setup-cluster.service.js';
 import { useContainer } from 'class-validator';
-import { ContextInterceptor } from './helpers/interceptors/context/context.interceptor';
-import { NotFoundConverterInterceptor } from './helpers/interceptors/not-found-converter/not-found-converter.interceptor';
+import { ContextInterceptor } from './helpers/interceptors/context/context.interceptor.js';
+import { NotFoundConverterInterceptor } from './helpers/interceptors/not-found-converter/not-found-converter.interceptor.js';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { ErrorValidationFormatFilter } from './helpers/filters/error-validation-format/error-validation-format.filter';
-import { LoggingService } from './services/logging/logging.service';
+import { ErrorValidationFormatFilter } from './helpers/filters/error-validation-format/error-validation-format.filter.js';
+import { LoggingService } from './services/logging/logging.service.js';
 import helmet from 'helmet';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { SessionConfigService } from './session-manager/services/session-config/session-config.service';
-import { flashMiddleware } from './session-manager/middlewares/flash/flash.middleware';
-import { SessionMapPreviousUrlInterceptor } from './session-manager/interceptors/session-map-previous-url/session-map-previous-url-interceptor.service';
-import { RedirectFromLoginFilter } from './session-manager/filters/redirect-to-login/redirect-to-login.filter';
-import { SetupIntendInterceptor } from './session-manager/interceptors/setup-intend/setup-intend.interceptor';
-import { KillForApiInterceptor } from './session-manager/interceptors/kill-for-api/kill-for-api.interceptor';
-import { registerApplicationContext } from './common/application-context';
-import { registerPgTypeParsers } from './helpers/pg-type-parsers/pg-type-parsers';
-import { registerSequelizeCls } from './helpers/sequelize-namespace/sequelize-namespace';
+import { SessionConfigService } from './session-manager/services/session-config/session-config.service.js';
+import { flashMiddleware } from './session-manager/middlewares/flash/flash.middleware.js';
+import { SessionMapPreviousUrlInterceptor } from './session-manager/interceptors/session-map-previous-url/session-map-previous-url-interceptor.service.js';
+import { RedirectFromLoginFilter } from './session-manager/filters/redirect-to-login/redirect-to-login.filter.js';
+import { SetupIntendInterceptor } from './session-manager/interceptors/setup-intend/setup-intend.interceptor.js';
+import { KillForApiInterceptor } from './session-manager/interceptors/kill-for-api/kill-for-api.interceptor.js';
+import { registerApplicationContext } from './common/application-context.js';
+import { registerPgTypeParsers } from './helpers/pg-type-parsers/pg-type-parsers.js';
+import { registerSequelizeCls } from './helpers/sequelize-namespace/sequelize-namespace.js';
 
 registerPgTypeParsers();
 registerSequelizeCls();

@@ -9,9 +9,9 @@ import { from, Observable, throwError } from 'rxjs';
 import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
 import { catchError, map } from 'rxjs/operators';
-import { AuthService } from '../../services/auth/auth.service';
+import { AuthService } from '../../services/auth/auth.service.js';
 import { IncomingHttpHeaders } from 'http2';
-import * as jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 
 @Injectable()
 export class AccessTokenGuard extends AuthGuard() implements CanActivate {

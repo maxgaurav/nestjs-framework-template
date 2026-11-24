@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UserRepository } from './user.repository';
-import { UserModel } from '../../databases/models/user.model';
+import { UserRepository } from './user.repository.js';
+import { UserModel } from '../../databases/models/user.model.js';
 import { getModelToken } from '@nestjs/sequelize';
 
 const FakedEmail = 'email@email.com';

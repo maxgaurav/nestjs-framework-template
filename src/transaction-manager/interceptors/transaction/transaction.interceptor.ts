@@ -5,7 +5,7 @@ import {
   NestInterceptor,
 } from '@nestjs/common';
 import { firstValueFrom, from, Observable } from 'rxjs';
-import { TransactionProviderService } from '../../services/transaction-provider/transaction-provider.service';
+import { TransactionProviderService } from '../../services/transaction-provider/transaction-provider.service.js';
 import { Request } from 'express';
 
 @Injectable()

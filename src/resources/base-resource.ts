@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
-import { DateResource } from './date-resource';
+import { DateResource } from './date-resource.js';
 
 export class BaseResource extends DateResource {
   @ApiProperty()

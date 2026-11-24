@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { Request } from 'express';
-import { SESSION_VALIDATION_INPUTS } from '../../constants';
+import { SESSION_VALIDATION_INPUTS } from '../../constants.js';
 import { map } from 'rxjs/operators';
 
 @Injectable()

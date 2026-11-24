@@ -1,4 +1,4 @@
-import { QueryFunction } from './query.function';
+import { QueryFunction } from './query.function.js';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsModule } from 'nestjs-cls';
 

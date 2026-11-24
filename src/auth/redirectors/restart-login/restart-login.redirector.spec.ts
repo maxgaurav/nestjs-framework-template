@@ -1,7 +1,7 @@
-import { RestartLoginRedirector } from './restart-login.redirector';
+import { RestartLoginRedirector } from './restart-login.redirector.js';
 import { Test, TestingModule } from '@nestjs/testing';
-import { HashEncryptService } from '../../services/hash-encrypt/hash-encrypt.service';
-import { UrlBuilderService } from '../../../url-management/services/url-builder/url-builder.service';
+import { HashEncryptService } from '../../services/hash-encrypt/hash-encrypt.service.js';
+import { UrlBuilderService } from '../../../url-management/services/url-builder/url-builder.service.js';
 import { ConfigService } from '@nestjs/config';
 
 describe('RestartLoginRedirector', () => {

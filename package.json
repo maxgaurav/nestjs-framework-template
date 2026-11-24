@@ -11,14 +11,14 @@
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/main",
+    "start:prod": "node --enable-source-maps dist/main.js",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\"",
     "test": "vitest run --project unit",
     "test:watch": "vitest --project unit",
     "test:cov": "vitest run --project unit --coverage",
     "test:debug": "vitest --project unit --inspect-brk --no-file-parallelism",
     "test:e2e": "vitest run --project e2e",
-    "app:command": "ts-node --swc --files src/cli.ts",
+    "app:command": "nest build && node --enable-source-maps dist/cli.js",
     "tinker": "nest start --entryFile tinker",
     "test:all": "vitest run"
   },
@@ -40,6 +40,7 @@
     "cls-hooked": "^4.2.2",
     "express-session": "^1.19.0",
     "helmet": "^8.3.0",
+    "jsonwebtoken": "^9.0.3",
     "nest-commander": "^3.21.0",
     "nestjs-cls": "^7.0.2",
     "nestjs-form-data": "^11.0.1",
@@ -75,6 +76,7 @@
     "@types/express": "^5.0.6",
     "@types/express-session": "^1.17.8",
     "@types/inquirer": "^8.2.10",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^26.6.6",
     "@types/nodemailer": "^7.0.4",
     "@types/passport-jwt": "^4.0.1",
@@ -89,8 +91,6 @@
     "eslint-plugin-prettier": "^5.5.4",
     "prettier": "^3.7.4",
     "supertest": "^7.2.2",
-    "ts-node": "^10.9.2",
-    "tsconfig-paths": "^4.2.0",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.74.0",
     "vite": "^8.3.8",
@@ -113,5 +113,6 @@
     "nest-commander": {
       "@golevelup/nestjs-discovery": "^7.1.0"
     }
-  }
+  },
+  "type": "module"
 }

@@ -1,52 +1,14 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { ConnectionNames } from '../../../databases/connection-names';
-import { DatabaseConnectionConfig } from '../../../environment/environment-types.interface';
-import { SequelizeStorage, Umzug } from 'umzug';
-import { ConfigService } from '@nestjs/config';
-import { InjectConnection } from '@nestjs/sequelize';
-import { Sequelize } from 'sequelize';
+import { Injectable } from '@nestjs/common';
+import { ConnectionNames } from '../../../databases/connection-names.js';
+import { MigratorFactoryService } from '../../services/migrator-factory/migrator-factory.service.js';
 
 @Injectable()
 export class RunMigrationService {
-  constructor(
-    private logger: Logger,
-    private config: ConfigService,
-    @InjectConnection() private connection: Sequelize,
-  ) {}
+  constructor(private readonly migratorFactory: MigratorFactoryService) {}
+
   public async runMigration(
     connectionName: ConnectionNames = ConnectionNames.DefaultConnection,
   ) {
-    const connectionConfig =
-      this.config.getOrThrow<Record<ConnectionNames, DatabaseConnectionConfig>>(
-        'databases',
-      )[connectionName];
-
-    const umzug = new Umzug({
-      migrations: {
-        glob: `${connectionConfig.migrationDirectory}/*.ts`,
-        resolve: ({ name, path, context }) => {
-          // const migration = (require as any)(path);
-          return {
-            name,
-            up: () =>
-              import(path as string).then(
-                (migration: {
-                  default: { up: (...args: unknown[]) => Promise<unknown> };
-                }) => migration.default.up(context, this.connection.Sequelize),
-              ),
-            down: async () =>
-              import(path as string).then(
-                (migration: {
-                  down: (...args: unknown[]) => Promise<unknown>;
-                }) => migration.down(context, this.connection.Sequelize),
-              ),
-          };
-        },
-      },
-      context: this.connection.getQueryInterface(),
-      storage: new SequelizeStorage({ sequelize: this.connection }),
-      logger: this.logger as never,
-    });
-    return umzug.up();
+    return this.migratorFactory.create(connectionName).up();
   }
 }

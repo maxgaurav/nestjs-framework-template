@@ -6,9 +6,9 @@ import {
   PrimaryKey,
   Table,
 } from 'sequelize-typescript';
-import { DatesMapping } from '../dates-mapping';
-import { ClientModel } from './client.model';
-import { UserModel } from '../user.model';
+import { DatesMapping } from '../dates-mapping.js';
+import { ClientModel } from './client.model.js';
+import { UserModel } from '../user.model.js';
 
 @Table({ tableName: 'oauth_access_tokens' })
 export class AccessTokenModel extends DatesMapping<AccessTokenModel> {

@@ -1,10 +1,10 @@
-import { ResourceConversionInterceptor } from './resource-conversion.interceptor';
+import { ResourceConversionInterceptor } from './resource-conversion.interceptor.js';
 import { Test, TestingModule } from '@nestjs/testing';
 import { CallHandler, ExecutionContext } from '@nestjs/common';
 import { firstValueFrom, from, Observable, of } from 'rxjs';
 import { Expose } from 'class-transformer';
 import { Reflector } from '@nestjs/core';
-import { ResourceMap } from '../../decorators/resource-map.decorator';
+import { ResourceMap } from '../../decorators/resource-map.decorator.js';
 
 class SampleResource {
   @Expose()

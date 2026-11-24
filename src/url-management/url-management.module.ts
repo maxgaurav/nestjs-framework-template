@@ -1,5 +1,5 @@
 import { Global, Module } from '@nestjs/common';
-import { UrlBuilderService } from './services/url-builder/url-builder.service';
+import { UrlBuilderService } from './services/url-builder/url-builder.service.js';
 
 @Global()
 @Module({

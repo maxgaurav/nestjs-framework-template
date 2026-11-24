@@ -9,8 +9,8 @@ import { ValidationError } from 'class-validator';
 import {
   SESSION_VALIDATION_ERROR_KEY,
   SESSION_VALIDATION_INPUTS,
-} from '../../../session-manager/constants';
-import { ValidationErrorsFormat } from '../../../interfaces/validation-errors-format';
+} from '../../../session-manager/constants.js';
+import { ValidationErrorsFormat } from '../../../interfaces/validation-errors-format.js';
 
 interface DefaultValidationError {
   statusCode: number;

@@ -2,8 +2,8 @@ import { INestApplication } from '@nestjs/common';
 import { Transaction } from 'sequelize';
 import { getModelToken } from '@nestjs/sequelize';
 import { faker } from '@faker-js/faker';
-import { UserModel } from '../../src/databases/models/user.model';
-import { HashEncryptService } from '../../src/auth/services/hash-encrypt/hash-encrypt.service';
+import { UserModel } from '../../src/databases/models/user.model.js';
+import { HashEncryptService } from '../../src/auth/services/hash-encrypt/hash-encrypt.service.js';
 
 /**
  * Creates a user. Inside `managedTransaction` the insert joins the test transaction

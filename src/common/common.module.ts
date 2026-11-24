@@ -1,10 +1,10 @@
 import { Global, Logger, Module } from '@nestjs/common';
-import { EventRegisterCallbackService } from './services/event-register-callback/event-register-callback.service';
-import { ProcessMessagingService } from './services/process-messaging/process-messaging.service';
-import { RandomByteGeneratorService } from './services/random-byte-generator/random-byte-generator.service';
-import { LoggingService } from '../services/logging/logging.service';
+import { EventRegisterCallbackService } from './services/event-register-callback/event-register-callback.service.js';
+import { ProcessMessagingService } from './services/process-messaging/process-messaging.service.js';
+import { RandomByteGeneratorService } from './services/random-byte-generator/random-byte-generator.service.js';
+import { LoggingService } from '../services/logging/logging.service.js';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { RedirectRouteInterceptor } from './interceptors/redirect-route/redirect-route.interceptor';
+import { RedirectRouteInterceptor } from './interceptors/redirect-route/redirect-route.interceptor.js';
 
 @Global()
 @Module({

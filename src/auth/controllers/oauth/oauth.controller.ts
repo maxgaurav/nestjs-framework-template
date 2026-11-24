@@ -1,17 +1,17 @@
 import { Controller, Post, UseGuards, UseInterceptors } from '@nestjs/common';
-import { LoginAccessTokenGuard } from '../../guards/login-access-token/login-access-token.guard';
-import { AccessTokenRepoService } from '../../services/oauth/access-token-repo/access-token-repo.service';
-import { RefreshTokenRepoService } from '../../services/oauth/refresh-token-repo/refresh-token-repo.service';
-import { TransactionInterceptor } from '../../../transaction-manager/interceptors/transaction/transaction.interceptor';
-import { AuthUser } from '../../decorators/auth-user.decorator';
-import { UserModel } from '../../../databases/models/user.model';
-import { ClientModel } from '../../../databases/models/oauth/client.model';
-import { ReqTransaction } from '../../../transaction-manager/decorators/transaction.decorator';
+import { LoginAccessTokenGuard } from '../../guards/login-access-token/login-access-token.guard.js';
+import { AccessTokenRepoService } from '../../services/oauth/access-token-repo/access-token-repo.service.js';
+import { RefreshTokenRepoService } from '../../services/oauth/refresh-token-repo/refresh-token-repo.service.js';
+import { TransactionInterceptor } from '../../../transaction-manager/interceptors/transaction/transaction.interceptor.js';
+import { AuthUser } from '../../decorators/auth-user.decorator.js';
+import { UserModel } from '../../../databases/models/user.model.js';
+import { ClientModel } from '../../../databases/models/oauth/client.model.js';
+import { ReqTransaction } from '../../../transaction-manager/decorators/transaction.decorator.js';
 import { Transaction } from 'sequelize';
-import { RefreshAccessTokenGuard } from '../../guards/refresh-access-token/refresh-access-token.guard';
-import { RefreshTokenModel } from '../../../databases/models/oauth/refresh-token.model';
+import { RefreshAccessTokenGuard } from '../../guards/refresh-access-token/refresh-access-token.guard.js';
+import { RefreshTokenModel } from '../../../databases/models/oauth/refresh-token.model.js';
 import { ConfigService } from '@nestjs/config';
-import { JwtConfig } from '../../../environment/environment-types.interface';
+import { JwtConfig } from '../../../environment/environment-types.interface.js';
 import moment from 'moment';
 import {
   ApiBody,
@@ -20,11 +20,11 @@ import {
   ApiProperty,
   ApiResponse,
 } from '@nestjs/swagger';
-import { RefreshTokenDto } from '../../dtos/refresh-token.dto';
-import { AccessTokenDto } from '../../dtos/access-token.dto';
-import { LoggingDecorator } from '../../../common/decorators/logging.decorator';
-import { HashEncryptService } from '../../services/hash-encrypt/hash-encrypt.service';
-import { AuthorizationChallengeRepoService } from '../../services/authorization-challenge-repo/authorization-challenge-repo.service';
+import { RefreshTokenDto } from '../../dtos/refresh-token.dto.js';
+import { AccessTokenDto } from '../../dtos/access-token.dto.js';
+import { LoggingDecorator } from '../../../common/decorators/logging.decorator.js';
+import { HashEncryptService } from '../../services/hash-encrypt/hash-encrypt.service.js';
+import { AuthorizationChallengeRepoService } from '../../services/authorization-challenge-repo/authorization-challenge-repo.service.js';
 
 export interface BearerTokenResult {
   expires_at: Date | string | null;

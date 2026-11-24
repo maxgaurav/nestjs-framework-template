@@ -1,7 +1,7 @@
-import { MapUserToSessionInterceptor } from './map-user-to-session.interceptor';
+import { MapUserToSessionInterceptor } from './map-user-to-session.interceptor.js';
 import { Test, TestingModule } from '@nestjs/testing';
-import { AuthService } from '../../services/auth/auth.service';
-import { AuthorizationChallengeRepoService } from '../../services/authorization-challenge-repo/authorization-challenge-repo.service';
+import { AuthService } from '../../services/auth/auth.service.js';
+import { AuthorizationChallengeRepoService } from '../../services/authorization-challenge-repo/authorization-challenge-repo.service.js';
 
 describe('MapUserToSessionInterceptor', () => {
   let interceptor: MapUserToSessionInterceptor;

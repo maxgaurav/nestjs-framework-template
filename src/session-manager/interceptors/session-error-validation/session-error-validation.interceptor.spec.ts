@@ -1,5 +1,5 @@
 import { vi } from 'vitest';
-import { SessionErrorValidationInterceptor } from './session-error-validation.interceptor';
+import { SessionErrorValidationInterceptor } from './session-error-validation.interceptor.js';
 import { firstValueFrom, of } from 'rxjs';
 
 describe('SessionErrorValidationInterceptor', () => {

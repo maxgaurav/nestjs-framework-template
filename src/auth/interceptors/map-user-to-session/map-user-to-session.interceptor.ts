@@ -5,11 +5,11 @@ import {
   NestInterceptor,
 } from '@nestjs/common';
 import { from, Observable, switchMap } from 'rxjs';
-import { AuthorizationChallengeModel } from '../../../databases/models/oauth/authorization-challenge.model';
+import { AuthorizationChallengeModel } from '../../../databases/models/oauth/authorization-challenge.model.js';
 import { Request } from 'express';
-import { AuthService } from '../../services/auth/auth.service';
+import { AuthService } from '../../services/auth/auth.service.js';
 import { map } from 'rxjs/operators';
-import { UserModel } from '../../../databases/models/user.model';
+import { UserModel } from '../../../databases/models/user.model.js';
 
 @Injectable()
 export class MapUserToSessionInterceptor implements NestInterceptor {

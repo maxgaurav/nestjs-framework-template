@@ -1,4 +1,4 @@
-import { AuthorizationRedirector } from './authorization.redirector';
+import { AuthorizationRedirector } from './authorization.redirector.js';
 
 describe('AuthorizationRedirector', () => {
   it('should be defined', () => {

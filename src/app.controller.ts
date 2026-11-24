@@ -1,5 +1,5 @@
 import { Controller, Get, Render } from '@nestjs/common';
-import { AppService } from './app.service';
+import { AppService } from './app.service.js';
 import { ApiExcludeController } from '@nestjs/swagger';
 
 @ApiExcludeController()

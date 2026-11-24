@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { RouteListService } from './route-list.service';
+import { RouteListService } from './route-list.service.js';
 import { Logger } from '@nestjs/common';
 
 describe('RouteListService', () => {

@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { DatabaseConfigService } from './database-config.service';
+import { DatabaseConfigService } from './database-config.service.js';
 import { ConfigService } from '@nestjs/config';
-import { ConnectionNames } from '../../connection-names';
+import { ConnectionNames } from '../../connection-names.js';
 import { SequelizeModuleOptions } from '@nestjs/sequelize';
 
 describe('DatabaseConfigService', () => {

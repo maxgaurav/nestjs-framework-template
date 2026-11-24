@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { UserRepository } from '../../../repositories/user/user.repository';
-import { UserModel } from '../../../databases/models/user.model';
-import { HashEncryptService } from '../hash-encrypt/hash-encrypt.service';
+import { UserRepository } from '../../../repositories/user/user.repository.js';
+import { UserModel } from '../../../databases/models/user.model.js';
+import { HashEncryptService } from '../hash-encrypt/hash-encrypt.service.js';
 import { Session } from 'express-session';
 import { JwtService } from '@nestjs/jwt';
-import { AccessTokenRepoService } from '../oauth/access-token-repo/access-token-repo.service';
-import { RefreshTokenRepoService } from '../oauth/refresh-token-repo/refresh-token-repo.service';
-import { RefreshTokenModel } from '../../../databases/models/oauth/refresh-token.model';
-import { LoggingDecorator } from '../../../common/decorators/logging.decorator';
+import { AccessTokenRepoService } from '../oauth/access-token-repo/access-token-repo.service.js';
+import { RefreshTokenRepoService } from '../oauth/refresh-token-repo/refresh-token-repo.service.js';
+import { RefreshTokenModel } from '../../../databases/models/oauth/refresh-token.model.js';
+import { LoggingDecorator } from '../../../common/decorators/logging.decorator.js';
 
 @Injectable()
 export class AuthService {

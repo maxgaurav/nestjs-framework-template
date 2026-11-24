@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { map, Observable } from 'rxjs';
 import { Reflector } from '@nestjs/core';
-import { ResourceMap } from '../../decorators/resource-map.decorator';
+import { ResourceMap } from '../../decorators/resource-map.decorator.js';
 import { plainToInstance } from 'class-transformer';
 
 @Injectable()

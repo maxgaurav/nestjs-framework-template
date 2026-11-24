@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { WebGuard } from './web.guard';
-import { AuthService } from '../../services/auth/auth.service';
+import { WebGuard } from './web.guard.js';
+import { AuthService } from '../../services/auth/auth.service.js';
 import { firstValueFrom } from 'rxjs';
 import { NotFoundException, UnauthorizedException } from '@nestjs/common';
 

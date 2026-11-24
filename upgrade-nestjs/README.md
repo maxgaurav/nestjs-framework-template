@@ -132,8 +132,10 @@ and before 09, so CI enforces the strict flags.
 | `tsconfig.json` includes only `src`, so `test/` is never type-checked | phase 10 |
 | `migration:rollback --till N` always rolled back 1 (string option) | ✅ fixed in phase 03 |
 | `ContextInterceptor` returned 500 for any body-less non-GET request (Express 5) | ✅ fixed in phase 03 |
-| `GET /oauth/authorization` with invalid params and no `Referer` redirects to itself (loop) | open; pre-existing (wisekeep's fix can be ported) |
-| `dist/cli.js` does not find migrations (`*.ts` glob) | phase 04 (migration-file helper) |
+| `GET /oauth/authorization` with invalid params and no `Referer` redirects to itself (loop) | planned in phase 09 (port wisekeep's fix) |
+| `dist/cli.js` does not find migrations (`*.ts` glob) | ✅ fixed in phase 04 (`MigratorFactoryService`) |
+| migration run/rollback used different module shapes (`default.up` vs `down`) | ✅ fixed in phase 04 |
+| Swagger operation ids duplicated as `OauthController_` (`LoggingDecorator` dropped the method name) | ✅ fixed in phase 04 |
 
 ## Follow-ups (out of scope)
 

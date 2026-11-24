@@ -1,7 +1,7 @@
-import { AppModule } from './app.module';
-import { HttpCommandFactory } from './cli-commands/http-command-factory/http-command.factory';
-import { registerPgTypeParsers } from './helpers/pg-type-parsers/pg-type-parsers';
-import { registerSequelizeCls } from './helpers/sequelize-namespace/sequelize-namespace';
+import { AppModule } from './app.module.js';
+import { HttpCommandFactory } from './cli-commands/http-command-factory/http-command.factory.js';
+import { registerPgTypeParsers } from './helpers/pg-type-parsers/pg-type-parsers.js';
+import { registerSequelizeCls } from './helpers/sequelize-namespace/sequelize-namespace.js';
 
 registerPgTypeParsers();
 registerSequelizeCls();

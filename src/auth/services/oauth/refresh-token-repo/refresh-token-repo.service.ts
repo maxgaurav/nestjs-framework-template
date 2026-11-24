@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { RefreshTokenModel } from '../../../../databases/models/oauth/refresh-token.model';
-import { RandomByteGeneratorService } from '../../../../common/services/random-byte-generator/random-byte-generator.service';
+import { RefreshTokenModel } from '../../../../databases/models/oauth/refresh-token.model.js';
+import { RandomByteGeneratorService } from '../../../../common/services/random-byte-generator/random-byte-generator.service.js';
 import { JwtService } from '@nestjs/jwt';
 import { Transaction } from 'sequelize';
-import { AccessTokenModel } from '../../../../databases/models/oauth/access-token.model';
-import { AccessTokenRepoService } from '../access-token-repo/access-token-repo.service';
+import { AccessTokenModel } from '../../../../databases/models/oauth/access-token.model.js';
+import { AccessTokenRepoService } from '../access-token-repo/access-token-repo.service.js';
 import { Buffer } from 'buffer';
-import { LoggingDecorator } from '../../../../common/decorators/logging.decorator';
-import { ClientModel } from '../../../../databases/models/oauth/client.model';
-import { UserModel } from '../../../../databases/models/user.model';
+import { LoggingDecorator } from '../../../../common/decorators/logging.decorator.js';
+import { ClientModel } from '../../../../databases/models/oauth/client.model.js';
+import { UserModel } from '../../../../databases/models/user.model.js';
 
 @Injectable()
 export class RefreshTokenRepoService {

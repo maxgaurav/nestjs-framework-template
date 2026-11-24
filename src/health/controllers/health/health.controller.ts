@@ -8,14 +8,14 @@ import {
   SequelizeHealthIndicator,
 } from '@nestjs/terminus';
 import { ConfigService } from '@nestjs/config';
-import { ConnectionNames } from '../../../databases/connection-names';
+import { ConnectionNames } from '../../../databases/connection-names.js';
 import { InjectConnection } from '@nestjs/sequelize';
 import { Sequelize } from 'sequelize-typescript';
 import { OnEvent } from '@nestjs/event-emitter';
-import { SystemEvents } from '../../../system-events/system-events';
-import { ProcessMessagingService } from '../../../common/services/process-messaging/process-messaging.service';
-import { CommunicationCommands } from '../../../cluster/communication-commands';
-import { SystemConfig } from '../../../environment/environment-types.interface';
+import { SystemEvents } from '../../../system-events/system-events.js';
+import { ProcessMessagingService } from '../../../common/services/process-messaging/process-messaging.service.js';
+import { CommunicationCommands } from '../../../cluster/communication-commands.js';
+import { SystemConfig } from '../../../environment/environment-types.interface.js';
 import { ApiExcludeController } from '@nestjs/swagger';
 
 @ApiExcludeController()

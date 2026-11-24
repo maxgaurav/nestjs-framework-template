@@ -8,12 +8,12 @@ import {
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-custom';
 import { Request } from 'express';
-import { RefreshTokenModel } from '../../../../databases/models/oauth/refresh-token.model';
-import { RefreshTokenDto } from '../../../dtos/refresh-token.dto';
+import { RefreshTokenModel } from '../../../../databases/models/oauth/refresh-token.model.js';
+import { RefreshTokenDto } from '../../../dtos/refresh-token.dto.js';
 import { validateOrReject } from 'class-validator';
-import { AuthService } from '../../../services/auth/auth.service';
+import { AuthService } from '../../../services/auth/auth.service.js';
 import moment from 'moment';
-import { ClientRepoService } from '../../../services/oauth/client-repo/client-repo.service';
+import { ClientRepoService } from '../../../services/oauth/client-repo/client-repo.service.js';
 import { plainToInstance } from 'class-transformer';
 
 @Injectable()

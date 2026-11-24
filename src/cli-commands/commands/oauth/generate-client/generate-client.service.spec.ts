@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { GenerateClientService } from './generate-client.service';
-import { ClientRepoService } from '../../../../auth/services/oauth/client-repo/client-repo.service';
+import { GenerateClientService } from './generate-client.service.js';
+import { ClientRepoService } from '../../../../auth/services/oauth/client-repo/client-repo.service.js';
 import { Logger } from '@nestjs/common';
 
 describe('GenerateClientService', () => {

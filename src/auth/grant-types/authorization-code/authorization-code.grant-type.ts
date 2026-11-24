@@ -1,15 +1,15 @@
-import { GrantTypeImplementation } from '../grant-type-implementation';
-import { ClientModel } from '../../../databases/models/oauth/client.model';
-import { UserModel } from '../../../databases/models/user.model';
+import { GrantTypeImplementation } from '../grant-type-implementation.js';
+import { ClientModel } from '../../../databases/models/oauth/client.model.js';
+import { UserModel } from '../../../databases/models/user.model.js';
 import {
   Injectable,
   Scope,
   UnprocessableEntityException,
   ValidationError,
 } from '@nestjs/common';
-import { AccessTokenDto } from '../../dtos/access-token.dto';
-import { AuthorizationChallengeRepoService } from '../../services/authorization-challenge-repo/authorization-challenge-repo.service';
-import { LoggingDecorator } from '../../../common/decorators/logging.decorator';
+import { AccessTokenDto } from '../../dtos/access-token.dto.js';
+import { AuthorizationChallengeRepoService } from '../../services/authorization-challenge-repo/authorization-challenge-repo.service.js';
+import { LoggingDecorator } from '../../../common/decorators/logging.decorator.js';
 
 @Injectable({ scope: Scope.TRANSIENT })
 export class AuthorizationCodeGrantType implements GrantTypeImplementation {

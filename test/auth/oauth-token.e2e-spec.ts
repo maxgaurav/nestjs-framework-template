@@ -1,13 +1,13 @@
 import { HttpStatus } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import request from 'supertest';
-import { basicE2eSetup, managedTransaction } from '../basic-e2e-setup';
-import { userFactory } from '../factories/user.factory';
-import { clientFactory } from '../factories/client.factory';
-import { ClientModel } from '../../src/databases/models/oauth/client.model';
-import { UserModel } from '../../src/databases/models/user.model';
-import { ClientRepoService } from '../../src/auth/services/oauth/client-repo/client-repo.service';
-import { GrantTypes } from '../../src/auth/grant-types/grant-type-implementation';
+import { basicE2eSetup, managedTransaction } from '../basic-e2e-setup.js';
+import { userFactory } from '../factories/user.factory.js';
+import { clientFactory } from '../factories/client.factory.js';
+import { ClientModel } from '../../src/databases/models/oauth/client.model.js';
+import { UserModel } from '../../src/databases/models/user.model.js';
+import { ClientRepoService } from '../../src/auth/services/oauth/client-repo/client-repo.service.js';
+import { GrantTypes } from '../../src/auth/grant-types/grant-type-implementation.js';
 
 describe('OAuth token endpoints (e2e)', () => {
   let app: NestExpressApplication;

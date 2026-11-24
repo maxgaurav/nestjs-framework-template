@@ -1,6 +1,6 @@
 import { firstValueFrom, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { notFoundPipe } from './not-found-pipe';
+import { notFoundPipe } from './not-found-pipe.js';
 import { NotFoundException } from '@nestjs/common';
 import { EmptyResultError } from 'sequelize';
 

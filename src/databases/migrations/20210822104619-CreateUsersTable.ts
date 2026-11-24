@@ -1,5 +1,3 @@
-'use strict';
-
 import { QueryInterface, Sequelize } from 'sequelize';
 import { DataType } from 'sequelize-typescript';
 

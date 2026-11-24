@@ -5,7 +5,7 @@ import {
   NestInterceptor,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
-import { notFoundPipe } from '../../not-found-pipe';
+import { notFoundPipe } from '../../not-found-pipe.js';
 
 @Injectable()
 export class NotFoundConverterInterceptor implements NestInterceptor {

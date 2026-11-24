@@ -1,4 +1,4 @@
-import { DatesMapping } from '../dates-mapping';
+import { DatesMapping } from '../dates-mapping.js';
 import {
   BelongsTo,
   Column,
@@ -8,8 +8,8 @@ import {
   PrimaryKey,
   Table,
 } from 'sequelize-typescript';
-import { UserModel } from '../user.model';
-import { ClientModel } from './client.model';
+import { UserModel } from '../user.model.js';
+import { ClientModel } from './client.model.js';
 
 @Table({ tableName: 'oauth_authorization_challenges' })
 export class AuthorizationChallengeModel extends DatesMapping<AuthorizationChallengeModel> {

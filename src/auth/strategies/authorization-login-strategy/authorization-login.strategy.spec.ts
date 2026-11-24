@@ -1,7 +1,7 @@
-import { AuthorizationLoginStrategy } from './authorization-login.strategy';
+import { AuthorizationLoginStrategy } from './authorization-login.strategy.js';
 import { Test, TestingModule } from '@nestjs/testing';
-import { HashEncryptService } from '../../services/hash-encrypt/hash-encrypt.service';
-import { AuthService } from '../../services/auth/auth.service';
+import { HashEncryptService } from '../../services/hash-encrypt/hash-encrypt.service.js';
+import { AuthService } from '../../services/auth/auth.service.js';
 
 describe('AuthorizationLoginStrategy', () => {
   let service: AuthorizationLoginStrategy;

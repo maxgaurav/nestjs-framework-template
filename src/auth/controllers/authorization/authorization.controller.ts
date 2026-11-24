@@ -10,33 +10,33 @@ import {
   Session as SessionDecorator,
   Header,
 } from '@nestjs/common';
-import { SessionErrorValidationInterceptor } from '../../../session-manager/interceptors/session-error-validation/session-error-validation.interceptor';
-import { OldInputsInterceptor } from '../../../session-manager/interceptors/old-inputs/old-inputs.interceptor';
-import { LoggingDecorator } from '../../../common/decorators/logging.decorator';
-import { AuthorizationDto } from '../../dtos/authorization.dto';
-import { RedirectGenerator } from '../../../common/decorators/redirect-generator.decorator';
-import { AuthorizationRedirector } from '../../redirections/authorization/authorization.redirector';
-import { AuthorizationGuard } from '../../guards/authorization/authorization.guard';
-import { RedirectRouteInterceptor } from '../../../common/interceptors/redirect-route/redirect-route.interceptor';
-import { TransactionInterceptor } from '../../../transaction-manager/interceptors/transaction/transaction.interceptor';
-import { AuthUser } from '../../decorators/auth-user.decorator';
-import { UserModel } from '../../../databases/models/user.model';
-import { ReqTransaction } from '../../../transaction-manager/decorators/transaction.decorator';
+import { SessionErrorValidationInterceptor } from '../../../session-manager/interceptors/session-error-validation/session-error-validation.interceptor.js';
+import { OldInputsInterceptor } from '../../../session-manager/interceptors/old-inputs/old-inputs.interceptor.js';
+import { LoggingDecorator } from '../../../common/decorators/logging.decorator.js';
+import { AuthorizationDto } from '../../dtos/authorization.dto.js';
+import { RedirectGenerator } from '../../../common/decorators/redirect-generator.decorator.js';
+import { AuthorizationRedirector } from '../../redirections/authorization/authorization.redirector.js';
+import { AuthorizationGuard } from '../../guards/authorization/authorization.guard.js';
+import { RedirectRouteInterceptor } from '../../../common/interceptors/redirect-route/redirect-route.interceptor.js';
+import { TransactionInterceptor } from '../../../transaction-manager/interceptors/transaction/transaction.interceptor.js';
+import { AuthUser } from '../../decorators/auth-user.decorator.js';
+import { UserModel } from '../../../databases/models/user.model.js';
+import { ReqTransaction } from '../../../transaction-manager/decorators/transaction.decorator.js';
 import { Transaction } from 'sequelize';
-import { GrantTypes } from '../../grant-types/grant-type-implementation';
-import { HashEncryptService } from '../../services/hash-encrypt/hash-encrypt.service';
-import { AuthorizationChallengeRepoService } from '../../services/authorization-challenge-repo/authorization-challenge-repo.service';
+import { GrantTypes } from '../../grant-types/grant-type-implementation.js';
+import { HashEncryptService } from '../../services/hash-encrypt/hash-encrypt.service.js';
+import { AuthorizationChallengeRepoService } from '../../services/authorization-challenge-repo/authorization-challenge-repo.service.js';
 import { ApiExcludeController } from '@nestjs/swagger';
-import { PasswordDto } from '../../dtos/password.dto';
+import { PasswordDto } from '../../dtos/password.dto.js';
 import { randomUUID } from 'node:crypto';
-import { PasswordRedirector } from '../../redirections/password/password.redirector';
+import { PasswordRedirector } from '../../redirections/password/password.redirector.js';
 import { Session } from 'express-session';
-import { CheckShowPasswordGuard } from '../../guards/check-show-password/check-show-password.guard';
-import { CanRestartLoginGuard } from '../../guards/can-restart-login/can-restart-login.guard';
-import { RestartLoginRedirector } from '../../redirectors/restart-login/restart-login.redirector';
-import { AppendFormActionHeaderInterceptor } from '../../interceptors/append-form-action-header/append-form-action-header.interceptor';
-import { AuthorizationChallengeModel } from '../../../databases/models/oauth/authorization-challenge.model';
-import { MapUserToSessionInterceptor } from '../../interceptors/map-user-to-session/map-user-to-session.interceptor';
+import { CheckShowPasswordGuard } from '../../guards/check-show-password/check-show-password.guard.js';
+import { CanRestartLoginGuard } from '../../guards/can-restart-login/can-restart-login.guard.js';
+import { RestartLoginRedirector } from '../../redirectors/restart-login/restart-login.redirector.js';
+import { AppendFormActionHeaderInterceptor } from '../../interceptors/append-form-action-header/append-form-action-header.interceptor.js';
+import { AuthorizationChallengeModel } from '../../../databases/models/oauth/authorization-challenge.model.js';
+import { MapUserToSessionInterceptor } from '../../interceptors/map-user-to-session/map-user-to-session.interceptor.js';
 
 @ApiExcludeController()
 @Controller('oauth/authorization')

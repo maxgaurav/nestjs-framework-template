@@ -3,7 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { CommandFactory } from 'nest-commander';
 import type { CommanderOptionsType } from 'nest-commander';
-import { LoggingService } from '../../services/logging/logging.service';
+import { LoggingService } from '../../services/logging/logging.service.js';
 
 /**
  * Runs nest-commander commands inside a full HTTP application instead of the

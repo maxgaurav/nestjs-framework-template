@@ -1,4 +1,4 @@
-import { SystemEvents } from '../system-events/system-events';
+import { SystemEvents } from '../system-events/system-events.js';
 
 export interface BroadcastCommandMessage<T = unknown> {
   command: Omit<CommunicationCommands, 'BroadcastCommand'>;

@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AuthorizationChallengeRepoService } from './authorization-challenge-repo.service';
+import { AuthorizationChallengeRepoService } from './authorization-challenge-repo.service.js';
 import { getModelToken } from '@nestjs/sequelize';
-import { AuthorizationChallengeModel } from '../../../databases/models/oauth/authorization-challenge.model';
-import { TransactionProviderService } from '../../../transaction-manager/services/transaction-provider/transaction-provider.service';
+import { AuthorizationChallengeModel } from '../../../databases/models/oauth/authorization-challenge.model.js';
+import { TransactionProviderService } from '../../../transaction-manager/services/transaction-provider/transaction-provider.service.js';
 
 describe('AuthorizationChallengeRepoService', () => {
   let service: AuthorizationChallengeRepoService;

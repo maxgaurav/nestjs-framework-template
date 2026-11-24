@@ -1,4 +1,4 @@
-import { RefreshAccessTokenGuard } from './refresh-access-token.guard';
+import { RefreshAccessTokenGuard } from './refresh-access-token.guard.js';
 import {
   UnauthorizedException,
   UnprocessableEntityException,
