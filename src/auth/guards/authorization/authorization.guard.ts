@@ -1,4 +1,5 @@
 import {
+  ExecutionContext,
   CanActivate,
   Injectable,
   UnauthorizedException,
@@ -24,7 +25,7 @@ export class AuthorizationGuard
     err: any,
     user: any,
     info: any,
-    context: any,
+    context: ExecutionContext,
     status?: any,
   ) {
     if (err || !user) {

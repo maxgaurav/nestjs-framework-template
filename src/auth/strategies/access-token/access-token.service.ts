@@ -52,7 +52,10 @@ export class AccessTokenService extends PassportStrategy(
       throw new NotFoundException();
     }
 
-    const payload = await this.validateContent(request.body, AccessTokenDto);
+    const payload = await this.validateContent(
+      request.body as Record<string, unknown>,
+      AccessTokenDto,
+    );
 
     if (!GrantTypeMappings[payload.grant_type]) {
       throw new Error(`Grant Type ${payload.grant_type} not implemented`);

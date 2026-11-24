@@ -100,7 +100,7 @@
 - [ ] **Storage**: `@nestjs/storage` disks (`StorageDisks` constants, `@InjectDisk`),
       `StorageErrorFilter`, and uploads validated by `nestjs-form-data` DTOs and persisted through
       `FileStorageService`.
-- [ ] **TypeScript strictness**: the phase 10 rules (`declare` on model columns, `!` on DTO and
+- [x] **TypeScript strictness** (done in phase 10): the phase 10 rules (`declare` on model columns, `!` on DTO and
       resource fields, `satisfies` in config loaders).
 - [ ] **Models**: ESM circular-import rule (the `Relation<T>` alias on association properties), and
       registration in `DefaultConnectionModels` is required (there is no glob any more).

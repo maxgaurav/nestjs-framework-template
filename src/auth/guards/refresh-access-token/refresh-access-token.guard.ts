@@ -1,4 +1,5 @@
 import {
+  ExecutionContext,
   CanActivate,
   Injectable,
   UnauthorizedException,
@@ -16,7 +17,7 @@ export class RefreshAccessTokenGuard
     err: any,
     user: any,
     info: any,
-    context: any,
+    context: ExecutionContext,
     status?: any,
   ) {
     if (err || !user) {
@@ -43,7 +44,7 @@ export class RefreshAccessTokenGuard
       err as never,
       user as never,
       info as never,
-      context as never,
+      context,
       status as never,
     );
   }
