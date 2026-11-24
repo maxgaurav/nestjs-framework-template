@@ -80,6 +80,8 @@ their new code must already compile under these flags.
   // removed: "strictPropertyInitialization": false, the redundant "noImplicitAny": true
   ```
 
+- [ ] oxlint: fix the 6 warnings left from phase 06 (5 × `no-unsafe-argument`, 1 floating promise
+      in `SetupClusterService`) and raise `no-floating-promises` / `no-unsafe-argument` to errors.
 - [ ] oxlint: with these flags on, remove any `typescript/*` rule overrides that were turned off
       only because `strictNullChecks`-style information was missing.
 - [ ] AGENTS.md: a "TypeScript strictness" section with the `declare` / `!` / `satisfies` rules.

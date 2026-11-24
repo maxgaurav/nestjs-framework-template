@@ -33,13 +33,13 @@ describe('DatabaseConfigService', () => {
     expect(service.createSequelizeOptions()).toEqual(
       expect.objectContaining({
         passes: `databases.${ConnectionNames.DefaultConnection}`,
-      }) as any,
+      }),
     );
 
     expect(service.createSequelizeOptions('sample')).toEqual(
       expect.objectContaining({
         passes: `databases.sample`,
-      }) as any,
+      }),
     );
   });
 

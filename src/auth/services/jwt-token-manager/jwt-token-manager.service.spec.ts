@@ -95,7 +95,7 @@ describe('JwtTokenManagerService', () => {
   it('should return false and create file if file does not exists', async () => {
     const accessSpy = vi
       .spyOn(fsPromises, 'access')
-      .mockReturnValue(Promise.reject());
+      .mockReturnValue(Promise.reject(new Error('ENOENT')));
 
     const writeSpy = vi
       .spyOn(fsPromises, 'writeFile')

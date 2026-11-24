@@ -38,7 +38,7 @@ export class RefreshAccessTokenGuard
         throw err;
       }
     }
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    // oxlint-disable-next-line typescript/no-unsafe-return -- passport AuthGuard.handleRequest returns any
     return super.handleRequest(
       err as never,
       user as never,

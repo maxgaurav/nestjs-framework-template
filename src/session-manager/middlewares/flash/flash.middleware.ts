@@ -10,7 +10,7 @@ declare module 'express-session' {
 
 declare global {
   // Augmenting Express's global namespace is the only way to type req.flash
-  // eslint-disable-next-line @typescript-eslint/no-namespace
+  // oxlint-disable-next-line typescript/no-namespace
   namespace Express {
     interface Request {
       /** Read and clear every queued message */
