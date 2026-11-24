@@ -20,13 +20,22 @@ import { GenerateOauthKeysCommand } from './commands/oauth/generate-private-keys
 import { GenerateClientCommand } from './commands/oauth/generate-client/generate-client.command.js';
 import { SeederCommand } from './commands/seeder/seeder.command.js';
 import { MigratorFactoryService } from './services/migrator-factory/migrator-factory.service.js';
+import { GenerateAppSecretCommand } from './commands/generate-app-secret/generate-app-secret.command.js';
+import { GenerateAppSecretService } from './commands/generate-app-secret/generate-app-secret.service.js';
+import { MigrationStatusCommand } from './commands/migration-status/migration-status.command.js';
+import { MigrationStatusService } from './commands/migration-status/migration-status.service.js';
 import { AuthModule } from '../auth/auth.module.js';
 import { CommonModule } from '../common/common.module.js';
 
 @Module({
   imports: [AuthModule, CommonModule],
   providers: [
+    // Listed here for --help; it actually runs through StandaloneCommandsModule (cli.ts)
+    GenerateAppSecretService,
+    GenerateAppSecretCommand,
     MigratorFactoryService,
+    MigrationStatusService,
+    MigrationStatusCommand,
     RouteListService,
     MakeMigrationService,
     RunMigrationService,

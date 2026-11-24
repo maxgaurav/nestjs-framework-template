@@ -1,22 +1,16 @@
-import { QueryInterface, Sequelize } from 'sequelize';
-import { DataType } from 'sequelize-typescript';
+import type { QueryInterface } from 'sequelize';
 
+// Rename `_queryInterface` to `queryInterface` once a step uses it: the underscore keeps the
+// empty stub compiling under noUnusedParameters. The runner also passes the Sequelize class
+// as a second argument; column types are available as `DataType` from 'sequelize-typescript'.
 export default {
-  up: async (queryInterface: QueryInterface, Sequelize: Sequelize) => {
-    /**
-     * Add altering commands here.
-     *
-     * Example:
-     * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
-     */
+  up: async (_queryInterface: QueryInterface) => {
+    // await queryInterface.createTable('users', {
+    //   id: { type: DataType.BIGINT, primaryKey: true, autoIncrement: true },
+    // });
   },
 
-  down: async (queryInterface: QueryInterface) => {
-    /**
-     * Add reverting commands here.
-     *
-     * Example:
-     * await queryInterface.dropTable('users');
-     */
+  down: async (_queryInterface: QueryInterface) => {
+    // await queryInterface.dropTable('users');
   },
 };
