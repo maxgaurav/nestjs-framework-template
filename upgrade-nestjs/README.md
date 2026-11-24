@@ -133,6 +133,7 @@ and before 09, so CI enforces the strict flags.
 | `migration:rollback --till N` always rolled back 1 (string option) | ✅ fixed in phase 03 |
 | `ContextInterceptor` returned 500 for any body-less non-GET request (Express 5) | ✅ fixed in phase 03 |
 | `GET /oauth/authorization` with invalid params and no `Referer` redirects to itself (loop) | planned in phase 09 (port wisekeep's fix) |
+| Sessions run on every API request; `KillForApiInterceptor` destroys them afterwards (logs web users out when they call the API, substring URL match) | planned in phase 09 (stateless API routes, `@UseSession()` opt-in) |
 | `dist/cli.js` does not find migrations (`*.ts` glob) | ✅ fixed in phase 04 (`MigratorFactoryService`) |
 | migration run/rollback used different module shapes (`default.up` vs `down`) | ✅ fixed in phase 04 |
 | Swagger operation ids duplicated as `OauthController_` (`LoggingDecorator` dropped the method name) | ✅ fixed in phase 04 |
