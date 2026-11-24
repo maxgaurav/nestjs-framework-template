@@ -66,6 +66,7 @@ Each phase leaves the app building, booting and passing tests, so each one can b
 | 06 | [ESLint → oxlint](./06-oxlint.md)                                        | 01 (05 for type-aware rules) |
 | 07 | [Mail → `@nestjs/mail`](./07-mail.md)                                    | 03         |
 | 08 | [File storage → `@nestjs/storage`](./08-file-storage.md)                 | 03         |
+| 10 | [Full strict TypeScript](./10-strict-typescript.md)                      | 05 (runs before 09) |
 | 09 | [CI, AGENTS.md, final verification](./09-ci-and-verification.md)         | all        |
 
 **Why Vitest comes before Nest 12.** Nest 12 packages are ESM-only. Jest loads them only on Node
@@ -73,7 +74,8 @@ Each phase leaves the app building, booting and passing tests, so each one can b
 keeps a working test suite through the Nest 12 and ESM phases, and avoids an interim Jest 30 step
 that we would throw away.
 
-Phases 06, 07 and 08 are independent of each other once 03 is merged.
+Phases 06, 07 and 08 are independent of each other once 03 is merged. Phase 10 runs after 05
+and before 09, so CI enforces the strict flags.
 
 ## Decisions
 
@@ -100,6 +102,10 @@ Phases 06, 07 and 08 are independent of each other once 03 is merged.
    This is the wisekeep setup. Routes still use `@UseInterceptors(TransactionInterceptor)` /
    `@ReqTransaction()`. See 02.
 10. **No legacy shims.** This is a template, so things are replaced outright.
+11. **Full strict TypeScript** (phase 10): drop `strictPropertyInitialization: false` and add
+    `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`, `noImplicitOverride`,
+    `noPropertyAccessFromIndexSignature` and the unused/returns checks. About 140 errors in `src`
+    (measured), mostly mechanical: `declare` on model columns, `!` on DTO fields.
 
 ## Main risks
 

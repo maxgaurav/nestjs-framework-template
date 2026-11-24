@@ -1,0 +1,207 @@
+{
+    "openapi": "3.0.0",
+    "paths": {
+        "/oauth/token": {
+            "post": {
+                "operationId": "OauthController_",
+                "parameters": [
+                    {
+                        "name": "accept",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "application/json"
+                            ]
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AccessTokenDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "links": {
+                            "requestBody": {
+                                "$ref": "#/components/schemas/AccessTokenDto"
+                            }
+                        },
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BearerTokenResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Oauth"
+                ]
+            }
+        },
+        "/oauth/refresh": {
+            "post": {
+                "operationId": "OauthController_",
+                "parameters": [
+                    {
+                        "name": "accept",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "application/json"
+                            ]
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RefreshTokenDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "links": {
+                            "requestBody": {
+                                "$ref": "#/components/schemas/RefreshTokenDto"
+                            }
+                        },
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BearerTokenResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Oauth"
+                ]
+            }
+        }
+    },
+    "info": {
+        "title": "Api for {CHANGE TEMPLATE NAME}",
+        "description": "",
+        "version": "1.0",
+        "contact": {}
+    },
+    "tags": [],
+    "servers": [],
+    "components": {
+        "securitySchemes": {
+            "bearer": {
+                "scheme": "bearer",
+                "bearerFormat": "JWT",
+                "type": "http",
+                "name": "JWT",
+                "description": "Enter JWT token",
+                "in": "header"
+            }
+        },
+        "schemas": {
+            "AccessTokenDto": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "object",
+                        "description": "Required with grant_type password"
+                    },
+                    "password": {
+                        "type": "object",
+                        "description": "Required with grant_type password"
+                    },
+                    "client_id": {
+                        "type": "object",
+                        "description": "Required with grant_type password, authorization-code"
+                    },
+                    "client_secret": {
+                        "type": "object",
+                        "description": "Required with grant_type password, authorization-code"
+                    },
+                    "grant_type": {
+                        "type": "string",
+                        "enum": [
+                            "password",
+                            "pkce",
+                            "authorization-code"
+                        ]
+                    },
+                    "code_verifier": {
+                        "type": "object",
+                        "description": "Required with grant_type pkce"
+                    },
+                    "code": {
+                        "type": "object",
+                        "description": "Required with grant_type pkce, authorization-code"
+                    }
+                },
+                "required": [
+                    "grant_type"
+                ]
+            },
+            "BearerTokenResponse": {
+                "type": "object",
+                "properties": {
+                    "access_token": {
+                        "type": "string"
+                    },
+                    "expires_at": {
+                        "format": "date-time",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "refresh_token": {
+                        "type": "string"
+                    },
+                    "type": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "access_token",
+                    "expires_at",
+                    "refresh_token",
+                    "type"
+                ]
+            },
+            "RefreshTokenDto": {
+                "type": "object",
+                "properties": {
+                    "refresh_token": {
+                        "type": "string"
+                    },
+                    "client_id": {
+                        "type": "string"
+                    },
+                    "client_secret": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "refresh_token",
+                    "client_id",
+                    "client_secret"
+                ]
+            }
+        }
+    }
+}

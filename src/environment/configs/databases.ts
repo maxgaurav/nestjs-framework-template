@@ -31,7 +31,7 @@ export const databaseConfig = () => {
     models: [__dirname + '/../../databases/models/**'],
     migrationDirectory: __dirname + '/../../databases/migrations',
     seedingDirectory: __dirname + '/../../databases/seeds',
-  } as DatabaseConnectionConfig;
+  } satisfies DatabaseConnectionConfig;
   return config;
 };
 

@@ -23,5 +23,5 @@ export const clusterConfig = () => ({
         ? parseFloat(process.env.CLUSTER_HEALTH_AUDIT_ATTEMPTS)
         : 15,
     },
-  } as ClusterConfig,
+  } satisfies ClusterConfig,
 });

@@ -77,7 +77,7 @@ export class AuthorizationController {
     (session as never as { passwordContent: unknown }).passwordContent = {
       ...passwordDto,
       passwordId,
-    } as never;
+    };
     await new Promise((res) => session.save(() => res(true)));
     return (session as never as { passwordContent: unknown }).passwordContent;
   }
