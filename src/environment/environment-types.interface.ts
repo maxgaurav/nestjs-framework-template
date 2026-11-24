@@ -7,6 +7,7 @@ export interface SystemConfig {
   port: number;
   url: string;
   secret: string;
+  encryptHexKey: string;
   maxHeapMemory: number;
   maxRssMemory: number;
   debug: boolean;

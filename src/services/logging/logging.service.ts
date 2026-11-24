@@ -1,4 +1,4 @@
-import { ConsoleLogger, Injectable } from '@nestjs/common';
+import { ConsoleLogger, Injectable, Optional } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { SystemConfig } from '../../environment/environment-types.interface';
 import { ClsService } from 'nestjs-cls';
@@ -7,7 +7,9 @@ import { ClsService } from 'nestjs-cls';
 export class LoggingService extends ConsoleLogger {
   constructor(
     private configService: ConfigService,
-    protected clsService: ClsService,
+    // The cluster primary has no ClsModule; Nest 12 no longer resolves a missing
+    // dependency to undefined unless the parameter itself is marked optional
+    @Optional() protected clsService?: ClsService,
   ) {
     super();
   }
@@ -39,13 +41,12 @@ export class LoggingService extends ConsoleLogger {
   }
 
   public generateMessage(message: unknown): unknown {
-    if (!this.clsService.isActive()) {
+    const cls = this.clsService;
+    if (!cls?.isActive()) {
       return message;
     }
 
-    return `[${
-      this.clsService.get('type') || 'Default'
-    }-${this.clsService.getId()}] ${
+    return `[${cls.get<string | undefined>('type') || 'Default'}-${cls.getId()}] ${
       typeof message === 'string' ? message : JSON.stringify(message)
     }`;
   }

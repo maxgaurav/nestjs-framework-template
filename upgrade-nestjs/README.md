@@ -130,6 +130,10 @@ and before 09, so CI enforces the strict flags.
 | Password grant (`POST /oauth/token`) did not check `is_revoked` / `grant_type`; refresh and code/PKCE exchanges accepted revoked clients | ✅ fixed after phase 02 (`test/auth/oauth-token.e2e-spec.ts`) |
 | `registerEventCallBacks` without a transaction does not fire immediately (AGENTS.md says it does) | open; decide in phase 09 |
 | `tsconfig.json` includes only `src`, so `test/` is never type-checked | phase 10 |
+| `migration:rollback --till N` always rolled back 1 (string option) | ✅ fixed in phase 03 |
+| `ContextInterceptor` returned 500 for any body-less non-GET request (Express 5) | ✅ fixed in phase 03 |
+| `GET /oauth/authorization` with invalid params and no `Referer` redirects to itself (loop) | open; pre-existing (wisekeep's fix can be ported) |
+| `dist/cli.js` does not find migrations (`*.ts` glob) | phase 04 (migration-file helper) |
 
 ## Follow-ups (out of scope)
 

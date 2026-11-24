@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { Command } from 'nestjs-command';
 import { RunMigrationService } from '../run-migration/run-migration.service';
 import { InjectConnection } from '@nestjs/sequelize';
 import { Sequelize } from 'sequelize';
@@ -10,11 +9,6 @@ export class RefreshMigrationService {
     private runMigrationCommand: RunMigrationService,
     @InjectConnection() private connection: Sequelize,
   ) {}
-
-  @Command({
-    command: 'migration:refresh',
-    describe: 'Refresh all migrations',
-  })
   public async refreshMigrations() {
     await this.connection.getQueryInterface().dropAllTables();
     await this.connection.getQueryInterface().dropAllEnums();

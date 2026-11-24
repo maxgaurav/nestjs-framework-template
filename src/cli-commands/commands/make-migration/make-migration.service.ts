@@ -1,5 +1,4 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Command, Positional } from 'nestjs-command';
 import { join } from 'path';
 import { Umzug } from 'umzug';
 import { readFileSync } from 'fs';
@@ -13,19 +12,7 @@ export class MakeMigrationService {
     private logger: Logger,
     private config: ConfigService,
   ) {}
-
-  @Command({
-    command: 'migration:make',
-    describe: 'Generates migration stub',
-  })
-  public async generateStub(
-    @Positional({
-      name: 'name',
-      describe: 'The name of migration file',
-      type: 'string',
-    })
-    name: string,
-  ) {
+  public async generateStub(name: string) {
     const stubFileContents: string = readFileSync(
       join(
         process.cwd(),

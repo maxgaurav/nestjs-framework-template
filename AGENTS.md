@@ -201,8 +201,11 @@ API controllers must not return raw unshaped models to clients.
 
 ### Adding CLI commands / seeders
 
-* Add a `@Command` class under `src/cli-commands/commands/` (folder-per-class).
-* **Register it** in `src/cli-commands/cli-commands.module.ts` `providers` (file alone is not enough).
+* Commands use [`nest-commander`](https://docs.nestjs.com/recipes/nest-commander). Per command, folder-per-class under `src/cli-commands/commands/<name>/`:
+  * `<name>.command.ts` — a thin `@Command({ name, arguments, description })` class extending `CommandRunner`; positional args arrive in `run(params)`, flags via `@Option({ flags })` parser methods (parse/validate types there, e.g. numbers).
+  * `<name>.service.ts` — the logic, so it stays testable without the CLI.
+* **Register both** in `src/cli-commands/cli-commands.module.ts` `providers` (file alone is not enough).
+* `src/cli.ts` runs commands through `HttpCommandFactory` (full HTTP app, not a bare application context) so commands such as `route:list` can use HTTP infrastructure. A failing command exits with code 1.
 * Seeders: extend the seeder base under `src/cli-commands/seeders/`, wire into seeder maps / `SeederService` inputs.
 
 ## Environment / config

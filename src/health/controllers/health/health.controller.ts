@@ -3,6 +3,7 @@ import {
   HealthCheck,
   HealthCheckResult,
   HealthCheckService,
+  HealthIndicatorFunction,
   MemoryHealthIndicator,
   SequelizeHealthIndicator,
 } from '@nestjs/terminus';
@@ -15,7 +16,6 @@ import { SystemEvents } from '../../../system-events/system-events';
 import { ProcessMessagingService } from '../../../common/services/process-messaging/process-messaging.service';
 import { CommunicationCommands } from '../../../cluster/communication-commands';
 import { SystemConfig } from '../../../environment/environment-types.interface';
-import { HealthIndicatorFunction } from '@nestjs/terminus/dist/health-indicator';
 import { ApiExcludeController } from '@nestjs/swagger';
 
 @ApiExcludeController()

@@ -44,21 +44,17 @@ describe('HashEncryptService', () => {
   });
 
   it('should encrypt content', async () => {
-    const secret = '9a3821cd5152199f';
-    const text = 'sample';
     const configGetOrThrowSpy = vi
       .spyOn(configService, 'getOrThrow')
-      .mockReturnValue(secret);
-    const configGetSpy = vi.spyOn(configService, 'get').mockReturnValue(secret);
+      .mockReturnValue({
+        secret: 'app-secret',
+        encryptHexKey: '9a3821cd5152199f',
+      });
     await service.onApplicationBootstrap();
 
-    const encryptedText = await service.encrypt(text);
-    const decryptedText = await service.decrypt(encryptedText);
-    expect(decryptedText).toEqual(text);
-    expect(configGetOrThrowSpy).toHaveBeenCalledWith('APP_SECRET');
-    expect(configGetSpy).toHaveBeenCalledWith(
-      'APP_ENCRYPT_HEX_KEY',
-      expect.any(String),
-    );
+    const encryptedText = await service.encrypt('sample');
+    expect(encryptedText).not.toEqual('sample');
+    expect(await service.decrypt(encryptedText)).toEqual('sample');
+    expect(configGetOrThrowSpy).toHaveBeenCalledWith('system');
   });
 });

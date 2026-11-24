@@ -1,5 +1,4 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Command } from 'nestjs-command';
 import { generateKeyPair } from 'crypto';
 import { promises as fsPromises } from 'fs';
 import { join } from 'path';
@@ -8,11 +7,6 @@ import { Buffer } from 'buffer';
 @Injectable()
 export class GenerateOauthKeysService {
   constructor(public log: Logger) {}
-
-  @Command({
-    command: 'oauth:generate-keys',
-    describe: 'Generates private and public keys for jwt',
-  })
   public async generateKeys() {
     this.log.debug('Starting generation of keys');
     await new Promise((resolve, reject) => {
